@@ -2,6 +2,7 @@
 // import { Text, View, Button } from "react-native";
 // import Engine, { Efficiency } from "./src/EngiCalc";
 import { Text, View } from "react-native";
+import { Link } from "expo-router";
 
 // export default function Index() {
 //   const [engine, setEngine] = useState<Engine | null>(null);
@@ -62,7 +63,9 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Lorem ipsum</Text>
+      <Link href="/tracuucatalog" style={{ marginTop: 20 }}>
+        <Text style={{ color: "blue" }}>Đi đến trang Tra cứu Catalog</Text>
+      </Link>
     </View>
   );
 }
