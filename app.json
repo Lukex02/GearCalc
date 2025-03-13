@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "DoAnGiamTOc",
-    "slug": "DoAnGiamTOc",
+    "name": "GearCalc",
+    "slug": "GearCalc",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.GearCalc"
     },
     "web": {
       "bundler": "metro",

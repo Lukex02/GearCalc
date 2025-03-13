@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, Image } from "react-native";
-import { Appbar, IconButton, Menu, PaperProvider } from "react-native-paper";
+import { Appbar, IconButton, Menu } from "react-native-paper";
 import { useRouter } from "expo-router";
 import styles from "./style/chitietstyle";
 
@@ -11,7 +11,7 @@ const ItemPage = () => {
   const closeMenu = () => setMenuVisible(false);
 
   return (
-    <PaperProvider style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
       <Appbar.Header style={styles.header}>
         <Menu
@@ -90,7 +90,7 @@ const ItemPage = () => {
           </TouchableOpacity>
         ))}
       </View>
-    </PaperProvider>
+    </View>
   );
 };
 
