@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, TouchableOpacity, Image } from "react-native";
 import { Appbar, IconButton, Menu } from "react-native-paper";
 import { useRouter } from "expo-router";
-import styles from "../style/ComponentStyle";
+import styles from "../style/MainStyle";
 
 const ComponentPage = () => {
   const router = useRouter();

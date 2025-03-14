@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, TouchableOpacity, Image } from "react-native";
 import { Appbar, IconButton, Menu } from "react-native-paper";
 import { useRouter } from "expo-router";
-import styles from "../style/CatalogStyle";
+import styles from "../style/MainStyle";
 
 const CatalogPage = () => {
   const router = useRouter();
