@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { View, TouchableOpacity, Image } from "react-native";
 import { Appbar, IconButton, Menu } from "react-native-paper";
 import { useRouter } from "expo-router";
-import styles from "./style/tracuustyle";
+import styles from "../style/CatalogStyle";
 
 const CatalogPage = () => {
-  const [menuVisible, setMenuVisible] = useState(false);
   const router = useRouter();
+  const [menuVisible, setMenuVisible] = useState(false);
   const openMenu = () => setMenuVisible(true);
   const closeMenu = () => setMenuVisible(false);
 
@@ -78,7 +78,7 @@ const CatalogPage = () => {
           <TouchableOpacity
             key={index}
             style={styles.gridItem}
-            onPress={() => router.push("/chitiet")}
+            onPress={() => router.push("/component")}
           >
             <Image
               source={{

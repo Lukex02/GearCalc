@@ -4,6 +4,7 @@ import { PaperProvider } from "react-native-paper";
 export default function RootLayout() {
   return (
     <PaperProvider>
+      {/* Ở đây mang tính chất hiển thị và đặt tên, không có link trang với nhau */}
       <Stack
         screenOptions={{
           headerStyle: { backgroundColor: "#E48C8C" }, // Màu nền header
@@ -14,8 +15,8 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" options={{ title: "Trang chủ" }} />
-        <Stack.Screen name="tracuucatalog" options={{ title: "Catalog" }} />
-        <Stack.Screen name="chitiet" options={{ title: "Chi tiết" }} />
+        <Stack.Screen name="/catalog" options={{ title: "Catalog" }} />
+        <Stack.Screen name="/component" options={{ title: "Chi tiết" }} />
       </Stack>
     </PaperProvider>
   );
