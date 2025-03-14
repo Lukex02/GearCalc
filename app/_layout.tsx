@@ -15,8 +15,8 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" options={{ title: "Trang chủ" }} />
-        <Stack.Screen name="/catalog" options={{ title: "Catalog" }} />
-        <Stack.Screen name="/component" options={{ title: "Chi tiết" }} />
+        <Stack.Screen name="catalog" options={{ title: "Catalog" }} />
+        <Stack.Screen name="component" options={{ title: "Chi tiết" }} />
       </Stack>
     </PaperProvider>
   );
