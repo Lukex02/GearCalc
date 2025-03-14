@@ -13,6 +13,9 @@ export default function Index() {
       <Link href="/catalog" style={{ marginTop: 20 }}>
         <Text style={{ color: "blue" }}>Đi đến trang Tra cứu Catalog</Text>
       </Link>
+      <Link href="/test" style={{ marginTop: 20 }}>
+        <Text style={{ color: "blue" }}>Đi đến trang Test</Text>
+      </Link>
     </View>
   );
 }
