@@ -32,7 +32,7 @@ export default class EngineController {
       T2,
       t2,
       efficieny.n_system,
-      ratio.ratio_comp
+      ratio.ratio_spec
     );
   }
   static async getSelectedEngine(
@@ -42,7 +42,6 @@ export default class EngineController {
   ): Promise<SelectedEngine[]> {
     // List of satisfied engine
     const dataList = await DatabaseService.getEngine(reqPower, reqRpm);
-    // console.log(dataList);
     return dataList
       .map(
         (data: {
@@ -76,5 +75,19 @@ export default class EngineController {
     cur_ratio: TransRatio
   ) {
     return EngineFactory.recalcTransRatio(calc_engi, sele_engi, cur_ratio);
+  }
+
+  static getShaftStats(
+    n_dc: number,
+    p_td: number,
+    final_effi: Efficiency,
+    final_ratio: TransRatio
+  ) {
+    return EngineFactory.calculateShaftStats(
+      n_dc,
+      p_td,
+      final_effi,
+      final_ratio
+    );
   }
 }

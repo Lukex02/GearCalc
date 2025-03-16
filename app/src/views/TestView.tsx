@@ -7,6 +7,7 @@ import {
   CalculatedEngine,
   Efficiency,
   SelectedEngine,
+  ShaftStats,
   TransRatio,
 } from "../models/EngineModel";
 
@@ -15,15 +16,15 @@ export default function TestPage() {
   const [calcEngine, setCalcEngine] = useState<CalculatedEngine | null>(null);
   const [seleEngine, setSeleEngine] = useState<SelectedEngine[] | []>([]);
   const [transRatio, setTransRatio] = useState<TransRatio | null>(null);
+  const [shaftStats, setShaftStats] = useState<ShaftStats | null>(null);
 
   const calculateEngine = async () => {
-    // let newEfficieny = new Efficiency(0.99, 0.85, 0.96, 0.94, 0.98);
-    // let newRatio = new TransRatio(3, 10, 3, 1);
+    // Thu
     let newEfficieny = new Efficiency([
       [{ type: "n_ol", value: 0.99 }, 4],
+      [{ type: "n_d", value: 0.94 }, 1],
       [{ type: "n_tv", value: 0.85 }, 1],
       [{ type: "n_brt", value: 0.96 }, 1],
-      [{ type: "n_d", value: 0.94 }, 1],
       [{ type: "n_kn", value: 0.98 }, 1],
     ]);
     let newRatio = new TransRatio([
@@ -47,11 +48,18 @@ export default function TestPage() {
       newSeleEngine[0],
       newRatio
     );
-    // console.log(newTransRatio);
+    const newShaftStats = EngineController.getShaftStats(
+      newSeleEngine[0].n_t,
+      newCalcEngine.p_td,
+      newEfficieny,
+      newRatio
+    );
+    console.log(newShaftStats);
     setEffi(newEfficieny);
     setTransRatio(newTransRatio);
     setCalcEngine(newCalcEngine);
     setSeleEngine(newSeleEngine);
+    setShaftStats(newShaftStats);
   };
 
   return (
@@ -64,13 +72,24 @@ export default function TestPage() {
         </View>
       )}
       {transRatio &&
-        transRatio.ratio_comp.map((ratio) => (
-          <View>
+        transRatio.ratio_spec.map((ratio) => (
+          <View key={ratio.type}>
             <Text>
               Tỷ số {ratio.type}: {ratio.value.toFixed(2)}
             </Text>
           </View>
         ))}
+      {/* {shaftStats && (
+        <View>
+          <Text>Khoảng cách truyền: {shaftStats..toFixed(2)} mm</Text>
+          <Text>
+            Khoảng cách truyền đáp ứng: {shaftStats.d_tr_app.toFixed(2)} mm
+          </Text>
+          <Text>
+            Khoảng cách truyền đáp ứng: {shaftStats.d_tr_app_rel.toFixed(2)} %
+          </Text>
+        </View>
+      )} */}
     </View>
   );
 }

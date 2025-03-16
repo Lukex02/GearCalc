@@ -98,26 +98,6 @@ export interface IEfficieny {
 }
 
 export class Efficiency {
-  // private _n_ol: number; // Hiệu suất một cặp ổ lăn
-  // private _n_tv: number; // Hiệu suất của bộ truyền trục vít
-  // private _n_brt: number; // Hiệu suất của bộ truyền đai
-  // private _n_belt: number; // Hiệu suất của bộ truyền đai
-  // private _n_kn: number; // Hiệu suất của khớp nối
-  // constructor(
-  //   n_ol: number,
-  //   n_tv: number,
-  //   n_brt: number,
-  //   n_belt: number,
-  //   n_kn: number
-  // ) {
-  //   this._n_ol = n_ol;
-  //   this._n_tv = n_tv;
-  //   this._n_brt = n_brt;
-  //   this._n_belt = n_belt;
-  //   this._n_kn = n_kn;
-  //   // this._n_system = n_ol ** 4 * n_tv * n_brt * n_belt * n_kn;
-  //   this._n_system = 0; // FIXME
-  // }
   private _n_parts: [IEfficieny, number][]; // Hiệu suất của chi tiết và số lượng chi tiết sử dụng
   private _n_system: number; // Hiệu suất truyền động của hệ thống
 
@@ -139,114 +119,19 @@ export class Efficiency {
   }
 }
 
-// FIXME TransRatio
-// export class TransRatio {
-//   private _u_t: number; // Tỷ số truyền của hệ dẫn động
-//   private _u_d: number; // Tỷ số truyền của đai
-//   private _u_brt: number; // Tỷ số truyền của bánh răng trụ
-//   private _u_tv: number; // Tỷ số truyền của trục vít
-//   private _u_ng: number; // Tỷ số truyền ngoài hộp
-//   private _u_h: number; // Tỷ số truyền trong hộp
-//   private _u_kn: number; // Tỷ số truyền khớp nối
-
-//   constructor(u_d: number, u_tv: number, u_brt: number, u_kn: number) {
-//     this._u_d = u_d;
-//     this._u_tv = u_tv;
-//     this._u_brt = u_brt;
-//     this._u_kn = u_kn;
-//     this._u_t = u_d * u_tv * u_brt * u_kn;
-//     this._u_ng = this._u_d;
-//     this._u_h = this._u_t / this._u_ng;
-//   }
-
-//   // Getter và Setter của u_t ////////////////////////
-//   get u_t(): number {
-//     return this._u_t;
-//   }
-//   set u_t(value: number) {
-//     this._u_t = value;
-//     this.u_h = this._u_t / this._u_ng;
-//   }
-
-//   // Getter và Setter của u_d
-//   get u_d(): number {
-//     return this._u_d;
-//   }
-//   set u_d(value: number) {
-//     this._u_d = value;
-//     this._u_ng = this._u_d;
-//   }
-
-//   // Getter và Setter của u_brt
-//   get u_brt(): number {
-//     return this._u_brt;
-//   }
-//   set u_brt(value: number) {
-//     this._u_brt = value;
-//   }
-
-//   // Getter và Setter của u_tv
-//   get u_tv(): number {
-//     return this._u_tv;
-//   }
-//   set u_tv(value: number) {
-//     this._u_tv = value;
-//     this.u_brt = this._u_h / this._u_tv;
-//   }
-
-//   // Getter và Setter của u_h ////////////////////////
-//   get u_h(): number {
-//     return this._u_h;
-//   }
-//   set u_h(value: number) {
-//     this._u_h = value;
-//     const tan_gamma = 0.2;
-
-//     // Giải u_tv theo thuật toán Newton-Raphson
-//     const f = (u_tv: number) =>
-//       math.evaluate(
-//         `8 - (${tan_gamma}^2 * ${this._u_h}^2 * (1 + (${this._u_h}/x))) / (x * ${tan_gamma} + 1)^3`,
-//         { x: u_tv }
-//       );
-
-//     const fPrime = (u_tv: number) =>
-//       math
-//         .derivative(
-//           `8 - (${tan_gamma}^2 * ${this._u_h}^2 * (1 + (${this._u_h}/x))) / (x * ${tan_gamma} + 1)^3`,
-//           "x"
-//         )
-//         .evaluate({ x: u_tv });
-
-//     let x = 1;
-//     for (let i = 0; i < 10; i++) {
-//       x = x - f(x) / fPrime(x);
-//       if (Math.abs(f(x)) < 1e-6) break;
-//     }
-
-//     this.u_tv = x;
-//   }
-
-//   // Getter và Setter của u_kn
-//   get u_kn(): number {
-//     return this._u_kn;
-//   }
-//   set u_kn(value: number) {
-//     this._u_kn = value;
-//   }
-// }
 export interface IRatio {
   type: string;
   value: number;
 }
 
 export class TransRatio {
-  private _ratio_comp: IRatio[]; // Tỷ số truyền các chi tiết
+  private _ratio_spec: IRatio[]; // Tỷ số truyền các chi tiết
   private _u_t: number; // Tỷ số truyền của hệ dẫn động
   private _u_ng: number; // Tỷ số truyền ngoài hộp
   private _u_h: number; // Tỷ số truyền trong hộp
 
   constructor(ratio: IRatio[]) {
-    this._ratio_comp = ratio;
+    this._ratio_spec = ratio;
     this._u_t = ratio.reduce((acc, ratio) => acc * ratio.value, 1);
     this._u_ng =
       ratio.find((ratio) => ratio.type === "u_d" || ratio.type === "u_x")
@@ -254,12 +139,12 @@ export class TransRatio {
     this._u_h = this._u_t / this._u_ng;
   }
 
-  get ratio_comp() {
-    return this._ratio_comp;
+  get ratio_spec() {
+    return this._ratio_spec;
   }
   // Getter
   get_ratio(type: string) {
-    return this._ratio_comp.find((ratio) => ratio.type === type)?.value;
+    return this._ratio_spec.find((ratio) => ratio.type === type)?.value;
   }
 
   get u_h(): number {
@@ -276,7 +161,7 @@ export class TransRatio {
 
   // Hàm set ratio cho các loại chi tiết
   private set_ratio(type: string, value: number) {
-    this._ratio_comp.map((ratio) => {
+    this._ratio_spec.map((ratio) => {
       if (ratio.type === type) return (ratio.value = value);
     });
   }
@@ -309,7 +194,7 @@ export class TransRatio {
   set u_tv(value: number) {
     // this._u_tv = value;
     // this.u_brt = this._u_h / this._u_tv;
-    this._ratio_comp.map((ratio) => {
+    this._ratio_spec.map((ratio) => {
       if (ratio.type === "u_tv") return (ratio.value = value);
       // Nếu u_tv thay đổi thì u_brt thay đổi theo u_brt = u_h / u_tv
       if (ratio.type === "u_brt") {
@@ -321,6 +206,56 @@ export class TransRatio {
   // Setter của u_kn
   set u_kn(value: number) {
     this.set_ratio("u_kn", value);
+  }
+}
+
+// Phần tính toán thì đúng nhưng mà cần không lệ thuộc vào array itteration hơn
+export class ShaftStats {
+  private _n: number[]; // Tốc độ quay trên các trục, [n_dc, n1, n2, n3,...]
+  private _p: number[]; // Công suất trên các trục, [p_dc, p1, p2, p3,...]
+  private _T: number[]; // Momen xoắn trên các trục [t_dc, t1, t2, t3,...]
+
+  constructor(n_dc: number, p_td: number, effi: Efficiency, ratio: TransRatio) {
+    this._n = ratio.ratio_spec.reduce(
+      (acc, ratio) => {
+        if (ratio.type !== "u_kn") acc.push(acc[acc.length - 1] / ratio.value);
+        return acc;
+      },
+      [n_dc]
+    );
+    let temp_effi = effi.n_parts_spec.reverse(); // Vì phải tính P ngược từ đầu ra
+    this._p = this.calc_power(p_td, temp_effi);
+    this._T = this._p.map((p, idx) => this.calc_torque(this._n[idx], p));
+  }
+
+  calc_power(p_td: number, efficienciesList: IEfficieny[]): number[] {
+    const results: number[] = [p_td];
+    const n_ol = efficienciesList.find((e) => e.type === "n_ol")?.value ?? 1;
+
+    for (const efficiencies of efficienciesList) {
+      if (efficiencies.type === "n_ol") continue;
+
+      const lastP = results[results.length - 1];
+      const newP = lastP / (efficiencies.value * n_ol);
+      console.log(efficiencies.value);
+      results.push(newP);
+    }
+
+    return results.reverse();
+  }
+
+  private calc_torque(n: number, p: number): number {
+    return (9.55 * 10 ** 6 * p) / n;
+  }
+
+  get n() {
+    return this._n;
+  }
+  get p() {
+    return this._p;
+  }
+  get T() {
+    return this._T;
   }
 }
 
@@ -389,8 +324,17 @@ export default class EngineFactory {
     // Kiểm tra lại
     let delta_check =
       cur_ratio.u_t -
-      cur_ratio.ratio_comp.reduce((acc, ratio) => acc * ratio.value, 1);
+      cur_ratio.ratio_spec.reduce((acc, ratio) => acc * ratio.value, 1);
     if (-0.5 < delta_check && delta_check < 0.5) return cur_ratio;
     else return null;
+  }
+
+  static calculateShaftStats(
+    n_dc: number,
+    p_td: number,
+    effi: Efficiency,
+    ratio: TransRatio
+  ) {
+    return new ShaftStats(n_dc, p_td, effi, ratio);
   }
 }
