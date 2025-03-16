@@ -31,8 +31,8 @@ export default class EngineController {
       t1,
       T2,
       t2,
-      efficieny.get_effi_system(),
-      ratio
+      efficieny.n_system,
+      ratio.ratio_comp
     );
   }
   static async getSelectedEngine(

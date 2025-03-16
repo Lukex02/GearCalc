@@ -17,16 +17,29 @@ export default function TestPage() {
   const [transRatio, setTransRatio] = useState<TransRatio | null>(null);
 
   const calculateEngine = async () => {
-    let newEfficieny = new Efficiency(0.99, 0.85, 0.96, 0.94, 0.98);
-    let newRatio = new TransRatio(3, 10, 3, 1);
+    // let newEfficieny = new Efficiency(0.99, 0.85, 0.96, 0.94, 0.98);
+    // let newRatio = new TransRatio(3, 10, 3, 1);
+    let newEfficieny = new Efficiency([
+      [{ type: "n_ol", value: 0.99 }, 4],
+      [{ type: "n_tv", value: 0.85 }, 1],
+      [{ type: "n_brt", value: 0.96 }, 1],
+      [{ type: "n_d", value: 0.94 }, 1],
+      [{ type: "n_kn", value: 0.98 }, 1],
+    ]);
+    let newRatio = new TransRatio([
+      { type: "u_d", value: 3 },
+      { type: "u_tv", value: 10 },
+      { type: "u_brt", value: 3 },
+      { type: "u_kn", value: 1 },
+    ]);
 
     const newCalcEngine = EngineController.generateCalculatedEngine(
       newEfficieny,
       newRatio
     );
     const newSeleEngine = await EngineController.getSelectedEngine(
-      newCalcEngine.get_p_ct(),
-      newCalcEngine.get_n_sb(),
+      newCalcEngine.p_ct,
+      newCalcEngine.n_sb,
       1
     );
     const newTransRatio = EngineController.getNewTransRatio(
@@ -34,6 +47,7 @@ export default function TestPage() {
       newSeleEngine[0],
       newRatio
     );
+    // console.log(newTransRatio);
     setEffi(newEfficieny);
     setTransRatio(newTransRatio);
     setCalcEngine(newCalcEngine);
@@ -46,16 +60,17 @@ export default function TestPage() {
 
       {calcEngine && (
         <View>
-          <Text>Công suất cần thiết: {calcEngine.get_p_ct().toFixed(2)}</Text>
+          <Text>Công suất cần thiết: {calcEngine.p_ct.toFixed(2)}</Text>
         </View>
       )}
-      {transRatio && (
-        <View>
-          <Text>Tỷ số bộ truyền đai: {transRatio.u_d.toFixed(2)}</Text>
-          <Text>Tỷ số bánh răng trụ thẳng: {transRatio.u_brt.toFixed(2)}</Text>
-          <Text>Tỷ số truyền trục vít : {transRatio.u_tv.toFixed(2)}</Text>
-        </View>
-      )}
+      {transRatio &&
+        transRatio.ratio_comp.map((ratio) => (
+          <View>
+            <Text>
+              Tỷ số {ratio.type}: {ratio.value.toFixed(2)}
+            </Text>
+          </View>
+        ))}
     </View>
   );
 }
