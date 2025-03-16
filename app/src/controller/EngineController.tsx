@@ -1,9 +1,10 @@
+import Efficiency from "../models/Efficiency";
 import EngineFactory, {
   CalculatedEngine,
   SelectedEngine,
-  Efficiency,
-  TransRatio,
 } from "../models/EngineModel";
+import TransRatio from "../models/GearRatio";
+import ShaftStats from "../models/Shaft";
 import DatabaseService from "../services/DatabaseService";
 
 export default class EngineController {
@@ -74,7 +75,7 @@ export default class EngineController {
     sele_engi: SelectedEngine,
     cur_ratio: TransRatio
   ) {
-    return EngineFactory.recalcTransRatio(calc_engi, sele_engi, cur_ratio);
+    return cur_ratio.recalcTransRatio(calc_engi, sele_engi);
   }
 
   static getShaftStats(
@@ -83,11 +84,6 @@ export default class EngineController {
     final_effi: Efficiency,
     final_ratio: TransRatio
   ) {
-    return EngineFactory.calculateShaftStats(
-      n_dc,
-      p_td,
-      final_effi,
-      final_ratio
-    );
+    return new ShaftStats(n_dc, p_td, final_effi, final_ratio);
   }
 }

@@ -3,13 +3,10 @@ import { View, Text, Button } from "react-native";
 // import { Appbar, IconButton, Menu } from "react-native-paper";
 import styles from "../style/MainStyle";
 import EngineController from "../controller/EngineController";
-import {
-  CalculatedEngine,
-  Efficiency,
-  SelectedEngine,
-  ShaftStats,
-  TransRatio,
-} from "../models/EngineModel";
+import { CalculatedEngine, SelectedEngine } from "../models/EngineModel";
+import Efficiency from "../models/Efficiency";
+import TransRatio from "../models/GearRatio";
+import ShaftStats from "../models/Shaft";
 
 export default function TestPage() {
   const [effi, setEffi] = useState<Efficiency | null>(null);
@@ -54,7 +51,6 @@ export default function TestPage() {
       newEfficieny,
       newRatio
     );
-    console.log(newShaftStats);
     setEffi(newEfficieny);
     setTransRatio(newTransRatio);
     setCalcEngine(newCalcEngine);
