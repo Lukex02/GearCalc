@@ -13,6 +13,10 @@ export default function Index() {
       <Link href="/catalog" style={{ marginTop: 20 }}>
         <Text style={{ color: "blue" }}>Đi đến trang Tra cứu Catalog</Text>
       </Link>
+
+      <Link href="/input" style={{ marginTop: 20 }}>
+        <Text style={{ color: "blue" }}>Nhập thông số thiết kế</Text>
+      </Link>
     </View>
   );
 }
