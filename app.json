@@ -37,6 +37,22 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "f2045624-d4bd-4a8a-8d56-3385c8482a1f"
+      }
+    },
+    "owner": "lukex02",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/f2045624-d4bd-4a8a-8d56-3385c8482a1f",
+      "channel": "preview"
     }
   }
 }
