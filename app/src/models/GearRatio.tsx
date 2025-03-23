@@ -63,13 +63,13 @@ export default class TransRatio {
 
   // Setter của u_d
   set u_d(value: number) {
-    this.set_ratio("u_d", value);
+    this.set_ratio("d", value);
     this._u_ng = value;
   }
 
   // Setter của u_brt
   set u_brt(value: number) {
-    this.set_ratio("u_brt", value);
+    this.set_ratio("brt", value);
   }
 
   // Setter của u_tv
@@ -77,9 +77,9 @@ export default class TransRatio {
     // this._u_tv = value;
     // this.u_brt = this._u_h / this._u_tv;
     this._ratio_spec.map((ratio) => {
-      if (ratio.type === "u_tv") return (ratio.value = value);
+      if (ratio.type === "tv") return (ratio.value = value);
       // Nếu u_tv thay đổi thì u_brt thay đổi theo u_brt = u_h / u_tv
-      if (ratio.type === "u_brt") {
+      if (ratio.type === "brt") {
         return (ratio.value = this.u_h / value);
       }
     });
@@ -87,23 +87,23 @@ export default class TransRatio {
 
   // Setter của u_kn
   set u_kn(value: number) {
-    this.set_ratio("u_kn", value);
+    this.set_ratio("kn", value);
   }
 
-  clone(): TransRatio {
-    return new TransRatio(this._ratio_spec);
-  }
+  // clone(): TransRatio {
+  //   return new TransRatio(this._ratio_spec);
+  // }
   recalcTransRatio(
     calc_engi: CalculatedEngine,
     sele_engi: SelectedEngine
-  ): TransRatio {
+  ): TransRatio | Error {
     // Sau khi gán u_t mới thì các thông số khác sẽ tự động cập nhật
-    let old_ratio = this.clone();
+    // let old_ratio = this.clone();
     this._u_t = sele_engi.n_t / calc_engi.n_lv;
     // Kiểm tra lại
     let delta_check =
       this._u_t - this._ratio_spec.reduce((acc, ratio) => acc * ratio.value, 1);
     if (-0.5 < delta_check && delta_check < 0.5) return this;
-    else return old_ratio;
+    else return new Error("Failed check");
   }
 }

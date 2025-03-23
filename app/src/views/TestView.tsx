@@ -7,6 +7,7 @@ import { CalculatedEngine, SelectedEngine } from "../models/EngineModel";
 import Efficiency from "../models/Efficiency";
 import TransRatio from "../models/GearRatio";
 import ShaftStats from "../models/Shaft";
+import CalcManager from "../models/CalcManager";
 
 export default function TestPage() {
   const [effi, setEffi] = useState<Efficiency | null>(null);
@@ -14,53 +15,41 @@ export default function TestPage() {
   const [seleEngine, setSeleEngine] = useState<SelectedEngine[] | []>([]);
   const [transRatio, setTransRatio] = useState<TransRatio | null>(null);
   const [shaftStats, setShaftStats] = useState<ShaftStats | null>(null);
+  const [calcManager, setCalcManager] = useState<CalcManager>();
 
-  const calculateEngine = async () => {
-    // Thu
-    let newEfficieny = new Efficiency([
-      [{ type: "n_ol", value: 0.99 }, 4],
-      [{ type: "n_d", value: 0.94 }, 1],
-      [{ type: "n_tv", value: 0.85 }, 1],
-      [{ type: "n_brt", value: 0.96 }, 1],
-      [{ type: "n_kn", value: 0.98 }, 1],
-    ]);
-    let newRatio = new TransRatio([
-      { type: "u_d", value: 3 },
-      { type: "u_tv", value: 10 },
-      { type: "u_brt", value: 3 },
-      { type: "u_kn", value: 1 },
-    ]);
-
-    const newCalcEngine = EngineController.generateCalculatedEngine(
-      newEfficieny,
-      newRatio
-    );
-    const newSeleEngine = await EngineController.getSelectedEngine(
-      newCalcEngine.p_ct,
-      newCalcEngine.n_sb,
-      1
-    );
-    const newTransRatio = EngineController.getNewTransRatio(
-      newCalcEngine,
-      newSeleEngine[0],
-      newRatio
-    );
-    const newShaftStats = EngineController.getShaftStats(
-      newSeleEngine[0].n_t,
-      newCalcEngine.p_td,
-      newEfficieny,
-      newRatio
-    );
-    setEffi(newEfficieny);
-    setTransRatio(newTransRatio);
-    setCalcEngine(newCalcEngine);
-    setSeleEngine(newSeleEngine);
-    setShaftStats(newShaftStats);
+  const setCalcStrat = () => {
+    let gearBoxType = "GearBox1";
+    setCalcManager(new CalcManager(gearBoxType));
   };
+
+  // const calculateEngine = async () => {
+  //   calcManager.calcEngine();
+  //   const newSeleEngine = await EngineController.getSelectedEngine(
+  //     newCalcEngine.p_ct,
+  //     newCalcEngine.n_sb,
+  //     1
+  //   );
+  //   const newTransRatio = EngineController.getNewTransRatio(
+  //     newCalcEngine,
+  //     newSeleEngine[0],
+  //     newRatio
+  //   );
+  //   const newShaftStats = EngineController.getShaftStats(
+  //     newSeleEngine[0].n_t,
+  //     newCalcEngine.p_td,
+  //     newEfficieny,
+  //     newRatio
+  //   );
+  //   setEffi(newEfficieny);
+  //   setTransRatio(newTransRatio);
+  //   setCalcEngine(newCalcEngine);
+  //   setSeleEngine(newSeleEngine);
+  //   setShaftStats(newShaftStats);
+  // };
 
   return (
     <View style={styles.container}>
-      <Button title="Tính Công Suất" onPress={calculateEngine} />
+      {/* <Button title="Tính Công Suất" onPress={calculateEngine} /> */}
 
       {calcEngine && (
         <View>

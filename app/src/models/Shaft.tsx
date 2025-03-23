@@ -10,7 +10,7 @@ export default class ShaftStats {
   constructor(n_dc: number, p_td: number, effi: Efficiency, ratio: TransRatio) {
     this._n = ratio.ratio_spec.reduce(
       (acc, ratio) => {
-        if (ratio.type !== "u_kn") acc.push(acc[acc.length - 1] / ratio.value);
+        if (ratio.type !== "kn") acc.push(acc[acc.length - 1] / ratio.value);
         return acc;
       },
       [n_dc]
@@ -22,10 +22,10 @@ export default class ShaftStats {
 
   calc_power(p_td: number, efficienciesList: IEfficieny[]): number[] {
     const results: number[] = [p_td];
-    const n_ol = efficienciesList.find((e) => e.type === "n_ol")?.value ?? 1;
+    const n_ol = efficienciesList.find((e) => e.type === "ol")?.value ?? 1;
 
     for (const efficiencies of efficienciesList) {
-      if (efficiencies.type === "n_ol") continue;
+      if (efficiencies.type === "ol") continue;
 
       const lastP = results[results.length - 1];
       const newP = lastP / (efficiencies.value * n_ol);

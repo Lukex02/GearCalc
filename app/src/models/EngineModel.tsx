@@ -6,13 +6,12 @@ export class CalculatedEngine {
   private _p_ct: number; // Công suất cần thiết
   private _n_sb: number; // Số vòng quay sơ bộ của động cơ
   private _n_lv: number; // Số vòng quay của trục máy công tác
+  private _T_mm: number; // Tỷ số của momen mở máy
 
   constructor(
     F: number, // Lực vòng trên băng tải (N) (đề)
     v: number, // Vận tốc băng tải (m/s) (đề)
-    z: number, // Số răng đĩa xích tải dẫn (răng) (đề)
-    p: number, // Bước xích tải (mm) (đề)
-    L: number, // Thời gian phục vụ (năm) (đề)
+    output_perimeter: number, // Chu vi của trục quay đầu ra (đề)
     T1: number, // Momen xoắn chế độ tải 1 (đề)
     t1: number, // Thời gian hoạt động ở tải 1 (đề)
     T2: number, // Momen xoắn chế độ tải 2 (đề)
@@ -22,9 +21,10 @@ export class CalculatedEngine {
   ) {
     this._p = this.calc_p(F, v);
     this._p_td = this.calc_p_td(T1, t1, T2, t2);
-    this._n_lv = this.calc_n_lv(v, z, p);
+    this._n_lv = this.calc_n_lv(v, output_perimeter);
     this._n_sb = this._n_lv * this.calc_u_t_predict(select_ratio); // NEW
     this._p_ct = this._p_td / efficiency_system;
+    this._T_mm = T1;
   }
 
   // Tính công suất trên trục công tác
@@ -37,8 +37,8 @@ export class CalculatedEngine {
     return this._p * Math.sqrt((T1 ** 2 * t1 + T2 ** 2 * t2) / (t1 + t2));
   }
 
-  private calc_n_lv(v: number, z: number, p: number): number {
-    return (60000 * v) / (z * p);
+  private calc_n_lv(v: number, output_perimeter: number): number {
+    return (60000 * v) / output_perimeter;
   }
 
   private calc_u_t_predict(ratio: IRatio[]): number {
@@ -69,6 +69,10 @@ export class CalculatedEngine {
   get n_sb() {
     return this._n_sb;
   }
+
+  get T_mm() {
+    return this._T_mm;
+  }
 }
 
 export class SelectedEngine {
@@ -89,9 +93,7 @@ export default class EngineFactory {
   static createCalculatedEngine(
     F: number, // Lực vòng trên băng tải (N) (đề)
     v: number, // Vận tốc băng tải (m/s) (đề)
-    z: number, // Số răng đĩa xích tải dẫn (răng) (đề)
-    p: number, // Bước xích tải (mm) (đề)
-    L: number, // Thời gian phục vụ (năm) (đề)
+    output_perimeter: number, // Số răng đĩa xích tải dẫn (răng) (đề)
     T1: number, // Momen xoắn chế độ tải 1 (đề)
     t1: number, // Thời gian hoạt động ở tải 1 (đề)
     T2: number, // Momen xoắn chế độ tải 2 (đề)
@@ -102,9 +104,7 @@ export default class EngineFactory {
     return new CalculatedEngine(
       F,
       v,
-      z,
-      p,
-      L,
+      output_perimeter,
       T1,
       t1,
       T2,

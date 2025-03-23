@@ -8,26 +8,21 @@ import ShaftStats from "../models/Shaft";
 import DatabaseService from "../services/DatabaseService";
 
 export default class EngineController {
-  static generateCalculatedEngine(efficieny: Efficiency, ratio: TransRatio) {
-    // This should be the data we get from user
-    // let efficieny = new Efficiency(0.99, 0.85, 0.96, 0.94, 0.98);
-    // let ratio = new TransRatio(3, 10, 3, 1);
-    let F = 17000,
-      v = 0.5,
-      z = 15,
-      p = 120,
-      L = 10,
-      T1 = 1,
-      t1 = 25,
-      T2 = 0.5,
-      t2 = 15;
-
+  static generateCalculatedEngine(
+    F: number,
+    v: number,
+    output_perimeter: number,
+    T1: number,
+    t1: number,
+    T2: number,
+    t2: number,
+    efficieny: Efficiency,
+    ratio: TransRatio
+  ) {
     return EngineFactory.createCalculatedEngine(
       F,
       v,
-      z,
-      p,
-      L,
+      output_perimeter,
       T1,
       t1,
       T2,

@@ -1,6 +1,6 @@
 import { SelectedEngine } from "./EngineModel";
 
-class GearBox {
+export default class GearBox {
   private _engine!: SelectedEngine;
 
   set engine(engine: SelectedEngine) {
@@ -17,7 +17,7 @@ interface Builder {
   build(): GearBox;
 }
 
-class GearBoxBuilder implements Builder {
+export class GearBoxBuilder implements Builder {
   private _gearBox!: GearBox;
 
   constructor() {
