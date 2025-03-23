@@ -10,10 +10,10 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Link href="/catalog" style={{ marginTop: 20 }}>
+      <Link href="/src/views/CatalogView" style={{ marginTop: 20 }}>
         <Text style={{ color: "blue" }}>Đi đến trang Tra cứu Catalog</Text>
       </Link>
-      <Link href="/test" style={{ marginTop: 20 }}>
+      <Link href="/src/views/TestView" style={{ marginTop: 20 }}>
         <Text style={{ color: "blue" }}>Đi đến trang Test</Text>
       </Link>
     </View>

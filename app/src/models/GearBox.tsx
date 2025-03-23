@@ -32,6 +32,10 @@ export class GearBoxBuilder implements Builder {
     this._gearBox.engine = engine;
   }
 
+  getEngine(): SelectedEngine {
+    return this._gearBox.engine;
+  }
+
   build(): GearBox {
     return this._gearBox;
   }
