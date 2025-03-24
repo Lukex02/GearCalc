@@ -21,14 +21,13 @@ import { IconButton, Menu } from "react-native-paper";
 import EngineController from "../controller/EngineController";
 
 export default function TestPage() {
-  // const [effi, setEffi] = useState<Efficiency | null>(null);
-  // const [calcEngine, setCalcEngine] = useState<CalculatedEngine | null>(null);
-  // const [seleEngine, setSeleEngine] = useState<SelectedEngine[] | []>([]);
-  // const [transRatio, setTransRatio] = useState<TransRatio | null>(null);
-  // const [shaftStats, setShaftStats] = useState<ShaftStats | null>(null);
+  const router = useRouter();
+  const [effi, setEffi] = useState<Efficiency | null>(null);
+  const [displayCalcEngine, setDisplayCalcEngine] =
+    useState<CalculatedEngine>();
+  const [transRatio, setTransRatio] = useState<TransRatio | null>(null);
   const [calcManager, setCalcManager] = useState<CalcManager>();
   const [gearBoxType, setGearBoxType] = useState("");
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const gearBoxOptions = ["GearBox2"];
   const [items, setItems] = useState<any[]>(
@@ -40,6 +39,7 @@ export default function TestPage() {
 
   const setCalcStrat = () => {
     setCalcManager(new CalcManager(gearBoxType));
+    console.log("Đã chọn loại");
   };
 
   const renderEngine = async (calcManager: CalcManager, T1: number) => {
@@ -54,7 +54,7 @@ export default function TestPage() {
     console.log(postStats);
   };
 
-  useEffect(() => {
+  const calcBaseEngine = () => {
     let F = 17000,
       v = 0.5,
       T1 = 1,
@@ -66,11 +66,33 @@ export default function TestPage() {
     // D = 550
     if (calcManager) {
       calcManager.calcEngineBase(F, v, T1, t1, T2, t2, { z, p });
+      // Get Engine adjustable Parameters here
+      // calcManager.showEngineParam();
       // console.log(calcManager.showEngineParam());
-      renderEngine(calcManager, T1);
+      setDisplayCalcEngine(calcManager.getCalcEngine());
     }
-  }, [calcManager]);
+  };
 
+  // Adjust Engine Parameters here
+  const changeParam = () => {
+    if (calcManager) {
+      let changeEffi = new Efficiency([
+        [{ type: "ol", value: 0.99 }, 4],
+        [{ type: "d", value: 0.94 }, 1],
+        [{ type: "tv", value: 0.85 }, 1],
+        [{ type: "brt", value: 0.96 }, 1],
+        [{ type: "kn", value: 0.98 }, 1],
+      ]);
+      let changeRatio = new TransRatio([
+        { type: "d", value: 3 },
+        { type: "tv", value: 10 },
+        { type: "brt", value: 3 },
+        { type: "kn", value: 1 },
+      ]);
+      calcManager.adjustCalcEngine(changeEffi, changeRatio);
+      setDisplayCalcEngine(calcManager.getCalcEngine());
+    }
+  };
   return (
     <View style={styles.container}>
       <Text>Trang nhập số liệu thiết kế</Text>
@@ -82,7 +104,19 @@ export default function TestPage() {
         setValue={setGearBoxType}
         setItems={setItems}
       />
-      <Button title="Tiếp theo" onPress={setCalcStrat} />
+
+      <Button title="Chọn loại" onPress={setCalcStrat} />
+      {displayCalcEngine && (
+        <View style={styles.container}>
+          <Text>Công suất cần thiết P_ct: {displayCalcEngine.p_ct}</Text>
+          <Text>Tốc độ quay n_sb: {displayCalcEngine.n_sb}</Text>
+        </View>
+      )}
+      <Button
+        title="Tính thông số động cơ ban đầu (Đúng thì cái này sẽ dẫn tới trang kế mà thay đổi param)"
+        onPress={calcBaseEngine}
+      />
+      <Button title="Thay đổi param" onPress={changeParam} />
     </View>
   );
 }
