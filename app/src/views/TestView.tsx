@@ -29,7 +29,7 @@ export default function TestPage() {
   const [calcManager, setCalcManager] = useState<CalcManager>();
   const [gearBoxType, setGearBoxType] = useState("");
   const [open, setOpen] = useState(false);
-  const gearBoxOptions = ["GearBox2"];
+  const gearBoxOptions = ["GearBox1", "GearBox2"];
   const [items, setItems] = useState<any[]>(
     gearBoxOptions.map((option) => ({
       label: option,
@@ -60,12 +60,13 @@ export default function TestPage() {
       T1 = 1,
       t1 = 25,
       T2 = 0.5,
-      t2 = 15,
-      z = 15,
-      p = 120;
-    // D = 550
+      t2 = 15;
+    let p = 120,
+      z = 15;
+    let D = 550;
     if (calcManager) {
-      calcManager.calcEngineBase(F, v, T1, t1, T2, t2, { z, p });
+      // calcManager.calcEngineBase(F, v, T1, t1, T2, t2, { z, p });
+      calcManager.calcEngineBase(F, v, T1, t1, T2, t2, { D });
       // Get Engine adjustable Parameters here
       // calcManager.showEngineParam();
       // console.log(calcManager.showEngineParam());
