@@ -1,7 +1,7 @@
 import { IRatio } from "./GearRatio";
 
 export class CalculatedEngine {
-  private _p: number; // Công suất trên trục công tác
+  private _p_lv: number; // Công suất trên trục công tác
   private _p_td: number; // Công suất tương đương
   private _p_ct: number; // Công suất cần thiết
   private _n_sb: number; // Số vòng quay sơ bộ của động cơ
@@ -19,7 +19,7 @@ export class CalculatedEngine {
     efficiency_system: number,
     select_ratio: IRatio[]
   ) {
-    this._p = this.calc_p(F, v);
+    this._p_lv = this.calc_p(F, v);
     this._p_td = this.calc_p_td(T1, t1, T2, t2);
     this._n_lv = this.calc_n_lv(v, output_perimeter);
     this._n_sb = this._n_lv * this.calc_u_t_predict(select_ratio); // NEW
@@ -34,7 +34,7 @@ export class CalculatedEngine {
 
   // Tính công suất tương đương
   private calc_p_td(T1: number, t1: number, T2: number, t2: number): number {
-    return this._p * Math.sqrt((T1 ** 2 * t1 + T2 ** 2 * t2) / (t1 + t2));
+    return this._p_lv * Math.sqrt((T1 ** 2 * t1 + T2 ** 2 * t2) / (t1 + t2));
   }
 
   private calc_n_lv(v: number, output_perimeter: number): number {
@@ -56,8 +56,8 @@ export class CalculatedEngine {
   }
 
   // Return công suất trên trục công tác
-  get p() {
-    return this._p;
+  get p_lv() {
+    return this._p_lv;
   }
 
   // Return Số vòng quay sơ bộ của động cơ
@@ -101,17 +101,7 @@ export default class EngineFactory {
     efficiency_system: number, // Hiệu suất truyền (chọn)
     select_ratio: IRatio[] // Tỷ số truyền (chọn)
   ): CalculatedEngine {
-    return new CalculatedEngine(
-      F,
-      v,
-      output_perimeter,
-      T1,
-      t1,
-      T2,
-      t2,
-      efficiency_system,
-      select_ratio
-    );
+    return new CalculatedEngine(F, v, output_perimeter, T1, t1, T2, t2, efficiency_system, select_ratio);
   }
 
   static createSelectedEngine(
@@ -126,17 +116,7 @@ export default class EngineFactory {
     T_mm_T: number // Tỷ số của momen mở máy
   ): SelectedEngine | null {
     // Kiểm tra điều kiện mở máy
-    if (T_mm_T <= T_k_T_dn)
-      return new SelectedEngine(
-        name,
-        power,
-        rpm,
-        H,
-        GD_2,
-        T_max_T_dn,
-        T_k_T_dn,
-        weight
-      );
+    if (T_mm_T <= T_k_T_dn) return new SelectedEngine(name, power, rpm, H, GD_2, T_max_T_dn, T_k_T_dn, weight);
     else return null;
   }
 }

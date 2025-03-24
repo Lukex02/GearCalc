@@ -26,7 +26,7 @@ export default function TestPage() {
     gearBoxOptions.map((option) => ({
       label: option,
       value: option,
-    })),
+    }))
   );
 
   const setCalcStrat = () => {
@@ -34,16 +34,28 @@ export default function TestPage() {
     console.log("Đã chọn loại");
   };
 
-  const renderEngine = async (calcManager: CalcManager, T1: number) => {
-    const newSeleEngi = await EngineController.getSelectedEngine(
-      calcManager.getCalcEngine().p_ct,
-      calcManager.getCalcEngine().n_sb,
-      T1,
-    );
-    calcManager.chooseEngine(newSeleEngi[0]);
-    // console.log(newSeleEngi[0]);
-    let postStats = calcManager.getEnginePostStats();
-    console.log(postStats);
+  const getEngineFromDb = async () => {
+    if (calcManager) {
+      const engineList = await EngineController.getSelectedEngine(
+        calcManager.getCalcEngine().p_ct,
+        calcManager.getCalcEngine().n_sb,
+        1
+      );
+      return engineList[0];
+    }
+  };
+
+  const renderEngine = () => {
+    if (calcManager) {
+      getEngineFromDb().then((engine) => {
+        if (engine) {
+          calcManager.chooseEngine(engine);
+          // console.log(newSeleEngi[0]);
+          let postStats = calcManager.getEnginePostStats();
+          console.log(postStats);
+        }
+      });
+    }
   };
 
   const calcBaseEngine = () => {
@@ -52,15 +64,20 @@ export default function TestPage() {
       T1 = 1,
       t1 = 25,
       T2 = 0.5,
-      t2 = 15;
-    let p = 120,
+      t2 = 15,
+      p = 120,
       z = 15;
-    let D = 550;
+    // let F = 7500,
+    //   v = 0.9,
+    //   T1 = 1,
+    //   t1 = 36,
+    //   T2 = 0.5,
+    //   t2 = 15,
+    //   D = 550;
     if (calcManager) {
-      // calcManager.calcEngineBase(F, v, T1, t1, T2, t2, { z, p });
-      calcManager.calcEngineBase(F, v, T1, t1, T2, t2, { D });
+      calcManager.calcEngineBase(F, v, T1, t1, T2, t2, { z, p });
+      // calcManager.calcEngineBase(F, v, T1, t1, T2, t2, { D });
       // Get Engine adjustable Parameters here
-      // calcManager.showEngineParam();
       // console.log(calcManager.showEngineParam());
       setDisplayCalcEngine(calcManager.getCalcEngine());
     }
@@ -110,6 +127,7 @@ export default function TestPage() {
         onPress={calcBaseEngine}
       />
       <Button title="Thay đổi param" onPress={changeParam} />
+      <Button title="Chọn động cơ" onPress={renderEngine} />
     </View>
   );
 }

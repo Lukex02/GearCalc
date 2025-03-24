@@ -20,6 +20,10 @@ export default class Efficiency {
     return this._n_parts.map((p) => p[0]);
   }
 
+  get n_parts_flat() {
+    return this._n_parts.flatMap(([efficiency, count]) => Array(count).fill(efficiency));
+  }
+
   get n_parts_full() {
     return this._n_parts;
   }

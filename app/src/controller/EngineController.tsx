@@ -1,8 +1,5 @@
 import Efficiency from "../models/Efficiency";
-import EngineFactory, {
-  CalculatedEngine,
-  SelectedEngine,
-} from "../models/EngineModel";
+import EngineFactory, { CalculatedEngine, SelectedEngine } from "../models/EngineModel";
 import TransRatio from "../models/GearRatio";
 import ShaftStats from "../models/Shaft";
 import DatabaseService from "../services/DatabaseService";
@@ -19,17 +16,7 @@ export default class EngineController {
     efficieny: Efficiency,
     ratio: TransRatio
   ) {
-    return EngineFactory.createCalculatedEngine(
-      F,
-      v,
-      output_perimeter,
-      T1,
-      t1,
-      T2,
-      t2,
-      efficieny.n_system,
-      ratio.ratio_spec
-    );
+    return EngineFactory.createCalculatedEngine(F, v, output_perimeter, T1, t1, T2, t2, efficieny.n_system, ratio.ratio_spec);
   }
   static async getSelectedEngine(
     reqPower: number, // CalculatedEngine.p_ct
@@ -65,21 +52,12 @@ export default class EngineController {
       .filter((engi) => engi !== null);
   }
 
-  static getNewTransRatio(
-    calc_engi: CalculatedEngine,
-    sele_engi: SelectedEngine,
-    cur_ratio: TransRatio
-  ) {
+  static getNewTransRatio(calc_engi: CalculatedEngine, sele_engi: SelectedEngine, cur_ratio: TransRatio) {
     // console.log(calc_engi, sele_engi, cur_ratio);
     return cur_ratio.recalcTransRatio(calc_engi, sele_engi);
   }
 
-  static getShaftStats(
-    n_dc: number,
-    p_td: number,
-    final_effi: Efficiency,
-    final_ratio: TransRatio
-  ) {
-    return new ShaftStats(n_dc, p_td, final_effi, final_ratio);
+  static getShaftStats(n_dc: number, p_td: number, final_effi: Efficiency, final_ratio: TransRatio, order: string[]) {
+    return new ShaftStats(n_dc, p_td, final_effi, final_ratio, order);
   }
 }
