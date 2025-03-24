@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Button,
-  TouchableOpacity,
-  Modal,
-  FlatList,
-} from "react-native";
+import { View, Text, Button, TouchableOpacity, Modal, FlatList } from "react-native";
 import styles from "../style/MainStyle";
 import { useRouter } from "expo-router";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -14,7 +7,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 // import EngineController from "../controller/EngineController";
 import { CalculatedEngine, SelectedEngine } from "../models/EngineModel";
 import Efficiency from "../models/Efficiency";
-import TransRatio from "../models/GearRatio";
+import TransRatio, { TransRatioType2 } from "../models/GearRatio";
 import ShaftStats from "../models/Shaft";
 import CalcManager from "../models/CalcManager";
 import { IconButton, Menu } from "react-native-paper";
@@ -22,10 +15,9 @@ import EngineController from "../controller/EngineController";
 
 export default function TestPage() {
   const router = useRouter();
-  const [effi, setEffi] = useState<Efficiency | null>(null);
-  const [displayCalcEngine, setDisplayCalcEngine] =
-    useState<CalculatedEngine>();
-  const [transRatio, setTransRatio] = useState<TransRatio | null>(null);
+  // const [effi, setEffi] = useState<Efficiency>();
+  // const [transRatio, setTransRatio] = useState<TransRatio>();
+  const [displayCalcEngine, setDisplayCalcEngine] = useState<CalculatedEngine>();
   const [calcManager, setCalcManager] = useState<CalcManager>();
   const [gearBoxType, setGearBoxType] = useState("");
   const [open, setOpen] = useState(false);
@@ -34,7 +26,7 @@ export default function TestPage() {
     gearBoxOptions.map((option) => ({
       label: option,
       value: option,
-    }))
+    })),
   );
 
   const setCalcStrat = () => {
@@ -46,7 +38,7 @@ export default function TestPage() {
     const newSeleEngi = await EngineController.getSelectedEngine(
       calcManager.getCalcEngine().p_ct,
       calcManager.getCalcEngine().n_sb,
-      T1
+      T1,
     );
     calcManager.chooseEngine(newSeleEngi[0]);
     // console.log(newSeleEngi[0]);
@@ -84,7 +76,7 @@ export default function TestPage() {
         [{ type: "brt", value: 0.96 }, 1],
         [{ type: "kn", value: 0.98 }, 1],
       ]);
-      let changeRatio = new TransRatio([
+      let changeRatio = new TransRatioType2([
         { type: "d", value: 3 },
         { type: "tv", value: 10 },
         { type: "brt", value: 3 },
