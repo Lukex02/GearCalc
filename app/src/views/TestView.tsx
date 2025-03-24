@@ -18,6 +18,7 @@ import TransRatio from "../models/GearRatio";
 import ShaftStats from "../models/Shaft";
 import CalcManager from "../models/CalcManager";
 import { IconButton, Menu } from "react-native-paper";
+import EngineController from "../controller/EngineController";
 
 export default function TestPage() {
   // const [effi, setEffi] = useState<Efficiency | null>(null);
@@ -40,6 +41,19 @@ export default function TestPage() {
   const setCalcStrat = () => {
     setCalcManager(new CalcManager(gearBoxType));
   };
+
+  const renderEngine = async (calcManager: CalcManager, T1: number) => {
+    const newSeleEngi = await EngineController.getSelectedEngine(
+      calcManager.getCalcEngine().p_ct,
+      calcManager.getCalcEngine().n_sb,
+      T1
+    );
+    calcManager.chooseEngine(newSeleEngi[0]);
+    // console.log(newSeleEngi[0]);
+    let postStats = calcManager.getEnginePostStats();
+    console.log(postStats);
+  };
+
   useEffect(() => {
     let F = 17000,
       v = 0.5,
@@ -47,41 +61,15 @@ export default function TestPage() {
       t1 = 25,
       T2 = 0.5,
       t2 = 15,
-      D = 550;
+      z = 15,
+      p = 120;
+    // D = 550
     if (calcManager) {
-      calcManager.calcEngineBase(F, v, T1, t1, T2, t2, { D });
-      // router.push({
-      //   pathname: "/src/views/TestStep2",
-      //   params: { mana: JSON.stringify(calcManager) },
-      // });
-      // console.log(calcManager);
+      calcManager.calcEngineBase(F, v, T1, t1, T2, t2, { z, p });
+      // console.log(calcManager.showEngineParam());
+      renderEngine(calcManager, T1);
     }
   }, [calcManager]);
-
-  // const calculateEngine = async () => {
-  //   calcManager.calcEngine();
-  //   const newSeleEngine = await EngineController.getSelectedEngine(
-  //     newCalcEngine.p_ct,
-  //     newCalcEngine.n_sb,
-  //     1
-  //   );
-  //   const newTransRatio = EngineController.getNewTransRatio(
-  //     newCalcEngine,
-  //     newSeleEngine[0],
-  //     newRatio
-  //   );
-  //   const newShaftStats = EngineController.getShaftStats(
-  //     newSeleEngine[0].n_t,
-  //     newCalcEngine.p_td,
-  //     newEfficieny,
-  //     newRatio
-  //   );
-  //   setEffi(newEfficieny);
-  //   setTransRatio(newTransRatio);
-  //   setCalcEngine(newCalcEngine);
-  //   setSeleEngine(newSeleEngine);
-  //   setShaftStats(newShaftStats);
-  // };
 
   return (
     <View style={styles.container}>

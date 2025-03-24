@@ -12,12 +12,13 @@ export default class TransRatio {
   private _u_ng: number; // Tỷ số truyền ngoài hộp
   private _u_h: number; // Tỷ số truyền trong hộp
 
+  // Cái này sẽ làm base ratio khi construct lần đầu
   constructor(ratio: IRatio[]) {
     this._ratio_spec = ratio;
     this._u_t = ratio.reduce((acc, ratio) => acc * ratio.value, 1);
     this._u_ng =
-      ratio.find((ratio) => ratio.type === "u_d" || ratio.type === "u_x")
-        ?.value ?? 1; // Dựa theo thiết kế
+      ratio.find((ratio) => ratio.type === "d" || ratio.type === "x")?.value ??
+      1; // Dựa theo thiết kế
     this._u_h = this._u_t / this._u_ng;
   }
 
@@ -96,14 +97,15 @@ export default class TransRatio {
   recalcTransRatio(
     calc_engi: CalculatedEngine,
     sele_engi: SelectedEngine
-  ): TransRatio | Error {
+  ): TransRatio {
     // Sau khi gán u_t mới thì các thông số khác sẽ tự động cập nhật
     // let old_ratio = this.clone();
-    this._u_t = sele_engi.n_t / calc_engi.n_lv;
+    this.u_t = sele_engi.n_t / calc_engi.n_lv;
     // Kiểm tra lại
+    // console.log(this);
     let delta_check =
-      this._u_t - this._ratio_spec.reduce((acc, ratio) => acc * ratio.value, 1);
+      this.u_t - this._ratio_spec.reduce((acc, ratio) => acc * ratio.value, 1);
     if (-0.5 < delta_check && delta_check < 0.5) return this;
-    else return new Error("Failed check");
+    else throw new Error("Failed check");
   }
 }

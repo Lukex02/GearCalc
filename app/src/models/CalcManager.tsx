@@ -5,9 +5,6 @@ import GearBox, { GearBoxBuilder } from "./GearBox";
 import TransRatio from "./GearRatio";
 
 interface DesignStrategy {
-  _designStats: any;
-  _effiency: Efficiency;
-  _ratio: TransRatio;
   designEngine(
     F: number, // Lực vòng trên băng tải (N) (đề)
     v: number, // Vận tốc băng tải (m/s) (đề)
@@ -16,9 +13,8 @@ interface DesignStrategy {
     T2: number, // Momen xoắn chế độ tải 2 (đề)
     t2: number, // Thời gian hoạt động ở tải 2 (đề)\
     output: any // Có thể là đĩa xích, trục tang, tùy thuộc sẽ thay đổi kiểu và số liệu
-  ): any;
+  ): { engi: CalculatedEngine; base_effi: Efficiency; base_ratio: TransRatio };
   recalcEngine(efficiency: Efficiency, ratio: TransRatio): CalculatedEngine;
-  showEngineParam(): [Efficiency, TransRatio];
 }
 
 // Hộp giảm tốc 2 cấp khai triển (2 cặp bánh răng)
@@ -46,8 +42,7 @@ interface DesignStrategy {
 // Hộp giảm tốc bánh răng trục vít 1 cấp
 class DesignGearBox2 implements DesignStrategy {
   _designStats: any;
-  _effiency!: Efficiency;
-  _ratio!: TransRatio;
+
   designEngine(
     F: number, // Lực vòng trên băng tải (N) (đề)
     v: number, // Vận tốc băng tải (m/s) (đề)
@@ -60,16 +55,16 @@ class DesignGearBox2 implements DesignStrategy {
       z: number; // Số răng đĩa xích tải dẫn (răng) (đề)
       p: number; // Bước xích tải (mm) (đề)
     }
-  ): CalculatedEngine {
+  ): { engi: CalculatedEngine; base_effi: Efficiency; base_ratio: TransRatio } {
     // Design strategy 2 implementation
-    this._effiency = new Efficiency([
+    let baseEfficiency = new Efficiency([
       [{ type: "ol", value: 0.99 }, 4],
       [{ type: "d", value: 0.94 }, 1],
       [{ type: "tv", value: 0.85 }, 1],
       [{ type: "brt", value: 0.96 }, 1],
       [{ type: "kn", value: 0.98 }, 1],
     ]);
-    this._ratio = new TransRatio([
+    let baseRatio = new TransRatio([
       { type: "d", value: 3 },
       { type: "tv", value: 10 },
       { type: "brt", value: 3 },
@@ -86,24 +81,26 @@ class DesignGearBox2 implements DesignStrategy {
         z: sprocket.z,
         p: sprocket.p,
       },
-      efficiency: this._effiency,
-      ratio: this._ratio,
+      efficiency: baseEfficiency,
+      ratio: baseRatio,
     };
-    return EngineController.generateCalculatedEngine(
-      F,
-      v,
-      sprocket.z * sprocket.p, // Chu vi của đĩa xích
-      T1,
-      t1,
-      T2,
-      t2,
-      this._effiency,
-      this._ratio
-    );
+    return {
+      engi: EngineController.generateCalculatedEngine(
+        F,
+        v,
+        sprocket.z * sprocket.p, // Chu vi của đĩa xích
+        T1,
+        t1,
+        T2,
+        t2,
+        baseEfficiency,
+        baseRatio
+      ),
+      base_effi: baseEfficiency,
+      base_ratio: baseRatio,
+    };
   }
   recalcEngine(efficiency: Efficiency, ratio: TransRatio) {
-    this._effiency = efficiency;
-    this._ratio = ratio;
     return EngineController.generateCalculatedEngine(
       this._designStats.F,
       this._designStats.v,
@@ -112,18 +109,17 @@ class DesignGearBox2 implements DesignStrategy {
       this._designStats.t1,
       this._designStats.T2,
       this._designStats.t2,
-      this._effiency,
-      this._ratio
+      (this._designStats.efficiency = efficiency),
+      (this._designStats.ratio = ratio)
     );
-  }
-  showEngineParam(): [Efficiency, TransRatio] {
-    return [this._effiency, this._ratio];
   }
 }
 
 export default class CalcManager {
   private _designStrategy: DesignStrategy;
-  private _calcEngine: CalculatedEngine | null;
+  private _effiency!: Efficiency;
+  private _ratio!: TransRatio;
+  private _calcEngine!: CalculatedEngine;
   // private _calcGear: CalculatedGear | null;
   // private _calcShaft: CalculatedShaft | null;
   private _gearBoxBuilder: GearBoxBuilder;
@@ -139,7 +135,6 @@ export default class CalcManager {
       default:
         throw new Error("Invalid gear box type");
     }
-    this._calcEngine = null;
     this._gearBoxBuilder = new GearBoxBuilder();
   }
   calcEngineBase(
@@ -151,7 +146,7 @@ export default class CalcManager {
     t2: number,
     output: any
   ) {
-    this._calcEngine = this._designStrategy.designEngine(
+    let engiDes = this._designStrategy.designEngine(
       F,
       v,
       T1,
@@ -160,13 +155,16 @@ export default class CalcManager {
       t2,
       output
     );
+    this._calcEngine = engiDes.engi;
+    this._effiency = engiDes.base_effi;
+    this._ratio = engiDes.base_ratio;
   }
   adjustCalcEngine(efficiency: Efficiency, ratio: TransRatio) {
     if (this._calcEngine) {
       // Adjust engine parameters
       this._calcEngine = this._designStrategy.recalcEngine(efficiency, ratio);
     } else {
-      throw new Error("Engine calculation has not been performed");
+      throw new Error("Base engine calculation has not been performed");
     }
   }
 
@@ -174,31 +172,31 @@ export default class CalcManager {
     this._gearBoxBuilder.setEngine(selected);
   }
 
-  getPostStats(newEfficieny: Efficiency, newRatio: TransRatio) {
+  getEnginePostStats() {
     if (this._gearBoxBuilder && this._calcEngine) {
       const newTransRatio = EngineController.getNewTransRatio(
         this._calcEngine,
         this._gearBoxBuilder.getEngine(),
-        newRatio
+        this._ratio
       );
-      const newShaftStats = EngineController.getShaftStats(
+      const newEngineShaftStats = EngineController.getShaftStats(
         this._gearBoxBuilder.getEngine().n_t,
         this._calcEngine.p_td,
-        newEfficieny,
-        newRatio
+        this._effiency,
+        newTransRatio
       );
       return {
         newTransRatio,
-        newShaftStats,
+        newEngineShaftStats,
       };
     }
   }
 
-  get calcEngine() {
+  getCalcEngine(): CalculatedEngine {
     return this._calcEngine;
   }
 
-  get calcEngineParam(): [Efficiency, TransRatio] {
-    return this._designStrategy.showEngineParam();
+  showEngineParam(): { effi: Efficiency; ratio: TransRatio } {
+    return { effi: this._effiency, ratio: this._ratio };
   }
 }

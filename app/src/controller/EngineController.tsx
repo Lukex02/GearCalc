@@ -70,6 +70,7 @@ export default class EngineController {
     sele_engi: SelectedEngine,
     cur_ratio: TransRatio
   ) {
+    // console.log(calc_engi, sele_engi, cur_ratio);
     return cur_ratio.recalcTransRatio(calc_engi, sele_engi);
   }
 

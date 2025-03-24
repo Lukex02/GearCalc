@@ -32,6 +32,7 @@ export default class ShaftStats {
       results.push(newP);
     }
 
+    results.shift();
     return results.reverse();
   }
 

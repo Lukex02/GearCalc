@@ -6,6 +6,9 @@ export default class GearBox {
   set engine(engine: SelectedEngine) {
     this._engine = engine;
   }
+  get engine(): SelectedEngine {
+    return this._engine;
+  }
 }
 
 // This is where the builder of Gear Box will be created
