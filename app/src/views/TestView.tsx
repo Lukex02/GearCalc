@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Button, TouchableOpacity, Modal, FlatList } from "react-native";
 import styles from "../style/MainStyle";
-import { useRouter } from "expo-router";
+// import { useRouter } from "expo-router";
 import DropDownPicker from "react-native-dropdown-picker";
 
 // import EngineController from "../controller/EngineController";
 import { CalculatedEngine, SelectedEngine } from "../models/EngineModel";
 import Efficiency from "../models/Efficiency";
 import TransRatio, { TransRatioType2 } from "../models/GearRatio";
-import ShaftStats from "../models/Shaft";
 import CalcController from "../controller/CalcController";
-import { IconButton, Menu } from "react-native-paper";
 import EngineController from "../controller/EngineController";
 
 export default function TestPage() {
-  const router = useRouter();
+  // const router = useRouter();
   // const [effi, setEffi] = useState<Efficiency>();
   // const [transRatio, setTransRatio] = useState<TransRatio>();
   const [displayCalcEngine, setDisplayCalcEngine] = useState<CalculatedEngine>();
