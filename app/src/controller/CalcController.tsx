@@ -1,8 +1,8 @@
-import EngineController from "../controller/EngineController";
-import Efficiency from "./Efficiency";
-import { CalculatedEngine, SelectedEngine } from "./EngineModel";
-import GearBox, { GearBoxBuilder } from "./GearBox";
-import TransRatio, { TransRatioType1, TransRatioType2 } from "./GearRatio";
+import EngineController from "./EngineController";
+import Efficiency from "../models/Efficiency";
+import { CalculatedEngine, SelectedEngine } from "../models/EngineModel";
+import GearBox, { GearBoxBuilder } from "../models/GearBox";
+import TransRatio, { TransRatioType1, TransRatioType2 } from "../models/GearRatio";
 
 interface DesignStrategy {
   _designStats: any;
@@ -167,7 +167,7 @@ class DesignGearBox2 implements DesignStrategy {
   }
 }
 
-export default class CalcManager {
+export default class CalcController {
   private _designStrategy: DesignStrategy;
   private _effiency!: Efficiency;
   private _ratio!: TransRatio;

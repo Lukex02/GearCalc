@@ -9,7 +9,7 @@ import { CalculatedEngine, SelectedEngine } from "../models/EngineModel";
 import Efficiency from "../models/Efficiency";
 import TransRatio, { TransRatioType2 } from "../models/GearRatio";
 import ShaftStats from "../models/Shaft";
-import CalcManager from "../models/CalcManager";
+import CalcController from "../controller/CalcController";
 import { IconButton, Menu } from "react-native-paper";
 import EngineController from "../controller/EngineController";
 
@@ -18,7 +18,7 @@ export default function TestPage() {
   // const [effi, setEffi] = useState<Efficiency>();
   // const [transRatio, setTransRatio] = useState<TransRatio>();
   const [displayCalcEngine, setDisplayCalcEngine] = useState<CalculatedEngine>();
-  const [calcManager, setCalcManager] = useState<CalcManager>();
+  const [calcController, setCalcController] = useState<CalcController>();
   const [gearBoxType, setGearBoxType] = useState("");
   const [open, setOpen] = useState(false);
   const gearBoxOptions = ["GearBox1", "GearBox2"];
@@ -30,15 +30,15 @@ export default function TestPage() {
   );
 
   const setCalcStrat = () => {
-    setCalcManager(new CalcManager(gearBoxType));
+    setCalcController(new CalcController(gearBoxType));
     console.log("Đã chọn loại");
   };
 
   const getEngineFromDb = async () => {
-    if (calcManager) {
+    if (calcController) {
       const engineList = await EngineController.getSelectedEngine(
-        calcManager.getCalcEngine().p_ct,
-        calcManager.getCalcEngine().n_sb,
+        calcController.getCalcEngine().p_ct,
+        calcController.getCalcEngine().n_sb,
         1
       );
       return engineList[0];
@@ -46,12 +46,12 @@ export default function TestPage() {
   };
 
   const renderEngine = () => {
-    if (calcManager) {
+    if (calcController) {
       getEngineFromDb().then((engine) => {
         if (engine) {
-          calcManager.chooseEngine(engine);
+          calcController.chooseEngine(engine);
           // console.log(newSeleEngi[0]);
-          let postStats = calcManager.getEnginePostStats();
+          let postStats = calcController.getEnginePostStats();
           console.log(postStats);
         }
       });
@@ -74,18 +74,18 @@ export default function TestPage() {
     //   T2 = 0.5,
     //   t2 = 15,
     //   D = 550;
-    if (calcManager) {
-      calcManager.calcEngineBase(F, v, T1, t1, T2, t2, { z, p });
-      // calcManager.calcEngineBase(F, v, T1, t1, T2, t2, { D });
+    if (calcController) {
+      calcController.calcEngineBase(F, v, T1, t1, T2, t2, { z, p });
+      // CalcController.calcEngineBase(F, v, T1, t1, T2, t2, { D });
       // Get Engine adjustable Parameters here
-      // console.log(calcManager.showEngineParam());
-      setDisplayCalcEngine(calcManager.getCalcEngine());
+      // console.log(CalcController.showEngineParam());
+      setDisplayCalcEngine(calcController.getCalcEngine());
     }
   };
 
   // Adjust Engine Parameters here
   const changeParam = () => {
-    if (calcManager) {
+    if (calcController) {
       let changeEffi = new Efficiency([
         [{ type: "ol", value: 0.99 }, 4],
         [{ type: "d", value: 0.94 }, 1],
@@ -99,8 +99,8 @@ export default function TestPage() {
         { type: "brt", value: 3 },
         { type: "kn", value: 1 },
       ]);
-      calcManager.adjustCalcEngine(changeEffi, changeRatio);
-      setDisplayCalcEngine(calcManager.getCalcEngine());
+      calcController.adjustCalcEngine(changeEffi, changeRatio);
+      setDisplayCalcEngine(calcController.getCalcEngine());
     }
   };
   return (
