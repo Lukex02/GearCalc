@@ -16,14 +16,9 @@ export default function RootLayout() {
       >
         <Stack.Screen name="index" options={{ title: "Trang chủ" }} />
         <Stack.Screen name="src/views/TestView" options={{ title: "Test" }} />
-        <Stack.Screen
-          name="src/views/CatalogView"
-          options={{ title: "Catalog" }}
-        />
-        <Stack.Screen
-          name="src/views/ComponentView"
-          options={{ title: "Chi tiết" }}
-        />
+        <Stack.Screen name="src/views/AuthTest" options={{ title: "AuthTest" }} />
+        <Stack.Screen name="src/views/CatalogView" options={{ title: "Catalog" }} />
+        <Stack.Screen name="src/views/ComponentView" options={{ title: "Chi tiết" }} />
       </Stack>
     </PaperProvider>
   );
