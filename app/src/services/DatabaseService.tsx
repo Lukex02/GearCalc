@@ -51,4 +51,6 @@ export default class DatabaseService {
   static async logOut() {
     await supabase.auth.signOut();
   }
+
+  // Code database here
 }
