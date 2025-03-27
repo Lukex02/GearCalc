@@ -21,6 +21,10 @@ export default function RootLayout() {
         <Stack.Screen name="src/views/CatalogView" options={{ title: "Catalog" }} />
         <Stack.Screen name="src/views/ComponentView" options={{ title: "Chi tiết" }} />
         <Stack.Screen name="src/views/DesignSelectionScreen" options={{ title: "Gear Calc" }} />
+        <Stack.Screen name="src/views/SelectEngineScreen" options={{ title: "Gear Calc" }} />
+        <Stack.Screen name="src/views/InputDataScreen" options={{ title: "Gear Calc" }} />
+        <Stack.Screen name="src/views/AdjustEngineParametersScreen" options={{ title: "Gear Calc" }} />
+
 
       </Stack>
     </PaperProvider>
