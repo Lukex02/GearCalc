@@ -57,24 +57,24 @@ export default function TestPage() {
   };
 
   const calcBaseEngine = () => {
-    let F = 17000,
-      v = 0.5,
-      T1 = 1,
-      t1 = 25,
-      T2 = 0.5,
-      t2 = 15,
-      p = 120,
-      z = 15;
-    // let F = 7500,
-    //   v = 0.9,
+    // let F = 17000,
+    //   v = 0.5,
     //   T1 = 1,
-    //   t1 = 36,
+    //   t1 = 25,
     //   T2 = 0.5,
     //   t2 = 15,
-    //   D = 550;
+    //   p = 120,
+    //   z = 15;
+    let F = 7500,
+      v = 0.9,
+      T1 = 1,
+      t1 = 36,
+      T2 = 0.5,
+      t2 = 15,
+      D = 550;
     if (calcController) {
-      calcController.calcEngineBase(F, v, T1, t1, T2, t2, { z, p });
-      // CalcController.calcEngineBase(F, v, T1, t1, T2, t2, { D });
+      // calcController.calcEngineBase(F, v, T1, t1, T2, t2, { z, p });
+      calcController.calcEngineBase(F, v, T1, t1, T2, t2, { D });
       // Get Engine adjustable Parameters here
       // console.log(CalcController.showEngineParam());
       setDisplayCalcEngine(calcController.getCalcEngine());

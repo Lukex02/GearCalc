@@ -31,8 +31,6 @@ export default class ShaftStats {
     for (const effiType of order) {
       let efficiency = efficienciesList.find((e) => effiType.includes(e.type))!;
       const lastP = results[results.length - 1];
-      console.log(efficiency);
-      console.log(lastP);
       const newP = lastP / (efficiency.value * n_ol);
       results.push(newP);
     }

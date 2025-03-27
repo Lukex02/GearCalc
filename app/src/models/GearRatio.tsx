@@ -67,7 +67,6 @@ export default class TransRatio {
     // Sau khi gán u_t mới thì các thông số khác sẽ tự động cập nhật
     this.u_t = sele_engi.n_t / calc_engi.n_lv;
     // Kiểm tra lại
-    console.log(this);
     let delta_check = this._u_t - this._ratio_spec.reduce((acc, ratio) => acc * ratio.value, 1);
     if (-0.5 < delta_check && delta_check < 0.5) return this;
     else throw new Error("Failed check");
