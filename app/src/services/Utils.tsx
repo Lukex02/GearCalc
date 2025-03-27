@@ -1,4 +1,6 @@
 import { create, all } from "mathjs";
+import * as Print from "expo-print";
+import { shareAsync } from "expo-sharing";
 const math = create(all);
 
 export function CalcU_tv(u_h: number, tan_gamma: number, initialGuess = 1): number {
@@ -17,3 +19,29 @@ export function CalcU_tv(u_h: number, tan_gamma: number, initialGuess = 1): numb
 
   return x;
 }
+
+export async function printReportPDF() {
+  const report = `
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  </head>
+  <body style="text-align: center;">
+    <h1 style="font-size: 50px; font-family: Helvetica Neue; font-weight: normal;">
+      Test Print!
+    </h1>
+    <img
+      src="/src/img/Engine_DK.jpeg"
+      style="width: 90vw;" />
+  </body>
+</html>
+`;
+  const { uri } = await Print.printToFileAsync({ html: report });
+  console.log("File has been saved to:", uri);
+  await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
+}
+
+export default {
+  CalcU_tv,
+  printReportPDF,
+};

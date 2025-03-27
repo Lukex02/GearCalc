@@ -1,4 +1,4 @@
-import { CalcU_tv } from "../services/Utils";
+import Utils from "../services/Utils";
 import { CalculatedEngine, SelectedEngine } from "./EngineModel";
 
 export interface IRatio {
@@ -187,7 +187,7 @@ export class TransRatioType2 extends TransRatio {
   set u_h(value: number) {
     this._u_h = value;
     const tan_gamma = 0.2;
-    this.u_tv = CalcU_tv(this._u_h, tan_gamma);
+    this.u_tv = Utils.CalcU_tv(this._u_h, tan_gamma);
   }
 
   // Setter của u_d

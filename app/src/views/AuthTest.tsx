@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { printReportPDF } from "../services/Utils";
 import DatabaseService from "../services/DatabaseService";
 
 const SignupScreen = () => {
@@ -32,9 +33,9 @@ const SignupScreen = () => {
       }
     });
   };
-  // const handleRefresh = () => {
-  //   DatabaseService.remove();
-  // };
+  const handlePrint = () => {
+    printReportPDF();
+  };
 
   return (
     <View>
@@ -50,7 +51,7 @@ const SignupScreen = () => {
       />
       <Button title="Login" onPress={handleLogin} />
       <Button title="Signup" onPress={handleSignup} />
-      {/* <Button title="Refresh" onPress={handleRefresh} /> */}
+      <Button title="Print" onPress={handlePrint} />
     </View>
   );
 };
