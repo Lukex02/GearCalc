@@ -3,21 +3,24 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E48C8C",
+    backgroundColor: "#9FD8E6",
   },
   header: {
-    backgroundColor: "#E48C8C",
-    elevation: 0,
-    marginBottom: 20,
+    backgroundColor: "#9FD8E6",
+    marginTop: 20,
   },
   title: {
-    color: "black",
-    fontWeight: "bold",
-    fontSize: 24,
+    flex: 1,
     textAlign: "center",
-    textShadowColor: "rgba(0, 0, 0, 0.2)",
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 4,
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#BLACK",
+    textTransform: "uppercase",
+    letterSpacing: 2,
+    textShadowColor: "rgba(0, 0, 0, 0.75)",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 5,
+    fontFamily: "monospace",
   },
   gridContainer: {
     flex: 1,
@@ -32,12 +35,14 @@ export default StyleSheet.create({
     backgroundColor: "white",
     borderWidth: 1,
     borderColor: "black",
-    margin: "1%",
+    margin: 1,
   },
 
   menu: {
     backgroundColor: "#fff",
     borderRadius: 15,
+    position: "absolute",
+    bottom: 10,
   },
   menuContent: {
     backgroundColor: "white",
