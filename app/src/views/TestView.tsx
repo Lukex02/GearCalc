@@ -7,7 +7,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 // import EngineController from "../controller/EngineController";
 import { CalculatedEngine, SelectedEngine } from "../models/EngineModel";
 import Efficiency from "../models/Efficiency";
-import TransRatio, { TransRatioType2 } from "../models/GearRatio";
+import TransRatio, { TransRatioType1, TransRatioType2 } from "../models/GearRatio";
 import CalcController from "../controller/CalcController";
 import EngineController from "../controller/EngineController";
 
@@ -84,17 +84,28 @@ export default function TestPage() {
   // Adjust Engine Parameters here
   const changeParam = () => {
     if (calcController) {
+      // let changeEffi = new Efficiency([
+      //   [{ type: "ol", value: 0.99 }, 4],
+      //   [{ type: "d", value: 0.94 }, 1],
+      //   [{ type: "tv", value: 0.85 }, 1],
+      //   [{ type: "brt", value: 0.96 }, 1],
+      //   [{ type: "kn", value: 0.98 }, 1],
+      // ]);
+      // let changeRatio = new TransRatioType2([
+      //   { type: "d", value: 3 },
+      //   { type: "tv", value: 10 },
+      //   { type: "brt", value: 3 },
+      //   { type: "kn", value: 1 },
+      // ]);
       let changeEffi = new Efficiency([
-        [{ type: "ol", value: 0.99 }, 4],
-        [{ type: "d", value: 0.94 }, 1],
-        [{ type: "tv", value: 0.85 }, 1],
-        [{ type: "brt", value: 0.96 }, 1],
-        [{ type: "kn", value: 0.98 }, 1],
+        [{ type: "ol", value: 0.992 }, 4],
+        [{ type: "x", value: 0.96 }, 1],
+        [{ type: "brt", value: 0.96 }, 2],
+        [{ type: "kn", value: 1 }, 1],
       ]);
-      let changeRatio = new TransRatioType2([
-        { type: "d", value: 3 },
-        { type: "tv", value: 10 },
-        { type: "brt", value: 3 },
+      let changeRatio = new TransRatioType1([
+        { type: "x", value: 2.56 },
+        { type: "h", value: 18 },
         { type: "kn", value: 1 },
       ]);
       calcController.adjustCalcEngine(changeEffi, changeRatio);
