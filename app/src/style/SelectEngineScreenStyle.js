@@ -1,0 +1,111 @@
+import { StyleSheet } from "react-native";
+
+export default StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#9FD8E6", 
+    alignItems: "center", 
+    justifyContent: "flex-start", 
+    paddingTop: 40,
+    paddingHorizontal: 20, 
+  },
+  header: {
+    marginBottom: 20,
+    alignItems: "center", 
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#000",
+  },
+  subtitle: {
+    fontSize: 20,
+    marginTop: 10,
+    color: "#000",
+  },
+  infoContainer: {
+    width: "100%",
+    backgroundColor: "#ffffff", 
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: "#000", 
+    shadowOpacity: 0.25,
+    shadowRadius: 3.5,
+    elevation: 5,
+    marginBottom: 20,
+  },
+  infoText: {
+    fontSize: 18,
+    color: "#000",
+    marginBottom: 10,
+  },
+  parameterAdjustment: {
+    width: "100%",
+    backgroundColor: "#ffffff",
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.25,
+    shadowRadius: 3.5,
+    elevation: 5,
+    marginBottom: 20,
+  },
+  parameterTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  engineItem: {
+    marginBottom: 15,
+    padding: 15,
+    backgroundColor: "#f4f4f4",
+    borderRadius: 8,
+    flexDirection: "row", 
+    alignItems: "center",
+  },
+  engineImage: {
+    width: 60,
+    height: 60,
+    marginRight: 15,
+    borderRadius: 8, 
+  },
+  engineName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#000",
+  },
+  engineDetails: {
+    fontSize: 14,
+    color: "#555",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around", 
+    width: "100%",
+    marginTop: 20,
+  },
+  button: {
+    backgroundColor: "#55DD7E",
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 5,
+    marginTop: 20, 
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  cancelButton: {
+    backgroundColor: "#FF7F7F",
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  cancelButtonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+  },
+});
