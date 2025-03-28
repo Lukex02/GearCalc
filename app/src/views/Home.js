@@ -35,7 +35,9 @@ export default function GearCalc() {
             }}
             style={styles.image}
           />
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button}
+           onPress={() => router.push("/src/views/DesignSelectionScreen")} 
+          >
             <Text style={styles.buttonText}>Bắt đầu thiết kế</Text>
           </TouchableOpacity>
         </View>
