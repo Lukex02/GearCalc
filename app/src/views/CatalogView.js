@@ -12,63 +12,19 @@ const CatalogPage = () => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <Appbar.Header style={styles.header}>
-        <Menu
-          style={styles.menu}
-          contentStyle={styles.menuContent}
-          visible={menuVisible}
-          onDismiss={closeMenu}
-          anchor={
-            <IconButton
-              icon="menu"
-              iconColor="white"
-              size={24}
-              onPress={openMenu}
-            />
-          }
-        >
-          <Menu.Item
-            onPress={() => {}}
-            title="Trục vít"
-            titleStyle={styles.menuItem}
-          />
-          <Menu.Item
-            onPress={() => {}}
-            title="Bánh răng trụ"
-            titleStyle={styles.menuItem}
-          />
-          <Menu.Item
-            onPress={() => {}}
-            title="Bánh răng côn"
-            titleStyle={styles.menuItem}
-          />
-          <Menu.Item
-            onPress={() => {}}
-            title="Vật liệu bánh răng"
-            titleStyle={styles.menuItem}
-          />
-          <Menu.Item
-            onPress={() => {}}
-            title="Số cấp giảm tốc"
-            titleStyle={styles.menuItem}
-          />
-          <Menu.Item
-            onPress={() => {}}
-            title="Loại ổ trục"
-            titleStyle={styles.menuItem}
-          />
-          <Menu.Item
-            onPress={() => {}}
-            title="Kích thước và tiêu chuẩn lắp ghép"
-            titleStyle={styles.menuItem}
-          />
-        </Menu>
-        <Appbar.Content title="GEARBOX CALCULATOR" titleStyle={styles.title} />
+        <IconButton
+          icon="arrow-left"
+          size={24}
+          iconColor="black"
+          onPress={() => router.back()}
+          style={styles.goBackButton}
+        />
+        <Appbar.Content title="GEAR CALC" titleStyle={styles.title} />
         <IconButton
           icon="account-circle"
           style={styles.accountCircle}
-          iconColor="white"
+          iconColor="black"
           size={24}
         />
       </Appbar.Header>
