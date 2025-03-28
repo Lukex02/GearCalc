@@ -3,13 +3,12 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#9FD8E6", 
+    backgroundColor: "#9FD8E6",
     alignItems: "center",
     justifyContent: "flex-start",
     padding: 20,
   },
   header: {
-    marginTop: 50,
     marginBottom: 20,
     alignItems: "center",
   },
@@ -39,6 +38,9 @@ export default StyleSheet.create({
     color: "#000",
   },
   parameterAdjustment: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
     width: "100%",
     backgroundColor: "white",
     padding: 20,
@@ -63,9 +65,9 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   parameterRow: {
-    flexDirection: "row",
+    // flexDirection: "row",
     marginBottom: 15,
-    alignItems: "center",
+    alignItems: "left",
   },
   paramType: {
     fontSize: 18,
@@ -81,32 +83,39 @@ export default StyleSheet.create({
     color: "#000",
     width: "50%",
   },
-  buttonContainer: {
+  buttonFooter: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    width: "100%",
-    marginTop: 20,
+    justifyContent: "space-between",
+    width: 400,
+    bottom: 40,
+    position: "absolute",
   },
   button: {
-    backgroundColor: "#55DD7E",
+    backgroundColor: "#86EFAC",
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 5,
+    marginTop: 20,
+    width: "45%",
   },
   buttonText: {
-    fontSize: 18,
-    color: "#fff",
+    color: "#000",
     fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 18,
   },
   cancelButton: {
-    backgroundColor: "#FF7F7F",
+    backgroundColor: "#FF6347",
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 5,
+    marginTop: 20,
+    width: "45%",
   },
   cancelButtonText: {
-    fontSize: 18,
     color: "#fff",
     fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 18,
   },
 });

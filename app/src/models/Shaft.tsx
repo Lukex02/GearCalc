@@ -1,4 +1,4 @@
-import Efficiency, { IEfficieny } from "./Efficiency";
+import Efficiency, { IEfficiency } from "./Efficiency";
 import TransRatio from "./GearRatio";
 
 export default class ShaftStats {
@@ -24,7 +24,7 @@ export default class ShaftStats {
     this._T = this._p.map((p, idx) => this.calc_torque(this._n[idx], p));
   }
 
-  calc_power(p_td: number, efficienciesList: IEfficieny[], order: string[]): number[] {
+  calc_power(p_td: number, efficienciesList: IEfficiency[], order: string[]): number[] {
     const results: number[] = [p_td];
     const n_ol = efficienciesList.find((e) => e.type === "ol")?.value ?? 1;
 

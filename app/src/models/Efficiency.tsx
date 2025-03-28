@@ -1,13 +1,13 @@
-export interface IEfficieny {
+export interface IEfficiency {
   type: string;
   value: number;
 }
 
 export default class Efficiency {
-  private _n_parts: [IEfficieny, number][]; // Hiệu suất của chi tiết và số lượng chi tiết sử dụng
+  private _n_parts: [IEfficiency, number][]; // Hiệu suất của chi tiết và số lượng chi tiết sử dụng
   private _n_system: number; // Hiệu suất truyền động của hệ thống
 
-  constructor(n_parts: [IEfficieny, number][]) {
+  constructor(n_parts: [IEfficiency, number][]) {
     this._n_parts = n_parts;
     this._n_system = n_parts.reduce((acc, n) => acc * n[0].value, 1);
   }

@@ -4,12 +4,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#9FD8E6",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
     paddingHorizontal: 20,
   },
   header: {
     marginBottom: 30,
+    marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -21,8 +22,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   dropdown: {
-    width: "80%",
-    marginBottom: 20,
+    flex: 1,
+    width: 400,
+    alignSelf: "center",
+    justifyContent: "flex-start",
+    marginBottom: 60,
     backgroundColor: "#fff",
     borderRadius: 10,
   },
@@ -54,11 +58,21 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
   },
-  buttonContainer: {
+  buttonFooter: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "80%",
-    marginTop: 30,
+    width: 400,
+    bottom: 40,
+    position: "absolute",
+  },
+  imgPreview: {
+    width: 400,
+    height: 300,
+    borderRadius: 10,
+    marginBottom: 20,
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: "#000",
   },
 });
 

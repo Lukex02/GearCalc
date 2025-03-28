@@ -1,5 +1,5 @@
 import EngineController from "./EngineController";
-import Efficiency from "../models/Efficiency";
+import Efficiency, { IEfficiency } from "../models/Efficiency";
 import { CalculatedEngine, SelectedEngine } from "../models/EngineModel";
 import GearBox, { GearBoxBuilder } from "../models/GearBox";
 import TransRatio, { TransRatioType1, TransRatioType2 } from "../models/GearRatio";
@@ -177,6 +177,13 @@ export default class CalcController {
   // private _calcShaft: CalculatedShaft | null;
   private _gearBoxBuilder: GearBoxBuilder;
 
+  // Implement semi-Singleton to store object state
+  private static instance: CalcController;
+
+  static getInstance(): CalcController {
+    return CalcController.instance;
+  }
+
   constructor(gearBoxType: string) {
     switch (gearBoxType) {
       case "GearBox1":
@@ -190,6 +197,7 @@ export default class CalcController {
       default:
         throw new Error("Invalid gear box type");
     }
+    CalcController.instance = this;
     this._gearBoxBuilder = new GearBoxBuilder();
   }
   calcEngineBase(F: number, v: number, T1: number, t1: number, T2: number, t2: number, output: any) {

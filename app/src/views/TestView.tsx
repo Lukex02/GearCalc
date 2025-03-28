@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Button, TouchableOpacity, Modal, FlatList } from "react-native";
 import styles from "../style/MainStyle";
-// import { useRouter } from "expo-router";
 import DropDownPicker from "react-native-dropdown-picker";
-
-// import EngineController from "../controller/EngineController";
 import { CalculatedEngine, SelectedEngine } from "../models/EngineModel";
 import Efficiency from "../models/Efficiency";
 import TransRatio, { TransRatioType1, TransRatioType2 } from "../models/GearRatio";
