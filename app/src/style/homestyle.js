@@ -3,40 +3,10 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
     backgroundColor: "#9FD8E6",
-    paddingTop: 20,
+    padding: 20,
   },
-  header: {
-    marginTop: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-
-  goBackButton: {
-    marginRight: 10,
-  },
-
-  title: {
-    flex: 1,
-    textAlign: "center",
-    fontSize: 30,
-    fontWeight: "bold",
-    color: "#BLACK",
-    textTransform: "uppercase",
-    letterSpacing: 2,
-    textShadowColor: "rgba(0, 0, 0, 0.75)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 5,
-    fontFamily: "monospace",
-  },
-
   optionContainer: {
-    marginTop: 30,
     width: "120%",
     alignItems: "center",
   },

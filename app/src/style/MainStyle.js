@@ -36,6 +36,7 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderColor: "black",
     margin: 1,
+    padding: 10,
   },
 
   menu: {

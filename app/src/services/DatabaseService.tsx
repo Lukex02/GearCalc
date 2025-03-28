@@ -1,4 +1,5 @@
 import Constants from "expo-constants";
+import * as SecureStore from "expo-secure-store";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = "https://odrfusjgbctkybkavelg.supabase.co";
@@ -31,12 +32,12 @@ export default class DatabaseService {
     ];
   }
 
-  static async signUp(name: string, email: string, password: string) {
+  static async signUp(username: string, email: string, password: string) {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { name }, // Lưu name vào user metadata
+        data: { username }, // Lưu username vào user metadata
       },
     });
     if (error) console.error("Signup error:", error.message);
@@ -52,5 +53,36 @@ export default class DatabaseService {
     await supabase.auth.signOut();
   }
 
+  // static async saveAccessToken(access_token: string) {
+  //   await SecureStore.setItemAsync("access_token", access_token);
+  // }
+  // static async getToken() {
+  //   const access_token = await SecureStore.getItemAsync("access_token");
+  //   return access_token;
+  // }
+
+  static async setSession(access_token: string, refresh_token: string) {
+    await supabase.auth.setSession({ access_token, refresh_token });
+  }
+
+  static async refreshToken() {
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === "TOKEN_REFRESHED" && session) {
+        await SecureStore.setItemAsync("access_token", session.access_token);
+        await SecureStore.setItemAsync("refresh_token", session.refresh_token);
+      }
+    });
+  }
+
+  static async checkAuth() {
+    const { data, error } = await supabase.auth.getSession();
+    if (data?.session) {
+      console.log("Đã đăng nhập");
+      return data.session;
+    } else {
+      console.log("Session không hợp lệ, user cần đăng nhập lại.", error);
+      return null;
+    }
+  }
   // Code database here
 }
