@@ -24,26 +24,43 @@ export default StyleSheet.create({
   },
   gridContainer: {
     flex: 1,
-    flexDirection: "row",
+    // flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "center",
-    alignItems: "center",
+    // alignContent: "center",
+    // justifyContent: "center",
+    // paddingHorizontal: 10,
+    // paddingVertical: 5,
+    marginVertical: 20,
   },
   gridItem: {
-    width: "48%",
-    height: "30%",
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "black",
-    margin: 1,
-    padding: 10,
+    padding: 20,
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 2, height: 2 },
+    shadowRadius: 4,
+    elevation: 3,
+    width: "90%",
+    marginBottom: 20,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  subtitle: {
+    fontSize: 14,
   },
 
   menu: {
     backgroundColor: "#fff",
     borderRadius: 15,
-    position: "absolute",
-    bottom: 10,
+    position: "fixed",
   },
   menuContent: {
     backgroundColor: "white",
@@ -54,9 +71,14 @@ export default StyleSheet.create({
     fontSize: 18,
     textAlign: "left",
   },
+  menuBtn: {
+    // width: "fit-content",
+  },
 
   gridImage: {
-    width: "100%",
-    height: "100%",
+    width: 100,
+    height: 100,
+    // padding: 20,
+    marginRight: 50,
   },
 });
