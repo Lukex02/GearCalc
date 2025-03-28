@@ -90,7 +90,7 @@ export default class DatabaseService {
     const tables = ["Engine", "chain"];
 
     for (const tableName of tables) {
-      const { data, error } = await supabase.from(tableName).select("*").limit(3);
+      const { data, error } = await supabase.from(tableName).select("*").limit(10); // Tránh lãng phí data
       if (error) {
         console.error(`Lỗi khi lấy dữ liệu từ ${tableName}:`, error);
       } else {

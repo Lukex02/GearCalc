@@ -16,6 +16,17 @@ const CatalogPage = () => {
   const openMenu = () => setMenuVisible(true);
   const closeMenu = () => setMenuVisible(false);
 
+  const printChainType = (type) => {
+    switch (type) {
+      case "1_roller":
+        return "Xích con lăn 1 dãy";
+      case "2_roller":
+        return "Xích con lăn 2 dãy";
+      default:
+        return "Không xác định";
+    }
+  };
+
   useEffect(() => {
     async function getCatalog() {
       DatabaseService.getCatalogAll().then((catalogFetch) => {
@@ -49,6 +60,7 @@ const CatalogPage = () => {
                 )}
                 {item.type === "chain" && (
                   <View style={styles.textContainer}>
+                    <Text style={styles.title}>Loại: {printChainType(item.chain_type)}</Text>
                     <Text style={styles.title}>Bước Xích: {item.Step_p} (mm)</Text>
                     <Text style={styles.subtitle}>B min: {item.B_min}</Text>
                     <Text style={styles.subtitle}>Breaking Load Q: {item.Breaking_Load_Q}</Text>
