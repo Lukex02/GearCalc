@@ -10,6 +10,7 @@ export default function SelectEngineScreen() {
   const router = useRouter(); // Khởi tạo router để điều hướng
   const calcController = CalcController.getInstance();
   const postStats = calcController.getEnginePostStats();
+  console.log(postStats);
 
   const handleContinue = () => {};
 

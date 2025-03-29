@@ -22,14 +22,32 @@ export default class EngineController {
     reqPower: number, // CalculatedEngine.p_ct
     reqRpm: number, // CalculatedEngine.n_sb
     T_mm_T: number // CalculatedEngine.T1 (có thể là T2 tùy vào lúc khởi động chạy cái nào, ở đây bài đang làm theo thì lấy T1)
-  ): Promise<SelectedEngine[] | null> {
+  ): Promise<SelectedEngine[]> {
     // List of satisfied engine
     const dataList = await DatabaseService.getSelectableEngine(reqPower, reqRpm);
-    return dataList;
+    if (dataList.length > 0) {
+      return dataList
+        .map((engine) => {
+          if (engine) {
+            return EngineFactory.createSelectedEngine(
+              engine.M_ID,
+              engine.Motor_Type,
+              engine.Power,
+              engine.Speed,
+              engine.H,
+              engine.Efficiency,
+              engine["Tmax/Tdn"],
+              engine["Tk/Tdn"],
+              T_mm_T
+            );
+          }
+        })
+        .filter((item): item is SelectedEngine => item !== null); // Loại bỏ `null` an toàn;
+    }
+    return [];
   }
 
   static getNewTransRatio(calc_engi: CalculatedEngine, sele_engi: SelectedEngine, cur_ratio: TransRatio) {
-    // console.log(calc_engi, sele_engi, cur_ratio);
     return cur_ratio.recalcTransRatio(calc_engi, sele_engi);
   }
 

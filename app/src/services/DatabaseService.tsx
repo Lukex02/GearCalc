@@ -28,14 +28,6 @@ export default class DatabaseService {
     await supabase.auth.signOut();
   }
 
-  // static async saveAccessToken(access_token: string) {
-  //   await SecureStore.setItemAsync("access_token", access_token);
-  // }
-  // static async getToken() {
-  //   const access_token = await SecureStore.getItemAsync("access_token");
-  //   return access_token;
-  // }
-
   static async setSession(access_token: string, refresh_token: string) {
     await supabase.auth.setSession({ access_token, refresh_token });
   }
@@ -60,7 +52,7 @@ export default class DatabaseService {
     }
   }
   // Code database here
-  static async getSelectableEngine(reqPower: number, reqRpm: number): Promise<any[] | null> {
+  static async getSelectableEngine(reqPower: number, reqRpm: number): Promise<any[]> {
     let { data, error } = await supabase
       .from("Engine")
       .select("*")
@@ -68,7 +60,7 @@ export default class DatabaseService {
       .lt("Speed", Math.floor(reqRpm) + 50) // Xấp xỉ thì cho phép sai số trên dưới 50 so với yêu cầu
       .gt("Speed", Math.floor(reqRpm) - 50);
     if (error) console.error("Lỗi khi lấy dữ liệu ", error);
-    return data;
+    return data ?? [];
   }
 
   static async getCatalogAll(): Promise<any[]> {

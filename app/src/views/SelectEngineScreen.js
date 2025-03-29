@@ -45,8 +45,7 @@ export default function SelectEngineScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>GEAR CALC</Text>
-        <Text style={styles.subtitle}>Chọn động cơ</Text>
+        <Text style={styles.title}>Chọn động cơ</Text>
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.infoText}>
@@ -68,9 +67,13 @@ export default function SelectEngineScreen() {
             <TouchableOpacity style={styles.engineItem} onPress={() => handleSelectEngine(item)}>
               <Image source={require("../img/wrench.png")} style={styles.engineImage} resizeMode="contain" />
               <View style={{ flex: 1 }}>
-                <Text style={styles.engineName}>Động cơ: {item.Motor_Type}</Text>
-                <Text style={styles.engineDetails}>Công suất: {item.Power} kW</Text>
-                <Text style={styles.engineDetails}>Tốc độ vòng quay: {item.Speed} rpm</Text>
+                <Text style={styles.engineName}>Động cơ: {item.name}</Text>
+                <Text style={styles.engineDetails}>Công suất: {item.power} kW</Text>
+                <Text style={styles.engineDetails}>Tốc độ vòng quay: {item.n_t} rpm</Text>
+                <Text style={styles.engineDetails}>Hệ số công suất: {item.eng_effi} %</Text>
+                <Text style={styles.engineDetails}>Hiệu suất động cơ: {item.H}</Text>
+                <Text style={styles.engineDetails}>Hệ số momen khởi động: {item.T_k_T_dn} / T_dn</Text>
+                <Text style={styles.engineDetails}>Hệ số momen tối đa: {item.T_max_T_dn} / T_dn</Text>
               </View>
               {selectedEngine?.M_ID === item.M_ID && (
                 <Image source={require("../img/tick.jpg")} style={styles.engineImage} resizeMode="contain" />

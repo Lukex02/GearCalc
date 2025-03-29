@@ -78,14 +78,14 @@ export class CalculatedEngine {
 export class SelectedEngine {
   // Vì chưa biết có tính toán gì sau không nên sẽ dùng class thay vì interface
   constructor(
+    public M_ID: string, // ID động cơ
     public name: string, // Kiểu động cơ
     public power: number, // Công suất theo nhà sản xuất
     public n_t: number, // Vận tốc quay vg/phút
     public H: number, // cosp: Hệ số công suất của động cơ
-    public GD_2: number, // Momen quán tính của động cơ
+    public eng_effi: number, // Hiệu suất động cơ
     public T_max_T_dn: number, // Hệ số momen cực đại chia cho momen định mức
-    public T_k_T_dn: number, // Tỷ số momen khởi động và momen định mức
-    public weight: number // Khối lượng
+    public T_k_T_dn: number // Tỷ số momen khởi động và momen định mức // public weight: number // Khối lượng
   ) {}
 }
 
@@ -105,18 +105,18 @@ export default class EngineFactory {
   }
 
   static createSelectedEngine(
+    M_ID: string,
     name: string,
     power: number,
     rpm: number,
     H: number,
-    GD_2: number,
+    eng_effi: number,
     T_max_T_dn: number,
     T_k_T_dn: number,
-    weight: number,
     T_mm_T: number // Tỷ số của momen mở máy
   ): SelectedEngine | null {
     // Kiểm tra điều kiện mở máy
-    if (T_mm_T <= T_k_T_dn) return new SelectedEngine(name, power, rpm, H, GD_2, T_max_T_dn, T_k_T_dn, weight);
+    if (T_mm_T <= T_k_T_dn) return new SelectedEngine(M_ID, name, power, rpm, H, eng_effi, T_max_T_dn, T_k_T_dn);
     else return null;
   }
 }
