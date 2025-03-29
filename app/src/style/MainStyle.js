@@ -24,12 +24,6 @@ export default StyleSheet.create({
   },
   gridContainer: {
     flex: 1,
-    // flexDirection: "row",
-    flexWrap: "wrap",
-    // alignContent: "center",
-    // justifyContent: "center",
-    // paddingHorizontal: 10,
-    // paddingVertical: 5,
     marginVertical: 20,
   },
   gridItem: {

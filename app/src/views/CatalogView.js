@@ -51,10 +51,7 @@ const CatalogPage = () => {
       {loading && <LoadingScreen />}
 
       {!loading && (
-        <ScrollView
-          style={styles.gridContainer}
-          contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}
-        >
+        <ScrollView style={styles.gridContainer} contentContainerStyle={{ alignItems: "center" }}>
           {filteredCatalog.map((item, index) => (
             <TouchableOpacity
               key={index}
@@ -91,10 +88,9 @@ const CatalogPage = () => {
           visible={menuVisible}
           onDismiss={closeMenu}
           anchorPosition="bottom"
-          anchor={
-            <IconButton icon="menu" iconColor="white" size={40} style={styles.menuBtn} onPress={openMenu} />
-          }
+          anchor={<IconButton icon="menu" iconColor="white" size={40} style={styles.menuBtn} onPress={openMenu} />}
         >
+          <Menu.Item onPress={() => filterByType("all")} title="Tất cả" titleStyle={styles.menuItem} />
           <Menu.Item onPress={() => filterByType("Engine")} title="Động cơ điện" titleStyle={styles.menuItem} />
           <Menu.Item onPress={() => {}} title="Bánh răng trụ" titleStyle={styles.menuItem} />
           <Menu.Item onPress={() => filterByType("chain")} title="Xích" titleStyle={styles.menuItem} />
