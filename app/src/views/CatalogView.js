@@ -5,7 +5,7 @@ import { useRouter } from "expo-router";
 import styles from "../style/MainStyle";
 import LoadingScreen from "./LoadingScreen";
 import DatabaseService from "../services/DatabaseService";
-import { ScrollView } from "react-native-web";
+
 const CatalogPage = () => {
   const [loading, setLoading] = useState(true);
   const [menuVisible, setMenuVisible] = useState(false);
