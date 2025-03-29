@@ -1,6 +1,9 @@
 export interface IEfficiency {
   type: string;
   value: number;
+  min?: number;
+  max?: number;
+  name?: string;
 }
 
 export default class Efficiency {

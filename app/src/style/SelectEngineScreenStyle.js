@@ -3,15 +3,15 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#9FD8E6", 
-    alignItems: "center", 
-    justifyContent: "flex-start", 
+    backgroundColor: "#9FD8E6",
+    alignItems: "center",
+    justifyContent: "flex-start",
     paddingTop: 40,
-    paddingHorizontal: 20, 
+    paddingHorizontal: 20,
   },
   header: {
     marginBottom: 20,
-    alignItems: "center", 
+    alignItems: "center",
   },
   title: {
     fontSize: 30,
@@ -25,10 +25,10 @@ export default StyleSheet.create({
   },
   infoContainer: {
     width: "100%",
-    backgroundColor: "#ffffff", 
+    backgroundColor: "#ffffff",
     padding: 20,
     borderRadius: 10,
-    shadowColor: "#000", 
+    shadowColor: "#000",
     shadowOpacity: 0.25,
     shadowRadius: 3.5,
     elevation: 5,
@@ -40,6 +40,7 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   parameterAdjustment: {
+    flex: 1,
     width: "100%",
     backgroundColor: "#ffffff",
     padding: 20,
@@ -48,7 +49,7 @@ export default StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.5,
     elevation: 5,
-    marginBottom: 20,
+    marginBottom: 120,
   },
   parameterTitle: {
     fontSize: 24,
@@ -56,18 +57,19 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   engineItem: {
+    flex: 1,
     marginBottom: 15,
     padding: 15,
     backgroundColor: "#f4f4f4",
     borderRadius: 8,
-    flexDirection: "row", 
+    flexDirection: "row",
     alignItems: "center",
   },
   engineImage: {
     width: 60,
     height: 60,
     marginRight: 15,
-    borderRadius: 8, 
+    borderRadius: 8,
   },
   engineName: {
     fontSize: 18,
@@ -80,7 +82,7 @@ export default StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-around", 
+    justifyContent: "space-around",
     width: "100%",
     marginTop: 20,
   },
@@ -89,7 +91,7 @@ export default StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 5,
-    marginTop: 20, 
+    marginTop: 20,
   },
   buttonText: {
     fontSize: 18,

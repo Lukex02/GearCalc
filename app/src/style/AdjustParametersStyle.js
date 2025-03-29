@@ -44,12 +44,13 @@ export default StyleSheet.create({
     width: "100%",
     backgroundColor: "white",
     padding: 20,
+    paddingVertical: 5,
     borderRadius: 10,
     shadowColor: "#000",
     shadowOpacity: 0.25,
     shadowRadius: 3.5,
     elevation: 5,
-    marginBottom: 20,
+    marginBottom: 120,
   },
   parameterTitle: {
     fontSize: 24,
@@ -65,12 +66,11 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   parameterRow: {
-    // flexDirection: "row",
     marginBottom: 15,
     alignItems: "left",
   },
   paramType: {
-    fontSize: 18,
+    fontSize: 15,
     marginRight: 10,
   },
   inputField: {

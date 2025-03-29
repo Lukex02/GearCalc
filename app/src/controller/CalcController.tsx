@@ -55,7 +55,7 @@ class DesignGearBox1 implements DesignStrategy {
       T2,
       t2,
       drumPulley: {
-        z: drumPulley.D,
+        D: drumPulley.D,
       },
       efficiency: baseEfficiency,
       ratio: baseRatio,

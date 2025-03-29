@@ -22,34 +22,10 @@ export default class EngineController {
     reqPower: number, // CalculatedEngine.p_ct
     reqRpm: number, // CalculatedEngine.n_sb
     T_mm_T: number // CalculatedEngine.T1 (có thể là T2 tùy vào lúc khởi động chạy cái nào, ở đây bài đang làm theo thì lấy T1)
-  ): Promise<SelectedEngine[]> {
+  ): Promise<SelectedEngine[] | null> {
     // List of satisfied engine
-    const dataList = await DatabaseService.getEngine(reqPower, reqRpm);
-    return dataList
-      .map(
-        (data: {
-          name: string;
-          power: number;
-          n_t: number;
-          H: number;
-          GD_2: number;
-          T_max_T_dn: number;
-          T_k_T_dn: number;
-          weight: number;
-        }) =>
-          EngineFactory.createSelectedEngine(
-            data.name,
-            data.power,
-            data.n_t,
-            data.H,
-            data.GD_2,
-            data.T_max_T_dn,
-            data.T_k_T_dn,
-            data.weight,
-            T_mm_T
-          )
-      )
-      .filter((engi) => engi !== null);
+    const dataList = await DatabaseService.getSelectableEngine(reqPower, reqRpm);
+    return dataList;
   }
 
   static getNewTransRatio(calc_engi: CalculatedEngine, sele_engi: SelectedEngine, cur_ratio: TransRatio) {

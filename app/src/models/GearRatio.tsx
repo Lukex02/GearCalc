@@ -4,6 +4,9 @@ import { CalculatedEngine, SelectedEngine } from "./EngineModel";
 export interface IRatio {
   type: string;
   value: number;
+  min?: number;
+  max?: number;
+  name?: string;
 }
 
 export default class TransRatio {

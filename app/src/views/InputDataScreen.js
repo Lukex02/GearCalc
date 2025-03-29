@@ -4,6 +4,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import styles from "../style/InputDataScreenStyle";
 import CalcController from "../controller/CalcController";
 import calcFooter from "../style/calcFooter";
+import { ScrollView } from "react-native-web";
 
 export default function InputDataScreen() {
   const { gearBoxType } = useLocalSearchParams();
@@ -11,35 +12,35 @@ export default function InputDataScreen() {
   const calcController = new CalcController(gearBoxType);
 
   // Các state cho giá trị nhập liệu
-  const [F, setF] = useState(""); // Lực vòng
-  const [v, setV] = useState(""); // Vận tốc
-  const [T1, setT1] = useState(""); // Momen xoắn T1
-  const [t1, setT1Duration] = useState(""); // Thời gian tải 1
-  const [T2, setT2] = useState(""); // Momen xoắn T2
-  const [t2, setT2Duration] = useState(""); // Thời gian tải 2
-  const [p, setP] = useState(""); // Bước xích
-  const [z, setZ] = useState(""); // Số răng xích
-  const [D, setD] = useState(""); // Đường kính tang
+  const [F, setF] = useState(0); // Lực vòng
+  const [v, setV] = useState(0); // Vận tốc
+  const [T1, setT1] = useState(0); // Momen xoắn T1
+  const [t1, setT1Duration] = useState(0); // Thời gian tải 1
+  const [T2, setT2] = useState(0); // Momen xoắn T2
+  const [t2, setT2Duration] = useState(0); // Thời gian tải 2
+  const [p, setP] = useState(0); // Bước xích
+  const [z, setZ] = useState(0); // Số răng xích
+  const [D, setD] = useState(0); // Đường kính tang
 
   // Dữ liệu mặc định cho GearBox1 và GearBox2
   useEffect(() => {
     if (gearBoxType === "GearBox1") {
-      setF("7500");
-      setV("0.9");
-      setT1("1");
-      setT1Duration("36");
-      setT2("0.5");
-      setT2Duration("15");
-      setD("550");
+      setF(7500);
+      setV(0.9);
+      setT1(1);
+      setT1Duration(36);
+      setT2(0.5);
+      setT2Duration(15);
+      setD(550);
     } else if (gearBoxType === "GearBox2") {
-      setF("17000");
-      setV("0.5");
-      setT1("1");
-      setT1Duration("25");
-      setT2("0.5");
-      setT2Duration("15");
-      setP("120");
-      setZ("15");
+      setF(17000);
+      setV(0.5);
+      setT1(1);
+      setT1Duration(25);
+      setT2(0.5);
+      setT2Duration(15);
+      setP(120);
+      setZ(15);
     }
   }, [gearBoxType]);
 

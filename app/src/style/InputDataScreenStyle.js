@@ -31,6 +31,7 @@ export default StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.5,
     elevation: 5,
+    marginBottom: 120,
   },
   inputField: {
     marginTop: 5,

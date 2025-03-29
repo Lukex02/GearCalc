@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import Slider from "@react-native-community/slider"; // Import Slider
 import { useNavigation } from "@react-navigation/native"; // Hook navigation
@@ -14,8 +14,41 @@ export default function AdjustEngineParametersScreen() {
   const router = useRouter(); // Hook để lấy router
   const calcController = CalcController.getInstance();
   const { effi: baseEfficiency, ratio: baseRatio } = calcController.showEngineParam();
+  baseEfficiency.n_parts_spec.forEach((effi) => {
+    if (effi.type == "brt") {
+      (effi.min = 0.96), (effi.max = 0.98), (effi.name = "bánh răng trụ");
+    }
+    if (effi.type == "tv") {
+      (effi.min = 0.83), (effi.max = 0.88), (effi.name = "trục vít");
+    }
+    if (effi.type == "x") {
+      (effi.min = 0.95), (effi.max = 0.97), (effi.name = "xích");
+    }
+    if (effi.type == "d") {
+      (effi.min = 0.95), (effi.max = 0.96), (effi.name = "đai");
+    }
+    if (effi.type == "ol") {
+      (effi.min = 0.99), (effi.max = 0.995), (effi.name = "ổ lăn");
+    }
+    if (effi.type == "kn") {
+      (effi.min = 1), (effi.max = 1), (effi.name = "khớp nối");
+    }
+  });
+  baseRatio.ratio_spec.forEach((ratio) => {
+    if (ratio.type == "x") {
+      (ratio.min = 2), (ratio.max = 5), (ratio.name = "xích");
+    }
+    if (ratio.type == "h") {
+      (ratio.min = 8), (ratio.max = 40), (ratio.name = "hộp");
+    }
+    if (ratio.type == "kn") {
+      (ratio.min = 1), (ratio.max = 1), (ratio.name = "khớp nối");
+    }
+  });
+
   const [changeEffi, setChangeEffi] = useState(baseEfficiency);
   const [changeRatio, setChangeRatio] = useState(baseRatio);
+  // console.log(changeEffi, changeRatio);
 
   const handleContinue = () => {
     // Chuyển giá trị sang trang tính toán tiếp theo
@@ -43,6 +76,10 @@ export default function AdjustEngineParametersScreen() {
     setChangeRatio(new changeRatio.constructor(newChangeRatio));
   };
 
+  useEffect(() => {
+    calcController.adjustCalcEngine(changeEffi, changeRatio);
+  }, [changeEffi, changeRatio]);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -65,41 +102,57 @@ export default function AdjustEngineParametersScreen() {
         {/* Hiệu suất */}
         <View style={styles.tableContainer}>
           <Text style={styles.tableTitle}>Hiệu suất</Text>
-          {changeEffi &&
-            changeEffi.n_parts_spec.map((param, index) => (
-              <View key={index} style={styles.parameterRow}>
-                <Text style={styles.paramType}>{param.type}</Text>
-                <Slider
-                  style={{ width: 130, height: 40 }}
-                  minimumValue={param.min}
-                  maximumValue={param.max}
-                  step={0.01}
-                  value={param.value}
-                  onValueChange={(value) => handleSliderChangeEffi(index, value)}
-                />
-                <Text>{param.value.toFixed(3)}</Text>
-              </View>
-            ))}
+          {changeEffi && (
+            <FlatList
+              data={changeEffi.n_parts_spec}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item, index }) => (
+                <View style={styles.parameterRow}>
+                  <Text style={styles.paramType}>
+                    n_{item.type}: {item.name}
+                  </Text>
+                  <Slider
+                    style={{ width: 130, height: 40 }}
+                    minimumValue={Math.round(item.min * 1000) / 1000}
+                    maximumValue={Math.round(item.max * 1000) / 1000}
+                    step={Math.round(((item.max - item.min) / 6) * 1000) / 1000}
+                    value={item.value}
+                    onValueChange={(value) => handleSliderChangeEffi(index, value)}
+                    disabled={item.type === "kn"}
+                  />
+                  <Text>{item.value.toFixed(3)}</Text>
+                </View>
+              )}
+            />
+          )}
         </View>
 
         {/* Tỷ số truyền */}
         <View style={styles.tableContainer}>
           <Text style={styles.tableTitle}>Tỷ số truyền</Text>
-          {changeRatio &&
-            changeRatio.ratio_spec.map((param, index) => (
-              <View key={index} style={styles.parameterRow}>
-                <Text style={styles.paramType}>{param.type}</Text>
-                <Slider
-                  style={{ width: 130, height: 40 }}
-                  minimumValue={param.min}
-                  maximumValue={param.max}
-                  step={1}
-                  value={param.value}
-                  onValueChange={(value) => handleSliderChangeRatio(index, value)}
-                />
-                <Text>{param.value.toFixed(1)}</Text>
-              </View>
-            ))}
+          {changeRatio && (
+            <FlatList
+              data={changeRatio.ratio_spec}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item, index }) => (
+                <View style={styles.parameterRow}>
+                  <Text style={styles.paramType}>
+                    u_{item.type}: {item.name}
+                  </Text>
+                  <Slider
+                    style={{ width: 130, height: 40 }}
+                    minimumValue={Math.round(item.min * 10) / 10}
+                    maximumValue={Math.round(item.max * 10) / 10}
+                    step={item.type === "h" ? 2 : Math.round(((item.max - item.min) / 6) * 10) / 10}
+                    value={item.value}
+                    onValueChange={(value) => handleSliderChangeRatio(index, value)}
+                    disabled={item.type === "kn"}
+                  />
+                  <Text>{item.value.toFixed(1)}</Text>
+                </View>
+              )}
+            />
+          )}
         </View>
       </View>
 
