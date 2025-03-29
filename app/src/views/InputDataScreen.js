@@ -70,31 +70,72 @@ export default function InputDataScreen() {
       </View>
       <View style={styles.inputContainer}>
         <Text>Lực vòng F (N):</Text>
-        <TextInput style={styles.inputField} keyboardType="numeric" value={F} onChangeText={setF} />
+        <TextInput
+          style={styles.inputField}
+          keyboardType="numeric"
+          value={F.toString()}
+          autoFocus={false}
+          onChangeText={(text) => setF(Number(text))}
+        />
 
         <Text>Vận tốc V (m/s):</Text>
-        <TextInput style={styles.inputField} keyboardType="numeric" value={v} onChangeText={setV} />
+        <TextInput
+          style={styles.inputField}
+          keyboardType="numeric"
+          value={v.toString()}
+          onChangeText={(text) => setV(Number(text))}
+        />
 
         <Text>Momen xoắn T1 (N.m):</Text>
-        <TextInput style={styles.inputField} keyboardType="numeric" value={T1} onChangeText={setT1} />
+        <TextInput
+          style={styles.inputField}
+          keyboardType="numeric"
+          value={T1.toString()}
+          onChangeText={(text) => setT1(Number(text))}
+        />
 
         <Text>Thời gian tải t1 (giờ):</Text>
-        <TextInput style={styles.inputField} keyboardType="numeric" value={t1} onChangeText={setT1Duration} />
+        <TextInput
+          style={styles.inputField}
+          keyboardType="numeric"
+          value={t1.toString()}
+          onChangeText={(text) => setT1Duration(Number(text))}
+        />
 
         <Text>Momen xoắn T2 (N.m):</Text>
-        <TextInput style={styles.inputField} keyboardType="numeric" value={T2} onChangeText={setT2} />
+        <TextInput
+          style={styles.inputField}
+          keyboardType="numeric"
+          value={T2.toString()}
+          onChangeText={(text) => setT2(Number(text))}
+        />
 
         <Text>Thời gian tải t2 (giờ):</Text>
-        <TextInput style={styles.inputField} keyboardType="numeric" value={t2} onChangeText={setT2Duration} />
+        <TextInput
+          style={styles.inputField}
+          keyboardType="numeric"
+          value={t2.toString()}
+          onChangeText={(text) => setT2Duration(Number(text))}
+        />
 
         {/* Hiển thị trường P và Z nếu chọn GearBox2 */}
         {gearBoxType === "GearBox2" && (
           <>
             <Text>Công suất P (N):</Text>
-            <TextInput style={styles.inputField} keyboardType="numeric" value={p} onChangeText={setP} />
+            <TextInput
+              style={styles.inputField}
+              keyboardType="numeric"
+              value={p.toString()}
+              onChangeText={(text) => setP(Number(text))}
+            />
 
             <Text>Số răng đĩa xích Z:</Text>
-            <TextInput style={styles.inputField} keyboardType="numeric" value={z} onChangeText={setZ} />
+            <TextInput
+              style={styles.inputField}
+              keyboardType="numeric"
+              value={z.toString()}
+              onChangeText={(text) => setZ(Number(text))}
+            />
           </>
         )}
 
@@ -102,7 +143,12 @@ export default function InputDataScreen() {
         {gearBoxType === "GearBox1" && (
           <>
             <Text>Đường kính D (mm):</Text>
-            <TextInput style={styles.inputField} keyboardType="numeric" value={D} onChangeText={setD} />
+            <TextInput
+              style={styles.inputField}
+              keyboardType="numeric"
+              value={D.toString()}
+              onChangeText={(text) => setD(Number(text))}
+            />
           </>
         )}
       </View>

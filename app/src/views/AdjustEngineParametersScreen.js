@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRouter } from "expo-router";
 import Slider from "@react-native-community/slider"; // Import Slider
-import { useNavigation } from "@react-navigation/native"; // Hook navigation
 import styles from "../style/AdjustParametersStyle";
 import Efficiency from "../models/Efficiency";
 import CalcController from "../controller/CalcController";
-import TransRatio, { TransRatioType1, TransRatioType2 } from "../models/GearRatio";
+// import TransRatio, { TransRatioType1, TransRatioType2 } from "../models/GearRatio";
 import calcFooter from "../style/calcFooter";
 
 export default function AdjustEngineParametersScreen() {
-  // const navigation = useNavigation(); // Hook để chuyển trang
   const router = useRouter(); // Hook để lấy router
   const calcController = CalcController.getInstance();
   const { effi: baseEfficiency, ratio: baseRatio } = calcController.showEngineParam();
@@ -48,15 +46,11 @@ export default function AdjustEngineParametersScreen() {
 
   const [changeEffi, setChangeEffi] = useState(baseEfficiency);
   const [changeRatio, setChangeRatio] = useState(baseRatio);
-  // console.log(changeEffi, changeRatio);
+  const [pCT, setPCT] = useState(calcController.getCalcEngine().p_ct);
+  const [nSB, setNSB] = useState(calcController.getCalcEngine().n_sb);
 
   const handleContinue = () => {
-    // Chuyển giá trị sang trang tính toán tiếp theo
-    // const results = {
-    //   efficiency: changeEffi.parameters,
-    //   ratio: changeRatio.parameters,
-    // };
-
+    console.log(calcController.getCalcEngine());
     router.push("/src/views/SelectEngineScreen");
   };
 
@@ -78,6 +72,8 @@ export default function AdjustEngineParametersScreen() {
 
   useEffect(() => {
     calcController.adjustCalcEngine(changeEffi, changeRatio);
+    setPCT(calcController.getCalcEngine().p_ct);
+    setNSB(calcController.getCalcEngine().n_sb);
   }, [changeEffi, changeRatio]);
 
   return (
@@ -88,12 +84,10 @@ export default function AdjustEngineParametersScreen() {
 
       <View style={styles.infoContainer}>
         <Text style={styles.infoText}>
-          Công suất cần thiết:{" "}
-          <Text style={{ color: "red", fontWeight: "bold" }}>{calcController.getCalcEngine().p_ct.toFixed(3)}</Text> kW
+          Công suất cần thiết: <Text style={{ color: "red", fontWeight: "bold" }}>{pCT.toFixed(3)}</Text> kW
         </Text>
         <Text style={styles.infoText}>
-          Số vòng quay sơ bộ:{" "}
-          <Text style={{ color: "red", fontWeight: "bold" }}>{calcController.getCalcEngine().n_sb.toFixed(0)}</Text> rpm
+          Số vòng quay sơ bộ: <Text style={{ color: "red", fontWeight: "bold" }}>{nSB.toFixed(0)}</Text> rpm
         </Text>
       </View>
 
@@ -105,7 +99,7 @@ export default function AdjustEngineParametersScreen() {
           {changeEffi && (
             <FlatList
               data={changeEffi.n_parts_spec}
-              keyExtractor={(item, index) => index.toString()}
+              keyExtractor={(_, index) => index.toString()}
               renderItem={({ item, index }) => (
                 <View style={styles.parameterRow}>
                   <Text style={styles.paramType}>
@@ -117,7 +111,7 @@ export default function AdjustEngineParametersScreen() {
                     maximumValue={Math.round(item.max * 1000) / 1000}
                     step={Math.round(((item.max - item.min) / 6) * 1000) / 1000}
                     value={item.value}
-                    onValueChange={(value) => handleSliderChangeEffi(index, value)}
+                    onSlidingComplete={(value) => handleSliderChangeEffi(index, value)}
                     disabled={item.type === "kn"}
                   />
                   <Text>{item.value.toFixed(3)}</Text>
@@ -145,7 +139,7 @@ export default function AdjustEngineParametersScreen() {
                     maximumValue={Math.round(item.max * 10) / 10}
                     step={item.type === "h" ? 2 : Math.round(((item.max - item.min) / 6) * 10) / 10}
                     value={item.value}
-                    onValueChange={(value) => handleSliderChangeRatio(index, value)}
+                    onSlidingComplete={(value) => handleSliderChangeRatio(index, value)}
                     disabled={item.type === "kn"}
                   />
                   <Text>{item.value.toFixed(1)}</Text>

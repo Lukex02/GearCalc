@@ -4,7 +4,7 @@ export default StyleSheet.create({
   buttonFooter: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: 400,
+    width: "90%",
     bottom: 40,
     position: "absolute",
   },

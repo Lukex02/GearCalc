@@ -64,7 +64,7 @@ export default function DesignSelectionScreen() {
         setItems={setItems}
         style={styles.dropdown}
         placeholder="Loại hộp giảm tốc"
-        dropDownContainerStyle={{ width: 400, alignSelf: "center" }}
+        dropDownContainerStyle={{ width: "90%", alignSelf: "center" }}
       />
       <Text style={styles.title}>Bản vẽ thiết kế</Text>
       <Image style={styles.imgPreview} source={image} resizeMode="stretch" />

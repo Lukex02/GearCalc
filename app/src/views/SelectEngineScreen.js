@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Image, Alert } from "react-native";
 import { useRouter } from "expo-router"; // Khởi tạo router từ expo-router
 import styles from "../style/SelectEngineScreenStyle"; // Sử dụng style đã tạo
 import calcFooter from "../style/calcFooter";
@@ -23,7 +23,7 @@ export default function SelectEngineScreen() {
       calcController.chooseEngine(selectedEngine);
       router.push(`/src/views/PostEngineStatsView`);
     } else {
-      alert("Vui lòng chọn động cơ.");
+      Alert.alert("Vui lòng chọn động cơ.");
     }
   };
 
@@ -48,7 +48,6 @@ export default function SelectEngineScreen() {
         <Text style={styles.title}>GEAR CALC</Text>
         <Text style={styles.subtitle}>Chọn động cơ</Text>
       </View>
-
       <View style={styles.infoContainer}>
         <Text style={styles.infoText}>
           Công suất cần thiết: <Text style={{ color: "green", fontWeight: "bold" }}>{requiredPower.toFixed(3)}</Text> kW
@@ -57,10 +56,10 @@ export default function SelectEngineScreen() {
           Tốc độ quay cần thiết: <Text style={{ color: "green", fontWeight: "bold" }}>{requiredSpeed.toFixed(0)}</Text> rpm
         </Text>
       </View>
-
       {/* Danh sách động cơ */}
       <View style={styles.parameterAdjustment}>
         <Text style={styles.parameterTitle}>Danh sách động cơ thỏa mãn</Text>
+        {engineList.length == 0 && <Text style={{ textAlign: "center" }}>Không có động cơ thỏa mãn điều kiện!</Text>}
         <FlatList
           contentContainerStyle={{ flex: 1 }}
           data={engineList}
@@ -80,7 +79,6 @@ export default function SelectEngineScreen() {
           )}
         />
       </View>
-
       <View style={calcFooter.buttonFooter}>
         <TouchableOpacity style={calcFooter.cancelButton} onPress={handleBack}>
           <Text style={calcFooter.cancelButtonText}>Quay lại</Text>
