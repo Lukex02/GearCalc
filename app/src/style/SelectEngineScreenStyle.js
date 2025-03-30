@@ -57,9 +57,8 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   engineItem: {
-    flex: 1,
     marginBottom: 15,
-    padding: 15,
+    padding: 10,
     backgroundColor: "#f4f4f4",
     borderRadius: 8,
     flexDirection: "row",
