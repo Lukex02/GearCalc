@@ -21,8 +21,6 @@ export default function RegisterScreen() {
           alert("User đã đăng nhập");
           Alert.alert("Thông báo", "User đã đăng nhập");
           router.push("./Home");
-        } else {
-          console.log("Chưa đăng nhập");
         }
         setLoading(false);
       }

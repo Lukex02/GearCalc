@@ -15,7 +15,7 @@ const FullscreenImageBackground: React.FC = () => {
       <TouchableOpacity style={styles.mainBtn} onPress={() => router.push("/src/views/Home")}>
         <Text style={styles.mainBtnTxt}>Bắt đầu</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.mainBtn} onPress={() => router.push("/src/views/login")}>
+      <TouchableOpacity style={styles.mainBtn} onPress={() => router.push("/src/views/Login")}>
         <Text style={styles.mainBtnTxt}>Đăng nhập</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.mainBtn} onPress={() => router.push("/src/views/Register")}>

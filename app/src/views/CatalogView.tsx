@@ -87,7 +87,7 @@ const CatalogPage = () => {
           contentStyle={styles.menuContent}
           visible={menuVisible}
           onDismiss={closeMenu}
-          anchorPosition="bottom"
+          anchorPosition="top"
           anchor={<IconButton icon="menu" iconColor="white" size={30} style={{ backgroundColor: "black" }} onPress={openMenu} />}
         >
           <Menu.Item onPress={() => filterByType("all")} title="Tất cả" titleStyle={styles.menuItem} />

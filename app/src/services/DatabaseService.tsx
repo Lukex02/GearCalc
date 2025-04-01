@@ -7,6 +7,7 @@ const supabaseKey = Constants.expoConfig?.extra?.supabaseAnonKey;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default class DatabaseService {
+  // private static _authSession: any;
   static async signUp(username: string, email: string, password: string) {
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -16,11 +17,13 @@ export default class DatabaseService {
       },
     });
     if (error) console.error("Signup error:", error.message);
+    // this._authSession = data.session;
     return { data, error };
   }
 
   static async logIn(email: string, password: string) {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    // this._authSession = data.session;
     return { data, error };
   }
 
@@ -46,6 +49,7 @@ export default class DatabaseService {
     if (data?.session) {
       console.log("Đã đăng nhập");
       // console.log(data.session);
+      // this._authSession = data.session;
       return data.session;
     } else {
       console.log("Session không hợp lệ, user cần đăng nhập lại.", error);

@@ -112,7 +112,7 @@ export default StyleSheet.create({
     textAlign: "center",
     fontSize: scale(24),
     fontWeight: "bold",
-    color: "#BLACK",
+    color: "#black",
     textTransform: "uppercase",
     letterSpacing: 2,
     textShadowColor: "rgba(0, 0, 0, 0.75)",
@@ -148,7 +148,7 @@ export default StyleSheet.create({
   title: {
     fontSize: scale(14),
     fontWeight: "bold",
-    color: "#BLACK",
+    color: "#black",
     textTransform: "uppercase",
   },
   subtitle: {
@@ -159,7 +159,7 @@ export default StyleSheet.create({
   menu: {
     backgroundColor: "#fff",
     borderRadius: 15,
-    width: "80%",
+    width: "50%",
   },
   menuContent: {
     backgroundColor: "white",
@@ -167,7 +167,7 @@ export default StyleSheet.create({
   menuItem: {
     color: "black",
     fontWeight: "bold",
-    fontSize: scale(18),
+    fontSize: scale(14),
     textAlign: "left",
   },
 
@@ -227,7 +227,7 @@ export default StyleSheet.create({
   designTitle: {
     fontSize: scale(20),
     fontWeight: "bold",
-    color: "#BLACK",
+    color: "#black",
     textTransform: "uppercase",
     textAlign: "center",
   },
@@ -299,7 +299,7 @@ export default StyleSheet.create({
     fontStyle: "italic",
   },
   slider: {
-    width: scale(110),
+    width: "90%",
     height: verticalScale(20),
     margin: "auto",
   },
