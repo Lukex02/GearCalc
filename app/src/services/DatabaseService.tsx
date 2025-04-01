@@ -45,6 +45,7 @@ export default class DatabaseService {
     const { data, error } = await supabase.auth.getSession();
     if (data?.session) {
       console.log("Đã đăng nhập");
+      // console.log(data.session);
       return data.session;
     } else {
       console.log("Session không hợp lệ, user cần đăng nhập lại.", error);
@@ -58,7 +59,8 @@ export default class DatabaseService {
       .select("*")
       .gt("Power", reqPower)
       .lt("Speed", Math.floor(reqRpm) + 50) // Xấp xỉ thì cho phép sai số trên dưới 50 so với yêu cầu
-      .gt("Speed", Math.floor(reqRpm) - 50);
+      .gt("Speed", Math.floor(reqRpm) - 50)
+      .limit(1);
     if (error) console.error("Lỗi khi lấy dữ liệu ", error);
     return data ?? [];
   }
@@ -68,7 +70,7 @@ export default class DatabaseService {
     const tables = ["Engine", "chain"];
 
     for (const tableName of tables) {
-      const { data, error } = await supabase.from(tableName).select("*").limit(10); // Tránh lãng phí data
+      const { data, error } = await supabase.from(tableName).select("*").limit(1); // Tránh lãng phí data
       if (error) {
         console.error(`Lỗi khi lấy dữ liệu từ ${tableName}:`, error);
       } else {

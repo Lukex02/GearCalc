@@ -8,14 +8,14 @@ import DatabaseService from "../services/DatabaseService";
 const CatalogPage = () => {
   const [loading, setLoading] = useState(true);
   const [menuVisible, setMenuVisible] = useState(false);
-  const [catalog, setCatalog] = useState([]); // full catalog
-  const [filteredCatalog, setFilteredCatalog] = useState([]); // filtered catalog
+  const [catalog, setCatalog] = useState<any[]>([]); // full catalog
+  const [filteredCatalog, setFilteredCatalog] = useState<any[]>([]); // filtered catalog
   const router = useRouter();
 
   const openMenu = () => setMenuVisible(true);
   const closeMenu = () => setMenuVisible(false);
 
-  const printChainType = (type) => {
+  const printChainType = (type: string) => {
     switch (type) {
       case "1_roller":
         return "Xích con lăn 1 dãy";
@@ -26,7 +26,7 @@ const CatalogPage = () => {
     }
   };
 
-  const filterByType = (type) => {
+  const filterByType = (type: string) => {
     closeMenu(); // always close menu on filter select
     if (!type || type === "all") {
       setFilteredCatalog(catalog);
@@ -52,7 +52,7 @@ const CatalogPage = () => {
 
       {!loading && (
         <ScrollView style={styles.gridContainer} contentContainerStyle={{ alignItems: "center" }}>
-          {filteredCatalog.map((item, index) => (
+          {filteredCatalog.map((item: any, index) => (
             <TouchableOpacity
               key={index}
               style={styles.gridItem}
@@ -61,34 +61,34 @@ const CatalogPage = () => {
               <Image source={require("../img/wrench.png")} style={styles.gridImage} resizeMode="contain" />
 
               {item.type === "Engine" && (
-                <View style={styles.textContainer}>
+                <View style={styles.gridTextContainer}>
                   <Text style={styles.title}>Động cơ: {item.Motor_Type}</Text>
-                  <Text style={styles.subtitle}>Công suất: {item.Power}</Text>
-                  <Text style={styles.subtitle}>Tốc độ vòng quay: {item.Speed}</Text>
+                  <Text style={styles.subtitle}>Công suất: {item.Power} kW</Text>
+                  <Text style={styles.subtitle}>Tốc độ vòng quay: {item.Speed} vg/ph</Text>
                 </View>
               )}
 
               {item.type === "chain" && (
-                <View style={styles.textContainer}>
+                <View style={styles.gridTextContainer}>
                   <Text style={styles.title}>Loại: {printChainType(item.chain_type)}</Text>
                   <Text style={styles.title}>Bước Xích: {item.Step_p} (mm)</Text>
-                  <Text style={styles.subtitle}>B min: {item.B_min}</Text>
-                  <Text style={styles.subtitle}>Breaking Load Q: {item.Breaking_Load_Q}</Text>
+                  <Text style={styles.subtitle}>B min: {item.B_min} (mm)</Text>
+                  <Text style={styles.subtitle}>Tải trọng phá hỏng Q: {item.Breaking_Load_Q} (kN)</Text>
+                  <Text style={styles.subtitle}>Khối lượng 1 mét xích Q: {item.q_p} (kg)</Text>
                 </View>
               )}
             </TouchableOpacity>
           ))}
         </ScrollView>
       )}
-
-      <View>
+      <View style={{ alignSelf: "flex-start" }}>
         <Menu
           style={styles.menu}
           contentStyle={styles.menuContent}
           visible={menuVisible}
           onDismiss={closeMenu}
           anchorPosition="bottom"
-          anchor={<IconButton icon="menu" iconColor="white" size={40} style={styles.menuBtn} onPress={openMenu} />}
+          anchor={<IconButton icon="menu" iconColor="white" size={30} style={{ backgroundColor: "black" }} onPress={openMenu} />}
         >
           <Menu.Item onPress={() => filterByType("all")} title="Tất cả" titleStyle={styles.menuItem} />
           <Menu.Item onPress={() => filterByType("Engine")} title="Động cơ điện" titleStyle={styles.menuItem} />

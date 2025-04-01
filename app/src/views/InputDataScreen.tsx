@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import styles from "../style/InputDataScreenStyle";
+import styles from "../style/MainStyle";
 import CalcController from "../controller/CalcController";
-import calcFooter from "../style/calcFooter";
-import { ScrollView } from "react-native-web";
+import CalcFooter from "./CalcFooter";
 
 export default function InputDataScreen() {
   const { gearBoxType } = useLocalSearchParams();
   const router = useRouter();
-  const calcController = new CalcController(gearBoxType);
+  const calcController = new CalcController(Array.isArray(gearBoxType) ? gearBoxType[0] : gearBoxType);
 
   // Các state cho giá trị nhập liệu
   const [F, setF] = useState(0); // Lực vòng
@@ -44,76 +43,69 @@ export default function InputDataScreen() {
     }
   }, [gearBoxType]);
 
-  const handleContinue = () => {
+  const handleValidation = () => {
     if (!F || !v || !T1 || !t1 || !T2 || !t2 || (gearBoxType === "GearBox2" && (!p || !z))) {
+      alert("Vui lòng điền đầy đủ thông tin.");
       Alert.alert("Thiếu thông tin", "Vui lòng điền đầy đủ thông tin.");
-      return;
+      return false;
+    } else {
+      if (gearBoxType === "GearBox1") calcController.calcEngineBase(F, v, T1, t1, T2, t2, { D });
+      if (gearBoxType === "GearBox2") calcController.calcEngineBase(F, v, T1, t1, T2, t2, { z, p });
+      return true;
     }
-    if (gearBoxType === "GearBox1") calcController.calcEngineBase(F, v, T1, t1, T2, t2, { D });
-    if (gearBoxType === "GearBox2") calcController.calcEngineBase(F, v, T1, t1, T2, t2, { z, p });
-    // Chuyển đến trang tiếp theo (thực hiện các tính toán hoặc hiển thị kết quả)
-    // router.push({
-    //   pathname: "/src/views/AdjustEngineParametersScreen",
-    //   params: { calcController: JSON.stringify(calcController) },
-    // });
-    router.push("/src/views/AdjustEngineParametersScreen");
-  };
-
-  const handleBack = () => {
-    router.back(); // Quay lại trang trước
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Số liệu thiết kế</Text>
+        <Text style={styles.designTitle}>Số liệu thiết kế</Text>
       </View>
-      <View style={styles.inputContainer}>
-        <Text>Lực vòng F (N):</Text>
+      <ScrollView style={styles.inputContainer}>
+        <Text style={styles.inputFieldLabel}>Lực vòng F (N):</Text>
         <TextInput
           style={styles.inputField}
-          keyboardType="numeric"
+          keyboardType="decimal-pad"
           value={F.toString()}
           autoFocus={false}
           onChangeText={(text) => setF(Number(text))}
         />
 
-        <Text>Vận tốc V (m/s):</Text>
+        <Text style={styles.inputFieldLabel}>Vận tốc V (m/s):</Text>
         <TextInput
           style={styles.inputField}
-          keyboardType="numeric"
+          keyboardType="decimal-pad"
           value={v.toString()}
           onChangeText={(text) => setV(Number(text))}
         />
 
-        <Text>Momen xoắn T1 (N.m):</Text>
+        <Text style={styles.inputFieldLabel}>Momen xoắn T1 (N.m):</Text>
         <TextInput
           style={styles.inputField}
-          keyboardType="numeric"
+          keyboardType="decimal-pad"
           value={T1.toString()}
           onChangeText={(text) => setT1(Number(text))}
         />
 
-        <Text>Thời gian tải t1 (giờ):</Text>
+        <Text style={styles.inputFieldLabel}>Thời gian tải t1 (giờ):</Text>
         <TextInput
           style={styles.inputField}
-          keyboardType="numeric"
+          keyboardType="decimal-pad"
           value={t1.toString()}
           onChangeText={(text) => setT1Duration(Number(text))}
         />
 
-        <Text>Momen xoắn T2 (N.m):</Text>
+        <Text style={styles.inputFieldLabel}>Momen xoắn T2 (N.m):</Text>
         <TextInput
           style={styles.inputField}
-          keyboardType="numeric"
+          keyboardType="decimal-pad"
           value={T2.toString()}
           onChangeText={(text) => setT2(Number(text))}
         />
 
-        <Text>Thời gian tải t2 (giờ):</Text>
+        <Text style={styles.inputFieldLabel}>Thời gian tải t2 (giờ):</Text>
         <TextInput
           style={styles.inputField}
-          keyboardType="numeric"
+          keyboardType="decimal-pad"
           value={t2.toString()}
           onChangeText={(text) => setT2Duration(Number(text))}
         />
@@ -121,18 +113,18 @@ export default function InputDataScreen() {
         {/* Hiển thị trường P và Z nếu chọn GearBox2 */}
         {gearBoxType === "GearBox2" && (
           <>
-            <Text>Công suất P (N):</Text>
+            <Text style={styles.inputFieldLabel}>Công suất P (N):</Text>
             <TextInput
               style={styles.inputField}
-              keyboardType="numeric"
+              keyboardType="decimal-pad"
               value={p.toString()}
               onChangeText={(text) => setP(Number(text))}
             />
 
-            <Text>Số răng đĩa xích Z:</Text>
+            <Text style={styles.inputFieldLabel}>Số răng đĩa xích Z:</Text>
             <TextInput
               style={styles.inputField}
-              keyboardType="numeric"
+              keyboardType="decimal-pad"
               value={z.toString()}
               onChangeText={(text) => setZ(Number(text))}
             />
@@ -142,26 +134,17 @@ export default function InputDataScreen() {
         {/* Hiển thị trường D nếu chọn GearBox1 */}
         {gearBoxType === "GearBox1" && (
           <>
-            <Text>Đường kính D (mm):</Text>
+            <Text style={styles.inputFieldLabel}>Đường kính D (mm):</Text>
             <TextInput
               style={styles.inputField}
-              keyboardType="numeric"
+              keyboardType="decimal-pad"
               value={D.toString()}
               onChangeText={(text) => setD(Number(text))}
             />
           </>
         )}
-      </View>
-
-      <View style={calcFooter.buttonFooter}>
-        <TouchableOpacity style={calcFooter.cancelButton} onPress={handleBack}>
-          <Text style={calcFooter.cancelButtonText}>Quay lại</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={calcFooter.button} onPress={handleContinue}>
-          <Text style={calcFooter.buttonText}>Tiếp tục</Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
+      <CalcFooter nextPage={"/src/views/AdjustEngineParametersScreen"} onValidate={handleValidation} />
     </View>
   );
 }
