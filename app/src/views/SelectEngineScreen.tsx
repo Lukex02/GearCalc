@@ -52,7 +52,7 @@ export default function SelectEngineScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.designTitle}>Chọn động cơ</Text>
+        <Text style={styles.pageTitle}>Chọn động cơ</Text>
       </View>
       <View style={styles.resultContainer}>
         <Text style={styles.resultText}>
@@ -63,7 +63,7 @@ export default function SelectEngineScreen() {
         </Text>
       </View>
       {/* Danh sách động cơ */}
-      <Text style={styles.designTitle}>Danh sách động cơ thỏa mãn</Text>
+      <Text style={styles.pageTitle}>Danh sách động cơ thỏa mãn</Text>
       {loading ? (
         <LoadingScreen />
       ) : (

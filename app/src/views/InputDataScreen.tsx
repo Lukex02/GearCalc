@@ -58,7 +58,7 @@ export default function InputDataScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.designTitle}>Số liệu thiết kế</Text>
+        <Text style={styles.pageTitle}>Số liệu thiết kế</Text>
       </View>
       <ScrollView style={styles.inputContainer}>
         <Text style={styles.inputFieldLabel}>Lực vòng F (N):</Text>

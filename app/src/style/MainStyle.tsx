@@ -27,6 +27,7 @@ export default StyleSheet.create({
     backgroundColor: "#9FD8E6",
     paddingHorizontal: scale(30),
     paddingVertical: verticalScale(20),
+    // flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
   },
@@ -86,6 +87,69 @@ export default StyleSheet.create({
     fontSize: scale(14),
     textAlign: "center",
   },
+
+  profileImg: {
+    width: scale(100),
+    height: scale(100),
+    margin: scale(10),
+    borderRadius: 8,
+    ...shadows.default,
+  },
+  historyContainer: {
+    height: verticalScale(300),
+    width: scale(300),
+    // flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: "white",
+    padding: scale(10),
+    borderRadius: 10,
+    ...shadows.default,
+  },
+  historyHeader: {
+    flexDirection: "row",
+    paddingBottom: scale(10),
+    borderBottomWidth: 2,
+  },
+  historyHeaderCell: {
+    flex: 1,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  historyRow: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "black",
+  },
+  historyCell: {
+    flex: 1,
+    margin: "auto",
+    textAlign: "center",
+    padding: scale(10),
+  },
+  historySpecBtn: {
+    flex: 1,
+    backgroundColor: "rgb(0, 140, 255)",
+    borderRadius: 6,
+    margin: "auto",
+    marginHorizontal: scale(5),
+    padding: scale(5),
+    alignItems: "center",
+    width: "100%",
+    ...shadows.default,
+  },
+  historyPrintBtn: {
+    flex: 1,
+    backgroundColor: "rgb(0, 255, 98)",
+    borderRadius: 6,
+    margin: "auto",
+    padding: scale(5),
+    marginHorizontal: scale(5),
+    alignItems: "center",
+    width: "100%",
+    ...shadows.default,
+  },
+
+  // Option styles
   optionCard: {
     backgroundColor: "#fff",
     padding: scale(20),
@@ -130,11 +194,11 @@ export default StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "white",
-    padding: 20,
+    padding: scale(20),
     borderRadius: 8,
     ...shadows.default,
     width: "90%",
-    marginBottom: 20,
+    marginBottom: verticalScale(20),
   },
   gridImage: {
     width: scale(80),
@@ -224,7 +288,7 @@ export default StyleSheet.create({
   },
 
   // Design Page Style
-  designTitle: {
+  pageTitle: {
     fontSize: scale(20),
     fontWeight: "bold",
     color: "#black",
@@ -269,20 +333,22 @@ export default StyleSheet.create({
     fontSize: scale(16),
     color: "#000",
   },
-  adjContainer: {
+  rowContainer: {
     maxHeight: verticalScale(300),
     flexDirection: "row",
     justifyContent: "space-around",
     width: scale(300),
     backgroundColor: "white",
-    // padding: scale(10),
     borderRadius: 10,
     ...shadows.default,
   },
   tableContainer: {
+    flex: 1,
+  },
+  tableContainerPad10: {
+    flex: 1,
     padding: scale(10),
-    width: scale(150),
-    // marginTop: scale(50),
+    justifyContent: "space-around",
   },
   tableTitle: {
     fontSize: scale(16),
@@ -292,14 +358,14 @@ export default StyleSheet.create({
   },
   parameterRow: {
     marginBottom: scale(5),
-    // marginHorizontal: scale(10),
+    marginHorizontal: scale(15),
   },
   paramType: {
     fontSize: scale(14),
     fontStyle: "italic",
   },
   slider: {
-    width: "90%",
+    width: "80%",
     height: verticalScale(20),
     margin: "auto",
   },

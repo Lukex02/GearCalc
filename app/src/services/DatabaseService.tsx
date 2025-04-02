@@ -44,6 +44,12 @@ export default class DatabaseService {
     });
   }
 
+  static async getUser() {
+    const { data, error } = await supabase.auth.getUser();
+    if (error) console.error("Lỗi khi lấy dữ liệu user:", error.message);
+    return data.user;
+  }
+
   static async checkAuth() {
     const { data, error } = await supabase.auth.getSession();
     if (data?.session) {

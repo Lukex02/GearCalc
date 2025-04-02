@@ -50,7 +50,7 @@ export default function DesignSelectionScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.designTitle}>Thiết kế hộp giảm tốc</Text>
+        <Text style={styles.pageTitle}>Thiết kế hộp giảm tốc</Text>
       </View>
 
       <DropDownPicker
@@ -64,7 +64,7 @@ export default function DesignSelectionScreen() {
         dropDownContainerStyle={styles.dropdownContainer}
         placeholder="Loại hộp giảm tốc"
       />
-      <Text style={styles.designTitle}>Bản vẽ thiết kế</Text>
+      <Text style={styles.pageTitle}>Bản vẽ thiết kế</Text>
       <Image style={styles.designImgPreview} source={image ? image : undefined} resizeMode="stretch" />
 
       <CalcFooter

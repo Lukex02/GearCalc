@@ -78,7 +78,7 @@ export default function AdjustEngineParametersScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.designTitle}>Thông số tính toán</Text>
+        <Text style={styles.pageTitle}>Thông số tính toán</Text>
       </View>
 
       <View style={styles.resultContainer}>
@@ -90,8 +90,8 @@ export default function AdjustEngineParametersScreen() {
         </Text>
       </View>
 
-      <Text style={styles.designTitle}>Điều chỉnh thông số</Text>
-      <View style={styles.adjContainer}>
+      <Text style={styles.pageTitle}>Điều chỉnh thông số</Text>
+      <View style={styles.rowContainer}>
         {/* Hiệu suất */}
         <View style={styles.tableContainer}>
           <Text style={styles.tableTitle}>Hiệu suất</Text>
