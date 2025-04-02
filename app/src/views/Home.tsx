@@ -2,21 +2,12 @@ import React from "react";
 import { ScrollView, View, Text, TouchableOpacity, Image } from "react-native";
 import { useRouter } from "expo-router";
 import styles from "../style/MainStyle";
-// import DatabaseService from "../services/DatabaseService";
 
 export default function GearCalc() {
   const router = useRouter();
 
   const handleGoToDesign = () => {
     router.push("/src/views/DesignSelectionScreen");
-    // DatabaseService.checkAuth().then((authStatus) => {
-    //   if (authStatus) {
-    //     router.push("/src/views/DesignSelectionScreen");
-    //   } else {
-    //     Alert.alert("Thông báo", "Bạn cần phải đăng nhập để dùng tính năng này");
-    //     router.push("./login");
-    //   }
-    // });
   };
 
   return (

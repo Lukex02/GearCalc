@@ -25,16 +25,12 @@ export default function SelectEngineScreen() {
   const handleValidation = () => {
     if (selectedEngine) {
       calcController.chooseEngine(selectedEngine);
-      // router.push(`/src/views/PostEngineStatsView`);
       return true;
     } else {
-      alert;
+      alert("Vui lòng chọn động cơ.");
       Alert.alert("Thông báo", "Vui lòng chọn động cơ.");
+      return false;
     }
-  };
-
-  const handleBack = () => {
-    router.back(); // Quay lại trang trước
   };
 
   // Lọc động cơ thỏa mãn các yêu cầu
@@ -97,7 +93,7 @@ export default function SelectEngineScreen() {
           />
         </View>
       )}
-      <CalcFooter nextPage={"/"} />
+      <CalcFooter onValidate={handleValidation} nextPage={"/src/views/PostEngineStatsView"} />
     </View>
   );
 }

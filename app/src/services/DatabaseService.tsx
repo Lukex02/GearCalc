@@ -7,7 +7,6 @@ const supabaseKey = Constants.expoConfig?.extra?.supabaseAnonKey;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default class DatabaseService {
-  // private static _authSession: any;
   static async signUp(username: string, email: string, password: string) {
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -17,13 +16,11 @@ export default class DatabaseService {
       },
     });
     if (error) console.error("Signup error:", error.message);
-    // this._authSession = data.session;
     return { data, error };
   }
 
   static async logIn(email: string, password: string) {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    // this._authSession = data.session;
     return { data, error };
   }
 
@@ -31,18 +28,18 @@ export default class DatabaseService {
     await supabase.auth.signOut();
   }
 
-  static async setSession(access_token: string, refresh_token: string) {
-    await supabase.auth.setSession({ access_token, refresh_token });
-  }
+  // static async setSession(access_token: string, refresh_token: string) {
+  //   await supabase.auth.setSession({ access_token, refresh_token });
+  // }
 
-  static async refreshToken() {
-    supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === "TOKEN_REFRESHED" && session) {
-        await SecureStore.setItemAsync("access_token", session.access_token);
-        await SecureStore.setItemAsync("refresh_token", session.refresh_token);
-      }
-    });
-  }
+  // static async refreshToken() {
+  //   supabase.auth.onAuthStateChange(async (event, session) => {
+  //     if (event === "TOKEN_REFRESHED" && session) {
+  //       await SecureStore.setItemAsync("access_token", session.access_token);
+  //       await SecureStore.setItemAsync("refresh_token", session.refresh_token);
+  //     }
+  //   });
+  // }
 
   static async getUser() {
     const { data, error } = await supabase.auth.getUser();
@@ -53,9 +50,8 @@ export default class DatabaseService {
   static async checkAuth() {
     const { data, error } = await supabase.auth.getSession();
     if (data?.session) {
-      console.log("Đã đăng nhập");
+      // console.log("Đã đăng nhập");
       // console.log(data.session);
-      // this._authSession = data.session;
       return data.session;
     } else {
       console.log("Session không hợp lệ, user cần đăng nhập lại.", error);
@@ -70,7 +66,7 @@ export default class DatabaseService {
       .gt("Power", reqPower)
       .lt("Speed", Math.floor(reqRpm) + 50) // Xấp xỉ thì cho phép sai số trên dưới 50 so với yêu cầu
       .gt("Speed", Math.floor(reqRpm) - 50)
-      .limit(1);
+      .limit(3);
     if (error) console.error("Lỗi khi lấy dữ liệu ", error);
     return data ?? [];
   }
