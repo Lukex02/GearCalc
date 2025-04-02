@@ -3,7 +3,6 @@ import styles from "../style/MainStyle";
 import { useState, useEffect } from "react";
 import DatabaseService from "../services/DatabaseService";
 import LoadingScreen from "./LoadingScreen";
-import { Button } from "react-native-paper";
 
 // Mẫu user data, vì chưa có history để làm
 const history_prop = [
