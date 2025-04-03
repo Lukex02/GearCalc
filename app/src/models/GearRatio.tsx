@@ -47,7 +47,13 @@ export default class TransRatio {
     });
   }
   protected add_ratio(type: string, value: number) {
-    this._ratio_spec.push({ type: type, value: value });
+    // Kiểm tra có tồn tại chưa
+    this._ratio_spec.some((ratio) => ratio.type === type)
+      ? this._ratio_spec.map((ratio) => {
+          // Rồi thì thay đổi giá trị
+          if (ratio.type === type) return (ratio.value = value);
+        })
+      : this._ratio_spec.push({ type: type, value: value }); // Chưa thì thêm object mới
   }
   protected remove_ratio(type: string) {
     this._ratio_spec = this._ratio_spec.filter((ratio) => ratio.type !== type);
@@ -66,13 +72,15 @@ export default class TransRatio {
     this.set_ratio("kn", value);
   }
 
-  recalcTransRatio(calc_engi: CalculatedEngine, sele_engi: SelectedEngine): TransRatio {
+  recalcTransRatio(calc_engi: CalculatedEngine, sele_engi: SelectedEngine): TransRatio | null {
     // Sau khi gán u_t mới thì các thông số khác sẽ tự động cập nhật
     this.u_t = sele_engi.n_t / calc_engi.n_lv;
     // Kiểm tra lại
+    // console.log(this.ratio_spec);
     let delta_check = this._u_t - this._ratio_spec.reduce((acc, ratio) => acc * ratio.value, 1);
+    // console.log("Delta check: " + delta_check);
     if (-0.5 < delta_check && delta_check < 0.5) return this;
-    else throw new Error("Failed check");
+    else return null;
   }
 }
 

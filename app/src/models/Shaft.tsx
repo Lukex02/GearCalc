@@ -7,19 +7,11 @@ export default class ShaftStats {
   private _T: number[]; // Momen xoắn trên các trục [t_dc, t1, t2, t3,..., t_ct] (ct là công tác, hay là output cuối)
 
   constructor(n_dc: number, p_td: number, effi: Efficiency, ratio: TransRatio, order: string[]) {
-    // this._n = ratio.ratio_spec.reduce(
-    //   (acc, ratio) => {
-    //     if (ratio.type !== "kn") acc.push(acc[acc.length - 1] / ratio.value);
-    //     return acc;
-    //   },
-    //   [n_dc]
-    // );
     this._n = [n_dc];
     order.map((type) => {
       const cur = ratio.ratio_spec.find((ratio) => ratio.type === type)!;
       this._n.push(this._n[this._n.length - 1] / cur.value);
     });
-    // let temp_effi = effi.n_parts_flat.reverse(); // Vì phải tính P ngược từ đầu ra
     this._p = this.calc_power(p_td, effi.n_parts_spec, order.reverse());
     this._T = this._p.map((p, idx) => this.calc_torque(this._n[idx], p));
   }

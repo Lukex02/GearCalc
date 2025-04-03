@@ -48,15 +48,6 @@ export default function AdjustEngineParametersScreen() {
   const [pCT, setPCT] = useState(calcController.getCalcEngine().p_ct);
   const [nSB, setNSB] = useState(calcController.getCalcEngine().n_sb);
 
-  // const handleValidate = () => {
-  //   console.log(calcController.getCalcEngine());
-  //   router.push("/src/views/SelectEngineScreen");
-  // };
-
-  // const handleBack = () => {
-  //   router.back(); // Quay lại trang trước
-  // };
-
   const handleSliderChangeEffi = (index: number, value: any) => {
     const newChangeEffi = [...changeEffi.n_parts_full];
     newChangeEffi[index][0].value = value;
@@ -91,7 +82,7 @@ export default function AdjustEngineParametersScreen() {
       </View>
 
       <Text style={styles.pageTitle}>Điều chỉnh thông số</Text>
-      <View style={styles.rowContainer}>
+      <View style={styles.colContainer}>
         {/* Hiệu suất */}
         <View style={styles.tableContainer}>
           <Text style={styles.tableTitle}>Hiệu suất</Text>

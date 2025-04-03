@@ -66,7 +66,8 @@ export default class DatabaseService {
       .gt("Power", reqPower)
       .lt("Speed", Math.floor(reqRpm) + 50) // Xấp xỉ thì cho phép sai số trên dưới 50 so với yêu cầu
       .gt("Speed", Math.floor(reqRpm) - 50)
-      .limit(3);
+      .order("Motor_Type", { ascending: false })
+      .limit(2);
     if (error) console.error("Lỗi khi lấy dữ liệu ", error);
     return data ?? [];
   }

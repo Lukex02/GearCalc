@@ -222,17 +222,24 @@ export default class CalcController {
   getEnginePostStats() {
     if (this._gearBoxBuilder && this._calcEngine) {
       const newTransRatio = EngineController.getNewTransRatio(this._calcEngine, this._gearBoxBuilder.getEngine(), this._ratio);
-      const newEngineShaftStats = EngineController.getShaftStats(
-        this._gearBoxBuilder.getEngine().n_t,
-        this._calcEngine.p_lv,
-        this._effiency,
-        newTransRatio,
-        this._order
-      );
-      return {
-        newTransRatio,
-        newEngineShaftStats,
-      };
+      if (newTransRatio) {
+        const newEngineShaftStats = EngineController.getShaftStats(
+          this._gearBoxBuilder.getEngine().n_t,
+          this._calcEngine.p_lv,
+          this._effiency,
+          newTransRatio,
+          this._order
+        );
+        let rearrangedRatio = this._order
+          .map((ratio_type) => newTransRatio.ratio_spec.find((ratio) => ratio.type === ratio_type))
+          .reverse();
+        return {
+          rearrangedRatio,
+          newEngineShaftStats,
+        };
+      } else {
+        return null;
+      }
     }
   }
 
