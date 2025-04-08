@@ -32,7 +32,7 @@ export default function SelectEngineScreen() {
       ) : (
         <View style={styles.container}>
           <Text style={styles.pageTitle}>Thông tin tài khoản</Text>
-          <View style={styles.rowContainer}>
+          <View style={styles.colContainer}>
             <Image style={styles.profileImg} source={require("../img/default-avatar.jpg")} resizeMode="contain"></Image>
             <View style={styles.tableContainerPad10}>
               <Text>

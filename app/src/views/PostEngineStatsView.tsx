@@ -51,7 +51,9 @@ export default function SelectEngineScreen() {
             <Text style={styles.specHeaderCell}>P{"\n"}(kW)</Text>
             {/* {dummyP.map((p) => ( */}
             {post_p.map((p) => (
-              <Text style={styles.specCell}>{p.toFixed(4)}</Text>
+              <Text key={p} style={styles.specCell}>
+                {p.toFixed(4)}
+              </Text>
             ))}
           </View>
 
@@ -60,7 +62,9 @@ export default function SelectEngineScreen() {
             <Text style={styles.specHeaderCell}>n{"\n"}(rpm)</Text>
             {/* {dummyN.map((n) => ( */}
             {post_n.map((n) => (
-              <Text style={styles.specCell}>{n.toFixed(2)}</Text>
+              <Text key={n} style={styles.specCell}>
+                {n.toFixed(2)}
+              </Text>
             ))}
           </View>
 
@@ -69,7 +73,9 @@ export default function SelectEngineScreen() {
             <Text style={styles.specHeaderCell}>T{"\n"}(N.mm)</Text>
             {/* {dummyT.map((T) => ( */}
             {post_T.map((T) => (
-              <Text style={styles.specCell}>{T.toFixed(4)}</Text>
+              <Text key={T} style={styles.specCell}>
+                {T.toFixed(4)}
+              </Text>
             ))}
           </View>
 
@@ -78,13 +84,15 @@ export default function SelectEngineScreen() {
             <Text style={styles.specHeaderCell}>u{"\n"}</Text>
             {/* {dummyU.map((u) => ( */}
             {post_u.map((u) => (
-              <Text style={styles.specCell}>{u.value.toFixed(2)}</Text>
+              <Text key={u.value} style={styles.specCell}>
+                {u.value.toFixed(2)}
+              </Text>
             ))}
           </View>
         </View>
 
         {/* Truyền địa chỉ trang xích tiếp theo ở đây */}
-        <CalcFooter nextPage={"/"} />
+        <CalcFooter nextPage={"/src/views/InputChain"} />
       </View>
     );
   }

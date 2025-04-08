@@ -3,9 +3,14 @@ import Efficiency, { IEfficiency } from "../models/Efficiency";
 import { CalculatedEngine, SelectedEngine } from "../models/EngineModel";
 import GearBox, { GearBoxBuilder } from "../models/GearBox";
 import TransRatio, { TransRatioType1, TransRatioType2 } from "../models/GearRatio";
+import ChainController from "./ChainController";
+import CalculatedChain, { SelectedChain } from "../models/Chain";
+import { Alert } from "react-native";
 
 interface DesignStrategy {
-  _designStats: any;
+  _designEngineStats: any;
+  _designMechDriveStats: any;
+
   designEngine(
     F: number, // Lực vòng trên băng tải (N) (đề)
     v: number, // Vận tốc băng tải (m/s) (đề)
@@ -16,12 +21,15 @@ interface DesignStrategy {
     output: any // Có thể là đĩa xích, trục tang, tùy thuộc sẽ thay đổi kiểu và số liệu
   ): { engi: CalculatedEngine; base_effi: Efficiency; base_ratio: TransRatio };
   recalcEngine(efficiency: Efficiency, ratio: TransRatio): CalculatedEngine;
+  designMechDrive(input: any): any;
+  continueCalcMechDrive(calculated: any, selected: any): void;
 }
 
 // Hộp giảm tốc 2 cấp khai triển (2 cặp bánh răng)
 // Quay một chiều, làm việc 2 ca, tải va đập nhẹ: 1 năm làm việc 300 ngày, 1 ca làm việc 8 giờ.
 class DesignGearBox1 implements DesignStrategy {
-  _designStats: any;
+  _designEngineStats: any;
+  _designMechDriveStats: any;
 
   designEngine(
     F: number, // Lực vòng trên băng tải (N) (đề)
@@ -47,7 +55,7 @@ class DesignGearBox1 implements DesignStrategy {
       { type: "h", value: 18 },
       { type: "kn", value: 1 },
     ]);
-    this._designStats = {
+    this._designEngineStats = {
       F,
       v,
       T1,
@@ -78,22 +86,57 @@ class DesignGearBox1 implements DesignStrategy {
   }
   recalcEngine(efficiency: Efficiency, ratio: TransRatio) {
     return EngineController.generateCalculatedEngine(
-      this._designStats.F,
-      this._designStats.v,
-      this._designStats.drumPulley.D * Math.PI, // Chu vi của trục tang trống
-      this._designStats.T1,
-      this._designStats.t1,
-      this._designStats.T2,
-      this._designStats.t2,
-      (this._designStats.efficiency = efficiency),
-      (this._designStats.ratio = ratio)
+      this._designEngineStats.F,
+      this._designEngineStats.v,
+      this._designEngineStats.drumPulley.D * Math.PI, // Chu vi của trục tang trống
+      this._designEngineStats.T1,
+      this._designEngineStats.t1,
+      this._designEngineStats.T2,
+      this._designEngineStats.t2,
+      (this._designEngineStats.efficiency = efficiency),
+      (this._designEngineStats.ratio = ratio)
     );
+  }
+
+  designMechDrive(input: any) {
+    try {
+      return ChainController.generateCalculatedChain(
+        input.P,
+        input.u_x,
+        input.n,
+        input.k_0,
+        input.k_a,
+        input.k_dc,
+        input.k_bt,
+        input.k_d,
+        input.k_c
+      );
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        Alert.alert("Error", error.message);
+        alert(error.message);
+      }
+    }
+  }
+  continueCalcMechDrive(calculatedChain: CalculatedChain, selectedChain: SelectedChain) {
+    try {
+      calculatedChain.calc_after_choose(selectedChain);
+      calculatedChain.calcSprocket();
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        Alert.alert("Error", error.message);
+        alert(error.message);
+      }
+    }
   }
 }
 
 // Hộp giảm tốc bánh răng trục vít 1 cấp
 class DesignGearBox2 implements DesignStrategy {
-  _designStats: any;
+  _designEngineStats: any;
+  _designMechDriveStats: any;
 
   designEngine(
     F: number, // Lực vòng trên băng tải (N) (đề)
@@ -122,7 +165,7 @@ class DesignGearBox2 implements DesignStrategy {
       { type: "brt", value: 3 },
       { type: "kn", value: 1 },
     ]);
-    this._designStats = {
+    this._designEngineStats = {
       F,
       v,
       T1,
@@ -154,17 +197,23 @@ class DesignGearBox2 implements DesignStrategy {
   }
   recalcEngine(efficiency: Efficiency, ratio: TransRatio) {
     return EngineController.generateCalculatedEngine(
-      this._designStats.F,
-      this._designStats.v,
-      this._designStats.sprocket.z * this._designStats.sprocket.p, // Chu vi của đĩa xích
-      this._designStats.T1,
-      this._designStats.t1,
-      this._designStats.T2,
-      this._designStats.t2,
-      (this._designStats.efficiency = efficiency),
-      (this._designStats.ratio = ratio)
+      this._designEngineStats.F,
+      this._designEngineStats.v,
+      this._designEngineStats.sprocket.z * this._designEngineStats.sprocket.p, // Chu vi của đĩa xích
+      this._designEngineStats.T1,
+      this._designEngineStats.t1,
+      this._designEngineStats.T2,
+      this._designEngineStats.t2,
+      (this._designEngineStats.efficiency = efficiency),
+      (this._designEngineStats.ratio = ratio)
     );
   }
+
+  designMechDrive(input: any) {
+    // Should be belt here
+    // this._designMechDriveStats = ChainController.generateCalculatedBelt(...);
+  }
+  continueCalcMechDrive(calculatedBelt: any, selectedBelt: any) {}
 }
 
 export default class CalcController {
@@ -172,6 +221,7 @@ export default class CalcController {
   private _effiency!: Efficiency;
   private _ratio!: TransRatio;
   private _calcEngine!: CalculatedEngine;
+  private _calcMechDrive!: CalculatedChain;
   private _order: string[];
   // private _calcGear: CalculatedGear | null;
   // private _calcShaft: CalculatedShaft | null;
@@ -221,24 +271,31 @@ export default class CalcController {
 
   getEnginePostStats() {
     if (this._gearBoxBuilder && this._calcEngine) {
-      const newTransRatio = EngineController.getNewTransRatio(this._calcEngine, this._gearBoxBuilder.getEngine(), this._ratio);
-      if (newTransRatio) {
-        const newEngineShaftStats = EngineController.getShaftStats(
-          this._gearBoxBuilder.getEngine().n_t,
-          this._calcEngine.p_lv,
-          this._effiency,
-          newTransRatio,
-          this._order
-        );
-        let rearrangedRatio = this._order
-          .map((ratio_type) => newTransRatio.ratio_spec.find((ratio) => ratio.type === ratio_type))
-          .reverse();
-        return {
-          rearrangedRatio,
-          newEngineShaftStats,
-        };
-      } else {
-        return null;
+      try {
+        const newTransRatio = EngineController.getNewTransRatio(this._calcEngine, this._gearBoxBuilder.getEngine(), this._ratio);
+        if (newTransRatio) {
+          const newEngineShaftStats = EngineController.getShaftStats(
+            this._gearBoxBuilder.getEngine().n_t,
+            this._calcEngine.p_lv,
+            this._effiency,
+            newTransRatio,
+            this._order
+          );
+          let rearrangedRatio = this._order
+            .map((ratio_type) => newTransRatio.ratio_spec.find((ratio) => ratio.type === ratio_type))
+            .reverse();
+          return {
+            rearrangedRatio,
+            newEngineShaftStats,
+          };
+        } else {
+          return null;
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          Alert.alert("Lỗi", error.message);
+          alert(`Error while calculating engine stats: ${error.message}`);
+        }
       }
     }
   }
@@ -249,5 +306,18 @@ export default class CalcController {
 
   showEngineParam(): { effi: Efficiency; ratio: TransRatio } {
     return { effi: this._effiency, ratio: this._ratio };
+  }
+
+  calcMechDriveBase(input: any) {
+    let mechDriveDes = this._designStrategy.designMechDrive(input);
+    this._calcMechDrive = mechDriveDes;
+  }
+
+  chooseMechDrive(selected: any) {
+    this._designStrategy.continueCalcMechDrive(this._calcMechDrive, selected);
+  }
+
+  getCalcChain(): CalculatedChain {
+    return this._calcMechDrive;
   }
 }

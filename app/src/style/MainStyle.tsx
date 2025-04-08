@@ -1,4 +1,4 @@
-import { StyleSheet, Platform } from "react-native";
+import { StyleSheet, Platform, TextStyle } from "react-native";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 export const shadows = {
@@ -13,10 +13,14 @@ export const shadows = {
       elevation: 5,
     },
     web: {
-      shadowColor: "#000",
-      shadowOffset: { width: 5, height: 5 },
-      shadowOpacity: 0.25,
-      shadowRadius: 10,
+      boxShadowColor: "#000",
+      boxShadowOffset: { width: 5, height: 5 },
+      boxShadowOpacity: 0.25,
+      boxShadowRadius: 10,
+      // shadowColor: "#000",
+      // shadowOffset: { width: 5, height: 5 },
+      // shadowOpacity: 0.25,
+      // shadowRadius: 10,
     },
   }),
 };
@@ -50,11 +54,13 @@ export default StyleSheet.create({
     fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: 2,
-    textShadowColor: "rgba(0, 0, 0, 0.75)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 5,
+    textShadow: {
+      color: "black",
+      offset: { width: 1, height: 1 },
+      radius: 4,
+    },
     fontFamily: "monospace",
-  },
+  } as TextStyle,
 
   // ! Option button
   mainBtn: {
@@ -177,11 +183,13 @@ export default StyleSheet.create({
     color: "#black",
     textTransform: "uppercase",
     letterSpacing: 2,
-    textShadowColor: "rgba(0, 0, 0, 0.75)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 5,
+    textShadow: {
+      color: "black",
+      offset: { width: 1, height: 1 },
+      radius: 4,
+    },
     fontFamily: "monospace",
-  },
+  } as TextStyle,
 
   // ! Grid
   gridContainer: {
@@ -264,7 +272,7 @@ export default StyleSheet.create({
   dropdown: {
     flex: 1,
     marginVertical: verticalScale(5),
-    width: scale(300),
+    width: "100%",
     alignSelf: "center",
     justifyContent: "flex-start",
     backgroundColor: "#fff",
@@ -272,13 +280,13 @@ export default StyleSheet.create({
     ...shadows.default,
   },
   dropdownContainer: {
-    width: scale(300),
+    width: "100%",
     alignSelf: "center",
   },
 
   // Design image preview
   designImgPreview: {
-    width: scale(300),
+    width: "100%",
     height: verticalScale(300),
     borderRadius: 10,
     borderWidth: 1,
@@ -296,7 +304,7 @@ export default StyleSheet.create({
   inputContainer: {
     maxHeight: verticalScale(450),
     // marginVertical: scale(20),
-    width: scale(300),
+    width: "100%",
     backgroundColor: "white",
     padding: scale(20),
     borderRadius: 10,
@@ -306,9 +314,9 @@ export default StyleSheet.create({
     fontSize: scale(14),
     fontStyle: "italic",
     color: "#000",
+    marginBottom: scale(5),
   },
   inputField: {
-    marginTop: scale(5),
     borderWidth: 2,
     borderColor: "#ccc",
     borderRadius: 5,
@@ -321,7 +329,7 @@ export default StyleSheet.create({
 
   // Adjustment Page Style
   resultContainer: {
-    width: scale(300),
+    width: "100%",
     backgroundColor: "white",
     padding: scale(20),
     borderRadius: 10,
@@ -335,7 +343,7 @@ export default StyleSheet.create({
     maxHeight: verticalScale(300),
     flexDirection: "row",
     justifyContent: "space-around",
-    width: scale(300),
+    width: "100%",
     padding: scale(10),
     backgroundColor: "white",
     borderRadius: 10,
@@ -412,7 +420,7 @@ export default StyleSheet.create({
   },
   specContainer: {
     height: verticalScale(400),
-    width: scale(300),
+    width: "100%",
     justifyContent: "space-between",
     backgroundColor: "white",
     padding: scale(10),

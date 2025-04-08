@@ -6,7 +6,7 @@ export default StyleSheet.create({
   buttonFooter: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: scale(300),
+    width: "100%",
   },
   continueBtn: {
     backgroundColor: "#86EFAC",
