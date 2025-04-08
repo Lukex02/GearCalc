@@ -6,10 +6,12 @@ import TransRatio, { TransRatioType1, TransRatioType2 } from "../models/GearRati
 import ChainController from "./ChainController";
 import CalculatedChain, { SelectedChain } from "../models/Chain";
 import { Alert } from "react-native";
+import CalculatedGear from "../models/Gear";
 
 interface DesignStrategy {
   _designEngineStats: any;
   _designMechDriveStats: any;
+  _designGearStats: any;
 
   designEngine(
     F: number, // Lực vòng trên băng tải (N) (đề)
@@ -23,6 +25,7 @@ interface DesignStrategy {
   recalcEngine(efficiency: Efficiency, ratio: TransRatio): CalculatedEngine;
   designMechDrive(input: any): any;
   continueCalcMechDrive(calculated: any, selected: any): void;
+  designGear(input: any): any; // Sẽ chỉ làm 1 hàm tính bánh răng dùng chung
 }
 
 // Hộp giảm tốc 2 cấp khai triển (2 cặp bánh răng)
@@ -30,6 +33,7 @@ interface DesignStrategy {
 class DesignGearBox1 implements DesignStrategy {
   _designEngineStats: any;
   _designMechDriveStats: any;
+  _designGearStats: any;
 
   designEngine(
     F: number, // Lực vòng trên băng tải (N) (đề)
@@ -131,12 +135,17 @@ class DesignGearBox1 implements DesignStrategy {
       }
     }
   }
+  designGear(input: any) {
+    // Design gears here
+    // GearController.generateGears(...);
+  }
 }
 
 // Hộp giảm tốc bánh răng trục vít 1 cấp
 class DesignGearBox2 implements DesignStrategy {
   _designEngineStats: any;
   _designMechDriveStats: any;
+  _designGearStats: any;
 
   designEngine(
     F: number, // Lực vòng trên băng tải (N) (đề)
@@ -214,16 +223,19 @@ class DesignGearBox2 implements DesignStrategy {
     // this._designMechDriveStats = ChainController.generateCalculatedBelt(...);
   }
   continueCalcMechDrive(calculatedBelt: any, selectedBelt: any) {}
+  designGear(input: any) {
+    // Design gears here
+  }
 }
 
 export default class CalcController {
   private _designStrategy: DesignStrategy;
+  private _order: string[];
   private _effiency!: Efficiency;
   private _ratio!: TransRatio;
   private _calcEngine!: CalculatedEngine;
-  private _calcMechDrive!: CalculatedChain;
-  private _order: string[];
-  // private _calcGear: CalculatedGear | null;
+  private _calcMechDrive!: CalculatedChain; // || CalculatedBelt; nếu có belt
+  private _calcGear!: any; // any vì mỗi thiết kế lại có kiểu khác nhau
   // private _calcShaft: CalculatedShaft | null;
   private _gearBoxBuilder: GearBoxBuilder;
 
@@ -272,7 +284,11 @@ export default class CalcController {
   getEnginePostStats() {
     if (this._gearBoxBuilder && this._calcEngine) {
       try {
-        const newTransRatio = EngineController.getNewTransRatio(this._calcEngine, this._gearBoxBuilder.getEngine(), this._ratio);
+        const newTransRatio = EngineController.getNewTransRatio(
+          this._calcEngine,
+          this._gearBoxBuilder.getEngine(),
+          this._ratio
+        );
         if (newTransRatio) {
           const newEngineShaftStats = EngineController.getShaftStats(
             this._gearBoxBuilder.getEngine().n_t,
@@ -319,5 +335,9 @@ export default class CalcController {
 
   getCalcChain(): CalculatedChain {
     return this._calcMechDrive;
+  }
+
+  calcGear(input: any) {
+    this._designStrategy.designGear(input);
   }
 }
