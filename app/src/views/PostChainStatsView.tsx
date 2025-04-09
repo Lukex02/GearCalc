@@ -84,7 +84,7 @@ export default function SelectEngineScreen() {
         </View>
 
         {/* Truyền địa chỉ trang xích tiếp theo ở đây */}
-        <CalcFooter nextPage={"/src/views/GearFast"} />
+        <CalcFooter nextPage="./src/views/GearFast" />
       </View>
     );
   }

@@ -102,7 +102,11 @@ export default function InputChain() {
     });
   };
   const handleValidation = () => {
-    if (Object.values(selectedValues).some((value) => value === null || value === undefined || value.value === 0)) {
+    if (
+      Object.values(selectedValues).some(
+        (value) => value === null || value === undefined || value.value === 0
+      )
+    ) {
       alert("Vui lòng điền đầy đủ thông tin.");
       Alert.alert("Thông báo", "Vui lòng điền đầy đủ thông tin.");
       return false;
@@ -141,7 +145,10 @@ export default function InputChain() {
           <View key={key} style={{ zIndex: 1000 - Object.keys(k_opt).indexOf(key) }}>
             <Text style={styles.inputFieldLabel}>
               {label} (hệ số {key}:{" "}
-              <Text style={{ color: "blue", fontWeight: "bold" }}>{selectedValues[key as keyof typeof selectedValues]}</Text>)
+              <Text style={{ color: "blue", fontWeight: "bold" }}>
+                {selectedValues[key as keyof typeof selectedValues]}
+              </Text>
+              )
             </Text>
             <DropDownPicker
               open={open[key as keyof KProps]}
@@ -160,7 +167,7 @@ export default function InputChain() {
           </View>
         ))}
       </ScrollView>
-      <CalcFooter onValidate={handleValidation} nextPage="/src/views/InputChain" />
+      <CalcFooter onValidate={handleValidation} nextPage="./src/views/SelectChainScreen" />
     </View>
   );
 }

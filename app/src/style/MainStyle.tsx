@@ -1,13 +1,13 @@
-import { StyleSheet, Platform, TextStyle } from "react-native";
+import { StyleSheet, Platform, TextStyle, ViewStyle } from "react-native";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 export const shadows = {
   default: Platform.select({
     ios: {
-      shadowColor: "#000",
-      shadowOffset: { width: 5, height: 5 },
-      shadowOpacity: 0.25,
-      shadowRadius: 10,
+      boxShadowColor: "#000",
+      boxShadowOffset: { width: 5, height: 5 },
+      boxShadowOpacity: 0.25,
+      boxShadowRadius: 10,
     },
     android: {
       elevation: 5,
@@ -17,10 +17,6 @@ export const shadows = {
       boxShadowOffset: { width: 5, height: 5 },
       boxShadowOpacity: 0.25,
       boxShadowRadius: 10,
-      // shadowColor: "#000",
-      // shadowOffset: { width: 5, height: 5 },
-      // shadowOpacity: 0.25,
-      // shadowRadius: 10,
     },
   }),
 };
@@ -183,13 +179,8 @@ export default StyleSheet.create({
     color: "#black",
     textTransform: "uppercase",
     letterSpacing: 2,
-    textShadow: {
-      color: "black",
-      offset: { width: 1, height: 1 },
-      radius: 4,
-    },
     fontFamily: "monospace",
-  } as TextStyle,
+  },
 
   // ! Grid
   gridContainer: {

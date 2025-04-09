@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  Image,
-  Alert,
-} from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Image, Alert } from "react-native";
 import { useRouter } from "expo-router"; // Khởi tạo router từ expo-router
 import styles from "../style/MainStyle"; // Sử dụng style đã tạo
 // import calcFooter from "../style/calcFooter";
@@ -16,7 +9,7 @@ import { SelectedEngine } from "../models/EngineModel";
 import CalcFooter from "./CalcFooter";
 import LoadingScreen from "./LoadingScreen";
 
-export default function SelectEngineScreen() {
+export default function SelectChainScreen() {
   const router = useRouter(); // Khởi tạo router để điều hướng
   const calcController = CalcController.getInstance();
   const requiredPower = calcController.getCalcEngine().p_ct;
@@ -64,17 +57,11 @@ export default function SelectEngineScreen() {
       <View style={styles.resultContainer}>
         <Text style={styles.resultText}>
           Công suất cần thiết:{" "}
-          <Text style={{ color: "green", fontWeight: "bold" }}>
-            {requiredPower.toFixed(3)}
-          </Text>{" "}
-          kW
+          <Text style={{ color: "green", fontWeight: "bold" }}>{requiredPower.toFixed(3)}</Text> kW
         </Text>
         <Text style={styles.resultText}>
           Tốc độ quay cần thiết:{" "}
-          <Text style={{ color: "green", fontWeight: "bold" }}>
-            {requiredSpeed.toFixed(0)}
-          </Text>{" "}
-          rpm
+          <Text style={{ color: "green", fontWeight: "bold" }}>{requiredSpeed.toFixed(0)}</Text> rpm
         </Text>
       </View>
       {/* Danh sách Xích */}
@@ -83,20 +70,13 @@ export default function SelectEngineScreen() {
         <LoadingScreen />
       ) : (
         <View style={styles.engineContainer}>
-          {engineList.length == 0 && (
-            <Text style={styles.noDataWarn}>
-              Không có Xích thỏa mãn điều kiện!
-            </Text>
-          )}
+          {engineList.length == 0 && <Text style={styles.noDataWarn}>Không có Xích thỏa mãn điều kiện!</Text>}
           <FlatList
             // contentContainerStyle={{ flex: 1 }}
             data={engineList}
             keyExtractor={(item) => item.M_ID}
             renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.engineItem}
-                onPress={() => handleSelectEngine(item)}
-              >
+              <TouchableOpacity style={styles.engineItem} onPress={() => handleSelectEngine(item)}>
                 <Image
                   source={require("../img/wrench.png")}
                   style={styles.engineImage}
@@ -105,31 +85,16 @@ export default function SelectEngineScreen() {
                 <View style={{ flex: 1 }}>
                   <Text style={styles.engineName}>{item.name}</Text>
                   <Text style={styles.engineDetails}>
-                    Công suất:{" "}
-                    <Text style={{ color: "green", fontWeight: "bold" }}>
-                      {item.power}
-                    </Text>{" "}
-                    kW
+                    Công suất: <Text style={{ color: "green", fontWeight: "bold" }}>{item.power}</Text> kW
                   </Text>
                   <Text style={styles.engineDetails}>
-                    Tốc độ vòng quay:{" "}
-                    <Text style={{ color: "green", fontWeight: "bold" }}>
-                      {item.n_t}
-                    </Text>{" "}
+                    Tốc độ vòng quay: <Text style={{ color: "green", fontWeight: "bold" }}>{item.n_t}</Text>{" "}
                     rpm
                   </Text>
-                  <Text style={styles.engineDetails}>
-                    Hệ số công suất: {item.eng_effi} %
-                  </Text>
-                  <Text style={styles.engineDetails}>
-                    Hiệu suất động cơ: {item.H}
-                  </Text>
-                  <Text style={styles.engineDetails}>
-                    Hệ số momen khởi động: {item.T_k_T_dn} / T_dn
-                  </Text>
-                  <Text style={styles.engineDetails}>
-                    Hệ số momen tối đa: {item.T_max_T_dn} / T_dn
-                  </Text>
+                  <Text style={styles.engineDetails}>Hệ số công suất: {item.eng_effi} %</Text>
+                  <Text style={styles.engineDetails}>Hiệu suất động cơ: {item.H}</Text>
+                  <Text style={styles.engineDetails}>Hệ số momen khởi động: {item.T_k_T_dn} / T_dn</Text>
+                  <Text style={styles.engineDetails}>Hệ số momen tối đa: {item.T_max_T_dn} / T_dn</Text>
                 </View>
                 {selectedEngine?.M_ID === item.M_ID && (
                   <Image
@@ -143,10 +108,7 @@ export default function SelectEngineScreen() {
           />
         </View>
       )}
-      <CalcFooter
-        onValidate={handleValidation}
-        nextPage={"/src/views/PostChainStatsView"}
-      />
+      <CalcFooter onValidate={handleValidation} nextPage="./src/views/PostChainStatsView" />
     </View>
   );
 }

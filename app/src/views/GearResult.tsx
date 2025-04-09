@@ -61,17 +61,13 @@ export default function GearResult() {
       {/* Thông báo điều kiện bôi trơn */}
       <View style={localStyles.lubricationContainer}>
         {lubricationSatisfied ? (
-          <Text style={localStyles.lubricationSatisfied}>
-            Bộ truyền thỏa mãn điều kiện bôi trơn
-          </Text>
+          <Text style={localStyles.lubricationSatisfied}>Bộ truyền thỏa mãn điều kiện bôi trơn</Text>
         ) : (
-          <Text style={localStyles.lubricationNotSatisfied}>
-            Bộ truyền không thỏa mãn điều kiện bôi trơn
-          </Text>
+          <Text style={localStyles.lubricationNotSatisfied}>Bộ truyền không thỏa mãn điều kiện bôi trơn</Text>
         )}
       </View>
 
-      <CalcFooter nextPage={"/src/views/SelectEngineScreen"} />
+      <CalcFooter nextPage={"./src/views/SelectEngineScreen"} />
     </View>
   );
 }
