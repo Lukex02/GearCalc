@@ -23,8 +23,8 @@ export default function SelectEngineScreen() {
       setPostU(postStats.rearrangedRatio);
       setIsValid(true);
     } else {
-      alert("Động cơ không phù hợp, hãy chọn động cơ khác");
-      Alert.alert("Thông báo", "Động cơ không phù hợp, hãy chọn động cơ khác");
+      alert("Xích không phù hợp, hãy chọn Xích khác");
+      Alert.alert("Thông báo", "Xích không phù hợp, hãy chọn Xích khác");
       router.back();
     }
   }, []);
@@ -33,7 +33,7 @@ export default function SelectEngineScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.pageTitle}>Thông số động học</Text>
+          <Text style={styles.pageTitle}>Thông số Xích</Text>
         </View>
         <View style={styles.specContainer}>
           {/* Header */}
@@ -84,7 +84,7 @@ export default function SelectEngineScreen() {
         </View>
 
         {/* Truyền địa chỉ trang xích tiếp theo ở đây */}
-        <CalcFooter nextPage={"/src/views/SelectChainScreen"} />
+        <CalcFooter nextPage={"/src/views/GearFast"} />
       </View>
     );
   }
