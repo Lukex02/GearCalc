@@ -4,9 +4,51 @@ import { CalculatedEngine, SelectedEngine } from "../models/EngineModel";
 import GearBox, { GearBoxBuilder } from "../models/GearBox";
 import TransRatio, { TransRatioType1, TransRatioType2 } from "../models/GearRatio";
 import ChainController from "./ChainController";
+import GearController from "./GearController";
 import CalculatedChain, { SelectedChain } from "../models/Chain";
 import { Alert } from "react-native";
-import CalculatedGear from "../models/Gear";
+
+type GearBox1GearSetInput = {
+  sigma_b: number;
+  sigma_ch: number;
+  HB: number;
+  S_max: number;
+  shaftStats: {
+    u: number;
+    n: number;
+    T: number;
+  };
+  desStats: {
+    T1: number;
+    t1: number;
+    T2: number;
+    t2: number;
+    L_h: number;
+  };
+  K_qt: number;
+};
+type GearBox2GearSetInput = {
+  a: number; // Random prop
+};
+
+type GearSetInput = GearBox1GearSetInput | GearBox2GearSetInput;
+
+type GearBox1MechDriveInput = {
+  P: number;
+  u_x: number;
+  n: number;
+  k_0: number;
+  k_a: number;
+  k_dc: number;
+  k_bt: number;
+  k_d: number;
+  k_c: number;
+};
+type GearBox2MechDriveInput = {
+  a: number; // Random prop
+};
+
+type MechDriveInput = GearBox1MechDriveInput | GearBox2MechDriveInput;
 
 interface DesignStrategy {
   _designEngineStats: any;
@@ -23,9 +65,9 @@ interface DesignStrategy {
     output: any // Có thể là đĩa xích, trục tang, tùy thuộc sẽ thay đổi kiểu và số liệu
   ): { engi: CalculatedEngine; base_effi: Efficiency; base_ratio: TransRatio };
   recalcEngine(efficiency: Efficiency, ratio: TransRatio): CalculatedEngine;
-  designMechDrive(input: any): any;
-  continueCalcMechDrive(calculated: any, selected: any): void;
-  designGear(input: any): any; // Sẽ chỉ làm 1 hàm tính bánh răng dùng chung
+  designMechDrive(input: MechDriveInput): any;
+  continueCalcMechDrive(calculated: CalculatedChain | any, selected: SelectedChain | any): void;
+  designGear(input: GearSetInput): any; // Sẽ chỉ làm 1 hàm tính bánh răng dùng chung
 }
 
 // Hộp giảm tốc 2 cấp khai triển (2 cặp bánh răng)
@@ -102,7 +144,7 @@ class DesignGearBox1 implements DesignStrategy {
     );
   }
 
-  designMechDrive(input: any) {
+  designMechDrive(input: GearBox1MechDriveInput) {
     try {
       return ChainController.generateCalculatedChain(
         input.P,
@@ -135,9 +177,17 @@ class DesignGearBox1 implements DesignStrategy {
       }
     }
   }
-  designGear(input: any) {
+  designGear(input: GearBox1GearSetInput): any {
     // Design gears here
-    // GearController.generateGears(...);
+    GearController.generateGearSet(
+      input.sigma_b,
+      input.sigma_ch,
+      input.HB,
+      input.S_max,
+      input.shaftStats,
+      input.desStats,
+      input.K_qt
+    );
   }
 }
 
@@ -324,20 +374,20 @@ export default class CalcController {
     return { effi: this._effiency, ratio: this._ratio };
   }
 
-  calcMechDriveBase(input: any) {
+  calcMechDriveBase(input: MechDriveInput) {
     let mechDriveDes = this._designStrategy.designMechDrive(input);
     this._calcMechDrive = mechDriveDes;
   }
 
-  chooseMechDrive(selected: any) {
+  chooseMechDrive(selected: SelectedChain | any) {
     this._designStrategy.continueCalcMechDrive(this._calcMechDrive, selected);
   }
 
-  getCalcChain(): CalculatedChain {
+  getCalcMechDrive(): CalculatedChain | any {
     return this._calcMechDrive;
   }
 
-  calcGear(input: any) {
+  calcGear(input: GearSetInput) {
     this._designStrategy.designGear(input);
   }
 }

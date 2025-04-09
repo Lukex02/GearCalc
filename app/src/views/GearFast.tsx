@@ -7,7 +7,7 @@ import Efficiency from "../models/Efficiency";
 import CalcController from "../controller/CalcController";
 import CalcFooter from "./CalcFooter";
 
-export default function AdjustEngineParametersScreen() {
+export default function GearFastScreen() {
   const router = useRouter(); // Hook để lấy router
   const calcController = CalcController.getInstance();
   const { effi: baseEfficiency, ratio: baseRatio } = calcController.showEngineParam();

@@ -5,7 +5,7 @@ import CalcController from "../controller/CalcController";
 import CalcFooter from "./CalcFooter";
 import styles from "../style/MainStyle";
 
-export default function SelectEngineScreen() {
+export default function PostChainStatsView() {
   const router = useRouter(); // Khởi tạo router để điều hướng
   const calcController = CalcController.getInstance();
   const [isValid, setIsValid] = useState(false);

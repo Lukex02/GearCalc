@@ -126,9 +126,9 @@ export default function InputChain() {
         k_d: selectedValues.k_d,
         k_c: selectedValues.k_c,
       });
-      ChainController.getSelectableChain(calcController.getCalcChain().P_t).then((chainList) => {
+      ChainController.getSelectableChain(calcController.getCalcMechDrive().P_t).then((chainList) => {
         calcController.chooseMechDrive(chainList[0]);
-        console.log("After choose", calcController.getCalcChain());
+        console.log("After choose", calcController.getCalcMechDrive());
       });
       return false;
     }
