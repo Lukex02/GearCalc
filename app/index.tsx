@@ -1,16 +1,14 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import styles from "./src/style/MainStyle";
-
-const { width, height } = Dimensions.get("window");
 
 const FullscreenImageBackground: React.FC = () => {
   const router = useRouter();
   return (
     <View style={styles.container}>
       <Image
-        source={require("../assets/images/background.png")}
+        source={require("./src/img/background.png")}
         style={styles.indexBackground}
         resizeMode="contain"
       ></Image>

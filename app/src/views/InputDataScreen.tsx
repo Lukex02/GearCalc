@@ -49,7 +49,6 @@ export default function InputDataScreen() {
   const handleValidation = () => {
     if (!F || !v || !T1 || !t1 || !T2 || !t2 || !L || (gearBoxType === "GearBox2" && (!p || !z))) {
       alert("Vui lòng điền đầy đủ thông tin.");
-      Alert.alert("Thiếu thông tin", "Vui lòng điền đầy đủ thông tin.");
       return false;
     } else {
       // if (gearBoxType === "GearBox1") calcController.calcEngineBase(F, v, T1, t1, T2, t2, { D });

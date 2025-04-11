@@ -19,7 +19,6 @@ export default function LoginScreen() {
         const authStatus = await DatabaseService.checkAuth();
         if (authStatus) {
           alert("User đã đăng nhập");
-          Alert.alert("Thông báo", "User đã đăng nhập");
           router.push("./Home");
         }
         setLoading(false);
@@ -37,7 +36,6 @@ export default function LoginScreen() {
         console.log("Error:", res.error);
       } else {
         alert("Đăng nhập thành công");
-        Alert.alert("Thông báo", "Đăng nhập thành công");
         router.push("./Home");
       }
     });

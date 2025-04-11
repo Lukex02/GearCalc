@@ -36,13 +36,11 @@ export default function DesignSelectionScreen() {
       // Nếu gearBoxType có giá trị, chuyển đến trang InputDataScreen với query string
       if (gearBoxType == "GearBox2") {
         alert("Loại hộp giảm tốc này hiện tại chưa hỗ trợ!");
-        Alert.alert("Thông báo", "Loại hộp giảm tốc này hiện tại chưa hỗ trợ!");
         return false;
       } else return true;
       // else router.push({ pathname: "/src/views/InputDataScreen", params: { gearBoxType: gearBoxType } });
     } else {
       alert("Vui lòng chọn loại thiết kế");
-      Alert.alert("Thông báo", "Vui lòng chọn loại thiết kế");
       return false;
     }
   };

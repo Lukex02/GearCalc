@@ -26,7 +26,6 @@ export default function SelectChainScreen() {
       return true;
     } else {
       alert("Vui lòng chọn thiết kế xích.");
-      Alert.alert("Thông báo", "Vui lòng chọn thiết kế xích.");
       return false;
     }
   };

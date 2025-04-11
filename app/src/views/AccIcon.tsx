@@ -43,7 +43,6 @@ export default function AccIcon() {
               DatabaseService.logOut();
               setLogin(false);
               alert("Đăng xuất thành công");
-              Alert.alert("Thông báo", "Đăng xuất thành công");
             }}
             title="Đăng xuất"
             titleStyle={styles.menuItem}

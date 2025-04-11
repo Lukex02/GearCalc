@@ -32,7 +32,6 @@ export default function PostChainStatsView() {
       setIsValid(true);
     } else {
       alert("Thiết kế xích không phù hợp, hãy chọn thiết kế xích khác");
-      Alert.alert("Thông báo", "Thiết kế xích không phù hợp, hãy chọn thiết kế xích khác");
       router.back();
     }
   }, []);

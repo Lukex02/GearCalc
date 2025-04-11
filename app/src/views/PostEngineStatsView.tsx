@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Text, Alert } from "react-native";
+import { View, Text } from "react-native";
 import { useRouter } from "expo-router"; // Khởi tạo router từ expo-router
 import CalcController from "../controller/CalcController";
 import CalcFooter from "./CalcFooter";
@@ -25,7 +25,6 @@ export default function SelectEngineScreen() {
       setIsValid(true);
     } else {
       alert("Động cơ không phù hợp, hãy chọn động cơ khác");
-      Alert.alert("Thông báo", "Động cơ không phù hợp, hãy chọn động cơ khác");
       router.back();
     }
   }, []);

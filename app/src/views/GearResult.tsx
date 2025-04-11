@@ -105,15 +105,15 @@ const localStyles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
-    paddingVertical: scale(5),
+    paddingVertical: Math.round(scale(5)),
   },
   cell: {
     marginVertical: "auto",
     flex: 1,
-    padding: scale(10),
+    padding: Math.round(scale(10)),
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: scale(16),
+    fontSize: Math.round(scale(16)),
   },
   lubricationContainer: {
     alignItems: "center",
@@ -122,11 +122,11 @@ const localStyles = StyleSheet.create({
     color: "green",
     fontWeight: "bold",
     textAlign: "center",
-    fontSize: scale(20),
+    fontSize: Math.round(scale(20)),
   },
   lubricationNotSatisfied: {
     color: "red",
     fontWeight: "bold",
-    fontSize: scale(20),
+    fontSize: Math.round(scale(20)),
   },
 });

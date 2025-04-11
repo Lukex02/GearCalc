@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, FlatList, Image, Alert } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
 import { useRouter } from "expo-router"; // Khởi tạo router từ expo-router
 import styles from "../style/MainStyle"; // Sử dụng style đã tạo
 // import calcFooter from "../style/calcFooter";
@@ -28,7 +28,6 @@ export default function SelectEngineScreen() {
       return true;
     } else {
       alert("Vui lòng chọn động cơ.");
-      Alert.alert("Thông báo", "Vui lòng chọn động cơ.");
       return false;
     }
   };

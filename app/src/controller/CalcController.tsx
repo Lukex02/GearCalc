@@ -167,7 +167,6 @@ class DesignGearBox1 implements DesignStrategy {
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
-        Alert.alert("Error", error.message);
         alert(error.message);
       }
     }
@@ -179,7 +178,6 @@ class DesignGearBox1 implements DesignStrategy {
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
-        Alert.alert("Error", error.message);
         alert(error.message);
       }
     }
@@ -391,7 +389,6 @@ export default class CalcController {
         }
       } catch (error) {
         if (error instanceof Error) {
-          Alert.alert("Lỗi", error.message);
           alert(`Error while calculating engine stats: ${error.message}`);
         }
       }
@@ -445,7 +442,6 @@ export default class CalcController {
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
-        Alert.alert("Lỗi", error.message);
         alert(`Lỗi khi tính toán bộ truyền: ${error.message}`);
       }
     }

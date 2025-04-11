@@ -1,10 +1,11 @@
 import DropDownPicker from "react-native-dropdown-picker";
 import { useState } from "react";
-import { View, Text, ScrollView, Alert } from "react-native";
+import { View, Text, ScrollView, Alert, KeyboardAvoidingView, Platform } from "react-native";
 import styles from "../style/MainStyle";
 import CalcFooter from "./CalcFooter";
 import CalcController from "../controller/CalcController";
 import ChainController from "../controller/ChainController";
+import { Icon, List } from "react-native-paper";
 
 type KProps = {
   k_0: any;
@@ -108,7 +109,6 @@ export default function InputChain() {
       )
     ) {
       alert("Vui lòng điền đầy đủ thông tin.");
-      Alert.alert("Thông báo", "Vui lòng điền đầy đủ thông tin.");
       return false;
     } else {
       // Tính toán với các giá trị đã chọn
@@ -129,16 +129,62 @@ export default function InputChain() {
       return false;
     }
   };
+  const handleAccordionToggle = (key: keyof typeof open) => {
+    setOpen((prev) => {
+      const newState = { ...Object.fromEntries(Object.keys(prev).map((k) => [k, false])) } as typeof prev;
+      newState[key] = !prev[key];
+      return newState;
+    });
+  };
 
   return (
-    <View style={styles.container}>
+    // <View style={styles.container}>
+    //   <View style={styles.header}>
+    //     <Text style={styles.pageTitle}>Chọn điều kiện xích</Text>
+    //   </View>
+    //   <ScrollView style={styles.inputContainer} nestedScrollEnabled={true}>
+    //     {k_key.map(({ key, label }) => (
+    //       // <View key={key}>
+    //       <View key={key} style={{ zIndex: 1000 - Object.keys(k_opt).indexOf(key) }}>
+    //         <Text style={styles.inputFieldLabel}>
+    //           {label} (hệ số {key}:{" "}
+    //           <Text style={{ color: "blue", fontWeight: "bold" }}>
+    //             {selectedValues[key as keyof typeof selectedValues]}
+    //           </Text>
+    //           )
+    //         </Text>
+    //         <DropDownPicker
+    //           open={open[key as keyof KProps]}
+    //           value={selectedValues[key as keyof typeof selectedValues]}
+    //           placeholder={`Điều kiện làm việc...`}
+    //           items={k_opt[key as keyof KProps]}
+    //           setOpen={(isOpen) => handleOpenChange(key as keyof KProps, isOpen)}
+    //           setValue={(callback) => handleValueChange(key as keyof KProps, callback(selectedValues[key]))}
+    //           style={styles.dropdown}
+    //           dropDownContainerStyle={{
+    //             zIndex: 1000 - Object.keys(k_opt).indexOf(key),
+    //             ...styles.dropdownContainer,
+    //           }}
+    //           dropDownDirection="BOTTOM"
+    //           listMode="SCROLLVIEW"
+    //         />
+    //       </View>
+    //     ))}
+    //   </ScrollView>
+    //   <CalcFooter onValidate={handleValidation} nextPage="/src/views/SelectChainScreen" />
+    // </View>
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.pageTitle}>Chọn điều kiện xích</Text>
       </View>
-      <ScrollView style={styles.inputContainer}>
+
+      <ScrollView
+        style={styles.inputContainer}
+        contentContainerStyle={{ paddingBottom: 100 }}
+        keyboardShouldPersistTaps="handled"
+      >
         {k_key.map(({ key, label }) => (
-          // <View key={key}>
-          <View key={key} style={{ zIndex: 1000 - Object.keys(k_opt).indexOf(key) }}>
+          <View key={key}>
             <Text style={styles.inputFieldLabel}>
               {label} (hệ số {key}:{" "}
               <Text style={{ color: "blue", fontWeight: "bold" }}>
@@ -146,24 +192,42 @@ export default function InputChain() {
               </Text>
               )
             </Text>
-            <DropDownPicker
-              open={open[key as keyof KProps]}
-              value={selectedValues[key as keyof typeof selectedValues]}
-              placeholder={`Điều kiện làm việc...`}
-              items={k_opt[key as keyof KProps]}
-              setOpen={(isOpen) => handleOpenChange(key as keyof KProps, isOpen)}
-              setValue={(callback) => handleValueChange(key as keyof KProps, callback(selectedValues[key]))}
-              style={styles.dropdown}
-              dropDownContainerStyle={{
-                zIndex: 1000 - Object.keys(k_opt).indexOf(key),
-                ...styles.dropdownContainer,
-              }}
-              dropDownDirection="BOTTOM"
-            />
+            <View style={{ borderRightWidth: 1 }}>
+              <List.Accordion
+                title={`Chọn điều kiện...`}
+                expanded={open[key]}
+                onPress={() => handleAccordionToggle(key)}
+                titleStyle={{ fontWeight: "bold", color: "rgba(0, 0, 0, 0.47)" }}
+                style={{ backgroundColor: "rgb(255, 255, 255)" }}
+              >
+                {k_opt[key as keyof typeof k_opt].map((item: any) => (
+                  <List.Item
+                    key={item.value}
+                    title={item.label}
+                    disabled={item.disabled}
+                    titleStyle={{
+                      fontWeight: "bold",
+                      color:
+                        selectedValues[key as keyof typeof selectedValues] === item.value ? "blue" : "black",
+                    }}
+                    right={() =>
+                      selectedValues[key as keyof typeof selectedValues] === item.value ? (
+                        <Icon source="check" color="blue" size={20} />
+                      ) : null
+                    }
+                    onPress={() => {
+                      handleValueChange(key as keyof typeof selectedValues, item.value);
+                      // handleAccordionToggle(key as keyof typeof selectedValues); // đóng lại sau khi chọn
+                    }}
+                  />
+                ))}
+              </List.Accordion>
+            </View>
           </View>
         ))}
       </ScrollView>
+
       <CalcFooter onValidate={handleValidation} nextPage="/src/views/SelectChainScreen" />
-    </View>
+    </KeyboardAvoidingView>
   );
 }
