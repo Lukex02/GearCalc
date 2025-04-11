@@ -17,6 +17,7 @@ export default function SelectEngineScreen() {
 
   useEffect(() => {
     if (postStats) {
+      // console.log(postStats);
       setPostP(postStats.newEngineShaftStats.p);
       setPostN(postStats.newEngineShaftStats.n);
       setPostT(postStats.newEngineShaftStats.T);
@@ -49,9 +50,8 @@ export default function SelectEngineScreen() {
           {/* Cột Công suất trên các trục p */}
           <View style={styles.specCol}>
             <Text style={styles.specHeaderCell}>P{"\n"}(kW)</Text>
-            {/* {dummyP.map((p) => ( */}
-            {post_p.map((p) => (
-              <Text key={p} style={styles.specCell}>
+            {post_p.map((p, index) => (
+              <Text key={index} style={styles.specCell}>
                 {p.toFixed(4)}
               </Text>
             ))}
@@ -60,9 +60,8 @@ export default function SelectEngineScreen() {
           {/* Cột Tốc độ quay trên các trục n */}
           <View style={styles.specCol}>
             <Text style={styles.specHeaderCell}>n{"\n"}(rpm)</Text>
-            {/* {dummyN.map((n) => ( */}
-            {post_n.map((n) => (
-              <Text key={n} style={styles.specCell}>
+            {post_n.map((n, index) => (
+              <Text key={index} style={styles.specCell}>
                 {n.toFixed(2)}
               </Text>
             ))}
@@ -71,9 +70,8 @@ export default function SelectEngineScreen() {
           {/* Cột Momen xoắn trên các trục T */}
           <View style={styles.specCol}>
             <Text style={styles.specHeaderCell}>T{"\n"}(N.mm)</Text>
-            {/* {dummyT.map((T) => ( */}
-            {post_T.map((T) => (
-              <Text key={T} style={styles.specCell}>
+            {post_T.map((T, index) => (
+              <Text key={index} style={styles.specCell}>
                 {T.toFixed(4)}
               </Text>
             ))}
@@ -82,9 +80,8 @@ export default function SelectEngineScreen() {
           {/* Cột Tỷ số truyền u */}
           <View style={styles.specCol}>
             <Text style={styles.specHeaderCell}>u{"\n"}</Text>
-            {/* {dummyU.map((u) => ( */}
-            {post_u.map((u) => (
-              <Text key={u.value} style={styles.specCell}>
+            {post_u.map((u, index) => (
+              <Text key={index} style={styles.specCell}>
                 {u.value.toFixed(2)}
               </Text>
             ))}

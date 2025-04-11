@@ -9,8 +9,12 @@ const FullscreenImageBackground: React.FC = () => {
   const router = useRouter();
   return (
     <View style={styles.container}>
-      <Image source={require("../assets/images/background.png")} style={styles.indexBackground} resizeMode="contain"></Image>
-      <Text style={styles.overlay}>Chào mừng tới GEARCALC</Text>
+      <Image
+        source={require("../assets/images/background.png")}
+        style={styles.indexBackground}
+        resizeMode="contain"
+      ></Image>
+      <Text style={styles.welcomeTitle}>Chào mừng tới GEARCALC</Text>
       {/* <View style={styles.rowContainer}> */}
       <TouchableOpacity style={styles.mainBtn} onPress={() => router.push("/src/views/Home")}>
         <Text style={styles.mainBtnTxt}>Bắt đầu</Text>

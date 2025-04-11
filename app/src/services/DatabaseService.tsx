@@ -28,19 +28,6 @@ export default class DatabaseService {
     await supabase.auth.signOut();
   }
 
-  // static async setSession(access_token: string, refresh_token: string) {
-  //   await supabase.auth.setSession({ access_token, refresh_token });
-  // }
-
-  // static async refreshToken() {
-  //   supabase.auth.onAuthStateChange(async (event, session) => {
-  //     if (event === "TOKEN_REFRESHED" && session) {
-  //       await SecureStore.setItemAsync("access_token", session.access_token);
-  //       await SecureStore.setItemAsync("refresh_token", session.refresh_token);
-  //     }
-  //   });
-  // }
-
   static async getUser() {
     const { data, error } = await supabase.auth.getUser();
     if (error) console.error("Lỗi khi lấy dữ liệu user:", error.message);
@@ -67,7 +54,21 @@ export default class DatabaseService {
       .lt("Speed", Math.floor(reqRpm) + 50) // Xấp xỉ thì cho phép sai số trên dưới 50 so với yêu cầu
       .gt("Speed", Math.floor(reqRpm) - 50)
       .order("Motor_Type", { ascending: false })
-      .limit(2);
+      .eq("Motor_Type", "K160S4"); // Lấy tạm thời theo bản thuyết minh để theo dõi tính toán
+    if (error) console.error("Lỗi khi lấy dữ liệu ", error);
+    return data ?? [];
+  }
+
+  static async getSelectableChain(P_ct: number): Promise<any[]> {
+    const { data, error } = await supabase
+      .from("chain")
+      .select("*")
+      .gte("P_max", P_ct)
+      .eq("chain_type", "1_roller")
+      .order("P_max", { ascending: true })
+      .order("Step_p", { ascending: true })
+      .limit(5);
+
     if (error) console.error("Lỗi khi lấy dữ liệu ", error);
     return data ?? [];
   }

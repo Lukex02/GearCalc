@@ -13,10 +13,10 @@ const K_HBetaTable: number[][] = [
   [1.18, 1.12, 1.05, 1.03, 1.02, 1.01, 1.01], // ψ_bd = 0.4
   [1.31, 1.19, 1.07, 1.05, 1.03, 1.02, 1.02], // ψ_bd = 0.6
   [1.45, 1.27, 1.12, 1.08, 1.05, 1.03, 1.02], // ψ_bd = 0.8
-  [0, 0, 1.15, 1.1, 1.07, 1.04, 1.03], // ψ_bd = 1.0
-  [0, 0, 1.13, 1.11, 1.06, 1.04, 1.03], // ψ_bd = 1.2
-  [0, 0, 1.17, 1.13, 1.09, 1.05, 1.04], // ψ_bd = 1.4
-  [0, 0, 1.28, 1.21, 1.16, 1.1, 1.05], // ψ_bd = 1.6
+  [0, 0, 1.15, 1.11, 1.07, 1.05, 1.03], // ψ_bd = 1.0
+  [0, 0, 1.2, 1.13, 1.11, 1.06, 1.04], // ψ_bd = 1.2
+  [0, 0, 1.24, 1.17, 1.13, 1.07, 1.05], // ψ_bd = 1.4
+  [0, 0, 1.28, 1.21, 1.16, 1.11, 1.06], // ψ_bd = 1.6
 ];
 const K_FBetaTable: number[][] = [
   [1.18, 1.1, 1.05, 1.03, 1.02, 1.01, 1.0], // ψ_bd = 0.2
@@ -154,10 +154,10 @@ export default class GearSet {
   private _x: number = 0; // Hệ số dịch chỉnh, cho mặc định là 0
 
   constructor(
-    sigma_b: number,
-    sigma_ch: number,
-    HB: number,
-    S_max: number,
+    sigma_b: [number, number],
+    sigma_ch: [number, number],
+    HB: [number, number],
+    S_max: [number, number],
     shaftStats: {
       u: number;
       n: number;
@@ -172,8 +172,8 @@ export default class GearSet {
     },
     fast: boolean
   ) {
-    this._gear_small = new CalculatedGear(sigma_b, sigma_ch, HB, S_max);
-    this._gear_big = new CalculatedGear(sigma_b, sigma_ch, HB, S_max);
+    this._gear_small = new CalculatedGear(sigma_b[0], sigma_ch[0], HB[0], S_max[0]);
+    this._gear_big = new CalculatedGear(sigma_b[1], sigma_ch[1], HB[1], S_max[1]);
     // Tính sigma này là lấy sơ bộ Z_R * Z_v * K_xH = 1
     this._gear_small.calcSigma_H_allow(
       shaftStats.u,
@@ -226,10 +226,10 @@ export default class GearSet {
     // Lấy mặc định là u + 1 do bánh răng ăn khớp ngoài
     if (fast) this._soDo = 3;
     else this._soDo = 5;
-    let psi_bd = Math.floor(0.53 * this._psi_ba * (shaftStats.u + 1));
-    if (psi_bd % 2 == 0) psi_bd += 1;
+    let psi_bd = Math.floor(0.53 * this._psi_ba * (shaftStats.u + 1) * 10) / 10;
+    if ((psi_bd * 10) % 2 !== 0) psi_bd = Math.round((psi_bd + 0.1) * 10) / 10;
     const psi_bdIndex = psi_bdValues.indexOf(psi_bd);
-    this._K_Hbeta = K_HBetaTable[psi_bdIndex][this._soDo];
+    this._K_Hbeta = K_HBetaTable[psi_bdIndex][this._soDo - 1];
 
     this._a_w_calc =
       this._K_a *
@@ -239,7 +239,7 @@ export default class GearSet {
         1 / 3
       );
     this._a_w = a_wValues.reduce((prev, curr) =>
-      Math.abs(curr - this._a_w_calc) < Math.abs(prev - this._a_w_calc) ? curr : prev
+      curr > this._a_w_calc && prev < this._a_w_calc ? curr : prev
     );
     const m_min = 0.01 * this._a_w;
     const m_max = 0.02 * this._a_w;
@@ -253,7 +253,7 @@ export default class GearSet {
     this._z2 = Math.floor(shaftStats.u * this._z1);
     this._u_m = this._z2 / this._z1; // Tỉ số truyền thực
     // Tính lại góc beta
-    this._cosBeta = (this._m * (this._z1 * this._z2)) / (2 * this._a_w);
+    this._cosBeta = (this._m * (this._z1 + this._z2)) / (2 * this._a_w);
     this._Beta_angle = Math.acos(this._cosBeta) * (180 / Math.PI);
 
     // Kiểm nghiệm răng về độ bền tiếp xúc
@@ -309,7 +309,7 @@ export default class GearSet {
     const Y_F1 = Y_FValues[z_v1Idx];
     const Y_F2 = Y_FValues[z_v2Idx];
 
-    this._K_Fbeta = K_FBetaTable[psi_bdIndex][this._soDo];
+    this._K_Fbeta = K_FBetaTable[psi_bdIndex][this._soDo - 1];
     this._K_Falpha = coeffValue.K_FAlpha;
 
     const v_F = 0.006 * Utils.getG0(this._m, this._precision_level) * Math.sqrt(this._a_w / this._u_m);
@@ -356,7 +356,7 @@ export default class GearSet {
   calcSizeStats() {
     this._d1 = (this._m * this._z1) / this._cosBeta;
     this._d2 = (this._m * this._z2) / this._cosBeta;
-    this._dw1 = 2 * this._a_w * this._u_m;
+    this._dw1 = (2 * this._a_w) / (this._u_m + 1);
     this._dw2 = this._dw1 * this._u_m;
     this._da1 = this._d1 + 2 * (1 + this._x) * this._m;
     this._da2 = this._d2 + 2 * (1 + this._x) * this._m;

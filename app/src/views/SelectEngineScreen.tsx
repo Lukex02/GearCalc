@@ -35,7 +35,11 @@ export default function SelectEngineScreen() {
 
   // Lọc động cơ thỏa mãn các yêu cầu
   const getEngineList = () => {
-    EngineController.getSelectedEngine(requiredPower, requiredSpeed, calcController.getCalcEngine().T_mm).then((list) => {
+    EngineController.getSelectedEngine(
+      requiredPower,
+      requiredSpeed,
+      calcController.getCalcEngine().T_mm
+    ).then((list) => {
       setEngineList(list);
       // console.log(list);
       setLoading(false);
@@ -52,10 +56,12 @@ export default function SelectEngineScreen() {
       </View>
       <View style={styles.resultContainer}>
         <Text style={styles.resultText}>
-          Công suất cần thiết: <Text style={{ color: "green", fontWeight: "bold" }}>{requiredPower.toFixed(3)}</Text> kW
+          Công suất cần thiết:{" "}
+          <Text style={{ color: "green", fontWeight: "bold" }}>{requiredPower.toFixed(3)}</Text> kW
         </Text>
         <Text style={styles.resultText}>
-          Tốc độ quay cần thiết: <Text style={{ color: "green", fontWeight: "bold" }}>{requiredSpeed.toFixed(0)}</Text> rpm
+          Tốc độ quay cần thiết:{" "}
+          <Text style={{ color: "green", fontWeight: "bold" }}>{requiredSpeed.toFixed(0)}</Text> rpm
         </Text>
       </View>
       {/* Danh sách động cơ */}
@@ -63,30 +69,41 @@ export default function SelectEngineScreen() {
       {loading ? (
         <LoadingScreen />
       ) : (
-        <View style={styles.engineContainer}>
-          {engineList.length == 0 && <Text style={styles.noDataWarn}>Không có động cơ thỏa mãn điều kiện!</Text>}
+        <View style={styles.selectContainer}>
+          {engineList.length == 0 && (
+            <Text style={styles.noDataWarn}>Không có động cơ thỏa mãn điều kiện!</Text>
+          )}
           <FlatList
             // contentContainerStyle={{ flex: 1 }}
             data={engineList}
             keyExtractor={(item) => item.M_ID}
             renderItem={({ item }) => (
-              <TouchableOpacity style={styles.engineItem} onPress={() => handleSelectEngine(item)}>
-                <Image source={require("../img/wrench.png")} style={styles.engineImage} resizeMode="contain" />
+              <TouchableOpacity style={styles.selectItem} onPress={() => handleSelectEngine(item)}>
+                <Image
+                  source={require("../img/wrench.png")}
+                  style={styles.selectImage}
+                  resizeMode="contain"
+                />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.engineName}>{item.name}</Text>
-                  <Text style={styles.engineDetails}>
-                    Công suất: <Text style={{ color: "green", fontWeight: "bold" }}>{item.power}</Text> kW
+                  <Text style={styles.selectName}>{item.name}</Text>
+                  <Text style={styles.selectDetails}>
+                    Công suất: <Text style={{ color: "green", fontWeight: "bold" }}>{item.power} kW</Text>
                   </Text>
-                  <Text style={styles.engineDetails}>
-                    Tốc độ vòng quay: <Text style={{ color: "green", fontWeight: "bold" }}>{item.n_t}</Text> rpm
+                  <Text style={styles.selectDetails}>
+                    Tốc độ vòng quay:{" "}
+                    <Text style={{ color: "green", fontWeight: "bold" }}>{item.n_t} rpm</Text>{" "}
                   </Text>
-                  <Text style={styles.engineDetails}>Hệ số công suất: {item.eng_effi} %</Text>
-                  <Text style={styles.engineDetails}>Hiệu suất động cơ: {item.H}</Text>
-                  <Text style={styles.engineDetails}>Hệ số momen khởi động: {item.T_k_T_dn} / T_dn</Text>
-                  <Text style={styles.engineDetails}>Hệ số momen tối đa: {item.T_max_T_dn} / T_dn</Text>
+                  <Text style={styles.selectDetails}>Hệ số công suất: {item.eng_effi} %</Text>
+                  <Text style={styles.selectDetails}>Hiệu suất động cơ: {item.H}</Text>
+                  <Text style={styles.selectDetails}>Hệ số momen khởi động: {item.T_k_T_dn} / T_dn</Text>
+                  <Text style={styles.selectDetails}>Hệ số momen tối đa: {item.T_max_T_dn} / T_dn</Text>
                 </View>
                 {selectedEngine?.M_ID === item.M_ID && (
-                  <Image source={require("../img/tick.jpg")} style={styles.engineImage} resizeMode="contain" />
+                  <Image
+                    source={require("../img/tick.jpg")}
+                    style={styles.selectImage}
+                    resizeMode="contain"
+                  />
                 )}
               </TouchableOpacity>
             )}

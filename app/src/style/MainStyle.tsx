@@ -44,7 +44,7 @@ export default StyleSheet.create({
     height: verticalScale(300),
     alignSelf: "center",
   },
-  overlay: {
+  welcomeTitle: {
     textAlign: "center",
     fontSize: scale(30),
     fontWeight: "bold",
@@ -61,8 +61,6 @@ export default StyleSheet.create({
   // ! Option button
   mainBtn: {
     backgroundColor: "#9CF2D4",
-    paddingVertical: scale(10),
-    paddingHorizontal: scale(10),
     borderRadius: 10,
     width: scale(170),
     alignSelf: "center",
@@ -70,13 +68,14 @@ export default StyleSheet.create({
   },
   mainBtnTxt: {
     color: "#000",
+    paddingVertical: scale(10),
+    paddingHorizontal: scale(10),
     fontWeight: "bold",
     fontSize: scale(16),
     textAlign: "center",
   },
   mainBtnMedium: {
     backgroundColor: "#9CF2D4",
-    paddingVertical: scale(10),
     borderRadius: 10,
     width: scale(120),
     alignSelf: "center",
@@ -84,8 +83,22 @@ export default StyleSheet.create({
   },
   mainBtnMediumTxt: {
     color: "#000",
+    paddingVertical: scale(10),
     fontWeight: "bold",
     fontSize: scale(14),
+    textAlign: "center",
+  },
+  mainBtnSmall: {
+    backgroundColor: "#9CF2D4",
+    borderRadius: 10,
+    width: scale(100),
+    alignSelf: "center",
+    ...shadows.default,
+  },
+  mainBtnSmallTxt: {
+    color: "#000",
+    fontWeight: "bold",
+    fontSize: scale(12),
     textAlign: "center",
   },
 
@@ -368,8 +381,8 @@ export default StyleSheet.create({
     margin: "auto",
   },
 
-  // Select Engine Page Style
-  engineContainer: {
+  // Select Stuff Page Style
+  selectContainer: {
     flex: 1,
     maxHeight: verticalScale(300),
     flexDirection: "row",
@@ -380,7 +393,7 @@ export default StyleSheet.create({
     borderRadius: 10,
     ...shadows.default,
   },
-  engineItem: {
+  selectItem: {
     marginBottom: scale(10),
     padding: scale(5),
     backgroundColor: "#f4f4f4",
@@ -388,19 +401,19 @@ export default StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  engineImage: {
+  selectImage: {
     width: scale(60),
     height: verticalScale(60),
     marginRight: scale(10),
     borderRadius: 8,
   },
-  engineName: {
+  selectName: {
     fontSize: scale(16),
     fontWeight: "bold",
     color: "#000",
     marginBottom: verticalScale(10),
   },
-  engineDetails: {
+  selectDetails: {
     fontSize: scale(12),
     color: "#555",
   },
@@ -410,13 +423,24 @@ export default StyleSheet.create({
     fontSize: scale(24),
   },
   specContainer: {
-    height: verticalScale(400),
+    height: verticalScale(450),
+    // maxHeight: verticalScale(450),
     width: "100%",
     justifyContent: "space-between",
     backgroundColor: "white",
     padding: scale(10),
     borderRadius: 10,
     flexDirection: "row",
+    ...shadows.default,
+  },
+  specContainerRow: {
+    maxHeight: verticalScale(450),
+    width: "100%",
+    justifyContent: "space-between",
+    backgroundColor: "white",
+    padding: scale(10),
+    borderRadius: 10,
+    flexDirection: "column",
     ...shadows.default,
   },
   specHeader: {
@@ -435,12 +459,35 @@ export default StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
   },
+  specHeaderRow: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-around",
+    paddingVertical: scale(10),
+    alignSelf: "center",
+    borderBottomWidth: 2,
+  },
+  specHeaderRowCell: {
+    flexWrap: "wrap",
+    paddingHorizontal: scale(5),
+    alignContent: "center",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
   specCol: {
     flex: 1,
     height: "100%",
     flexDirection: "column",
     justifyContent: "space-around",
     borderRightWidth: 1,
+    borderBottomColor: "black",
+  },
+  specRow: {
+    flex: 1,
+    height: "100%",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    borderBottomWidth: 1,
     borderBottomColor: "black",
   },
   specCell: {
@@ -450,5 +497,28 @@ export default StyleSheet.create({
     alignContent: "center",
     textAlign: "center",
     borderTopWidth: 1,
+  },
+  specCellRow: {
+    flex: 1,
+    flexWrap: "wrap",
+    paddingHorizontal: scale(5),
+    paddingVertical: scale(10),
+    alignContent: "center",
+    textAlign: "center",
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)", // mờ nền
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    backgroundColor: "white",
+    padding: scale(20),
+    borderRadius: 10,
+    width: "90%",
+    height: "90%",
+    alignItems: "center",
+    rowGap: scale(20),
   },
 });

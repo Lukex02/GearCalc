@@ -32,8 +32,8 @@ const dummyShaft3Stats = {
 };
 
 export default function InputChain() {
-  // const calcController = CalcController.getInstance();
-  const calcController = new CalcController("GearBox1");
+  const calcController = CalcController.getInstance();
+  const enginePostStats = calcController.getEnginePostStats();
 
   const [selectedValues, setSelectedValues] = useState<KProps>({
     k_0: 1,
@@ -112,24 +112,20 @@ export default function InputChain() {
       return false;
     } else {
       // Tính toán với các giá trị đã chọn
-      // console.log(selectedValues);
-      // const k_total = Object.values(selectedValues).reduce((acc, val) => acc * val, 1);
-      // console.log("Tổng hệ số xích:", k_total);
-      calcController.calcMechDriveBase({
-        P: dummyShaft3Stats.P,
-        u_x: dummyShaft3Stats.u,
-        n: dummyShaft3Stats.n,
-        k_0: selectedValues.k_0,
-        k_a: selectedValues.k_a,
-        k_dc: selectedValues.k_dc,
-        k_bt: selectedValues.k_bt,
-        k_d: selectedValues.k_d,
-        k_c: selectedValues.k_c,
-      });
-      ChainController.getSelectableChain(calcController.getCalcMechDrive().P_t).then((chainList) => {
-        calcController.chooseMechDrive(chainList[0]);
-        console.log("After choose", calcController.getCalcMechDrive());
-      });
+      if (enginePostStats) {
+        calcController.calcMechDriveBase({
+          P: enginePostStats.newEngineShaftStats.p[3] ?? dummyShaft3Stats.P,
+          u_x: enginePostStats.rearrangedRatio[3].value ?? dummyShaft3Stats.u,
+          n: enginePostStats.newEngineShaftStats.n[3] ?? dummyShaft3Stats.n,
+          k_0: selectedValues.k_0,
+          k_a: selectedValues.k_a,
+          k_dc: selectedValues.k_dc,
+          k_bt: selectedValues.k_bt,
+          k_d: selectedValues.k_d,
+          k_c: selectedValues.k_c,
+        });
+        return true;
+      }
       return false;
     }
   };
@@ -167,7 +163,7 @@ export default function InputChain() {
           </View>
         ))}
       </ScrollView>
-      <CalcFooter onValidate={handleValidation} nextPage="./src/views/SelectChainScreen" />
+      <CalcFooter onValidate={handleValidation} nextPage="/src/views/SelectChainScreen" />
     </View>
   );
 }

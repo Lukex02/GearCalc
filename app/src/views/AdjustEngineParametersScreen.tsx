@@ -74,10 +74,10 @@ export default function AdjustEngineParametersScreen() {
 
       <View style={styles.resultContainer}>
         <Text style={styles.resultText}>
-          Công suất cần thiết: <Text style={{ color: "red", fontWeight: "bold" }}>{pCT.toFixed(3)}</Text> kW
+          Công suất cần thiết: <Text style={{ color: "blue", fontWeight: "bold" }}>{pCT.toFixed(3)} kW</Text>
         </Text>
         <Text style={styles.resultText}>
-          Số vòng quay sơ bộ: <Text style={{ color: "red", fontWeight: "bold" }}>{nSB.toFixed(0)}</Text> rpm
+          Số vòng quay sơ bộ: <Text style={{ color: "blue", fontWeight: "bold" }}>{nSB.toFixed(0)} rpm</Text>
         </Text>
       </View>
 
@@ -99,7 +99,9 @@ export default function AdjustEngineParametersScreen() {
                     style={styles.slider}
                     minimumValue={Math.round(item.min ? item.min * 1000 : 1000) / 1000}
                     maximumValue={Math.round(item.max ? item.max * 1000 : 1000) / 1000}
-                    step={Math.round(((item.max ? item.max : 1 - (item.min ? item.min : 1)) / 6) * 1000) / 1000}
+                    step={
+                      Math.round(((item.max ? item.max : 1 - (item.min ? item.min : 1)) / 6) * 1000) / 1000
+                    }
                     value={item.value}
                     onSlidingComplete={(value) => handleSliderChangeEffi(index, value)}
                     disabled={item.type === "kn"}
@@ -128,7 +130,9 @@ export default function AdjustEngineParametersScreen() {
                     minimumValue={Math.round(item.min ? item.min * 10 : 10) / 10}
                     maximumValue={Math.round(item.max ? item.max * 10 : 10) / 10}
                     step={
-                      item.type === "h" ? 2 : Math.round(((item.max ? item.max : 1 - (item.min ? item.min : 1)) / 6) * 10) / 10
+                      item.type === "h"
+                        ? 2
+                        : Math.round(((item.max ? item.max : 1 - (item.min ? item.min : 1)) / 6) * 10) / 10
                     }
                     value={item.value}
                     onSlidingComplete={(value) => handleSliderChangeRatio(index, value)}

@@ -7,30 +7,23 @@ import ChainController from "./ChainController";
 import GearController from "./GearController";
 import CalculatedChain, { SelectedChain } from "../models/Chain";
 import { Alert } from "react-native";
+import GearSet from "../models/Gear";
 
 type GearBox1GearSetInput = {
-  sigma_b: number;
-  sigma_ch: number;
-  HB: number;
-  S_max: number;
+  sigma_b: [number, number];
+  sigma_ch: [number, number];
+  HB: [number, number];
+  S_max: [number, number];
   shaftStats: {
     u: number;
     n: number;
     T: number;
-  };
-  desStats: {
-    T1: number;
-    t1: number;
-    T2: number;
-    t2: number;
-    L_h: number;
   };
   K_qt: number;
 };
 type GearBox2GearSetInput = {
   a: number; // Random prop
 };
-
 type GearSetInput = GearBox1GearSetInput | GearBox2GearSetInput;
 
 type GearBox1MechDriveInput = {
@@ -47,48 +40,62 @@ type GearBox1MechDriveInput = {
 type GearBox2MechDriveInput = {
   a: number; // Random prop
 };
-
 type MechDriveInput = GearBox1MechDriveInput | GearBox2MechDriveInput;
 
 interface DesignStrategy {
+  _designInputStats: any;
   _designEngineStats: any;
-  _designMechDriveStats: any;
-  _designGearStats: any;
+  // _designMechDriveStats: any;
+  // _designGearStats: any;
 
-  designEngine(
-    F: number, // Lực vòng trên băng tải (N) (đề)
-    v: number, // Vận tốc băng tải (m/s) (đề)
-    T1: number, // Momen xoắn chế độ tải 1 (đề)
-    t1: number, // Thời gian hoạt động ở tải 1 (đề)
-    T2: number, // Momen xoắn chế độ tải 2 (đề)
-    t2: number, // Thời gian hoạt động ở tải 2 (đề)\
-    output: any // Có thể là đĩa xích, trục tang, tùy thuộc sẽ thay đổi kiểu và số liệu
-  ): { engi: CalculatedEngine; base_effi: Efficiency; base_ratio: TransRatio };
+  storeDesignInput(
+    F: number,
+    v: number,
+    T1: number,
+    t1: number,
+    T2: number,
+    t2: number,
+    L: number,
+    output: any
+  ): void;
+  designEngine(): { engi: CalculatedEngine; base_effi: Efficiency; base_ratio: TransRatio };
   recalcEngine(efficiency: Efficiency, ratio: TransRatio): CalculatedEngine;
   designMechDrive(input: MechDriveInput): any;
   continueCalcMechDrive(calculated: CalculatedChain | any, selected: SelectedChain | any): void;
-  designGear(input: GearSetInput): any; // Sẽ chỉ làm 1 hàm tính bánh răng dùng chung
+  designGear(input: GearSetInput): GearSet | any; // Sẽ chỉ làm 1 hàm tính bánh răng dùng chung
 }
 
 // Hộp giảm tốc 2 cấp khai triển (2 cặp bánh răng)
 // Quay một chiều, làm việc 2 ca, tải va đập nhẹ: 1 năm làm việc 300 ngày, 1 ca làm việc 8 giờ.
 class DesignGearBox1 implements DesignStrategy {
+  _designInputStats: any;
   _designEngineStats: any;
-  _designMechDriveStats: any;
-  _designGearStats: any;
+  // _designMechDriveStats: any;
+  // _designGearStats: any;
 
-  designEngine(
-    F: number, // Lực vòng trên băng tải (N) (đề)
-    v: number, // Vận tốc băng tải (m/s) (đề)
-    T1: number, // Momen xoắn chế độ tải 1 (đề)
-    t1: number, // Thời gian hoạt động ở tải 1 (đề)
-    T2: number, // Momen xoắn chế độ tải 2 (đề)
-    t2: number, // Thời gian hoạt động ở tải 2 (đề)\
-    drumPulley: {
-      // Trục tang trống
-      D: number; // Đường kính tang
-    }
-  ): { engi: CalculatedEngine; base_effi: Efficiency; base_ratio: TransRatio } {
+  storeDesignInput(
+    F: number,
+    v: number,
+    T1: number,
+    t1: number,
+    T2: number,
+    t2: number,
+    L: number,
+    output: any
+  ) {
+    this._designInputStats = {
+      F: F,
+      v: v,
+      T1: T1,
+      t1: t1,
+      T2: T2,
+      t2: t2,
+      L: L,
+      output: output,
+    };
+  }
+
+  designEngine(): { engi: CalculatedEngine; base_effi: Efficiency; base_ratio: TransRatio } {
     // Design strategy 1 implementation
     let baseEfficiency = new Efficiency([
       [{ type: "ol", value: 0.992 }, 4],
@@ -102,27 +109,27 @@ class DesignGearBox1 implements DesignStrategy {
       { type: "kn", value: 1 },
     ]);
     this._designEngineStats = {
-      F,
-      v,
-      T1,
-      t1,
-      T2,
-      t2,
+      F: this._designInputStats.F,
+      v: this._designInputStats.v,
+      T1: this._designInputStats.T1,
+      t1: this._designInputStats.t1,
+      T2: this._designInputStats.T2,
+      t2: this._designInputStats.t2,
       drumPulley: {
-        D: drumPulley.D,
+        D: this._designInputStats.output.D,
       },
       efficiency: baseEfficiency,
       ratio: baseRatio,
     };
     return {
       engi: EngineController.generateCalculatedEngine(
-        F,
-        v,
-        drumPulley.D * Math.PI, // Chu vi của đĩa xích
-        T1,
-        t1,
-        T2,
-        t2,
+        this._designEngineStats.F,
+        this._designEngineStats.v,
+        this._designEngineStats.drumPulley.D * Math.PI, // Chu vi của đĩa xích
+        this._designEngineStats.T1,
+        this._designEngineStats.t1,
+        this._designEngineStats.T2,
+        this._designEngineStats.t2,
         baseEfficiency,
         baseRatio
       ),
@@ -177,15 +184,21 @@ class DesignGearBox1 implements DesignStrategy {
       }
     }
   }
-  designGear(input: GearBox1GearSetInput): any {
+  designGear(input: GearBox1GearSetInput): GearSet {
     // Design gears here
-    GearController.generateGearSet(
+    return GearController.generateGearSet(
       input.sigma_b,
       input.sigma_ch,
       input.HB,
       input.S_max,
       input.shaftStats,
-      input.desStats,
+      {
+        T1: this._designInputStats.T1,
+        t1: this._designInputStats.t1,
+        T2: this._designInputStats.T2,
+        t2: this._designInputStats.t2,
+        L_h: this._designInputStats.L,
+      },
       input.K_qt
     );
   }
@@ -193,23 +206,34 @@ class DesignGearBox1 implements DesignStrategy {
 
 // Hộp giảm tốc bánh răng trục vít 1 cấp
 class DesignGearBox2 implements DesignStrategy {
+  _designInputStats: any;
   _designEngineStats: any;
-  _designMechDriveStats: any;
-  _designGearStats: any;
+  // _designMechDriveStats: any;
+  // _designGearStats: any;
 
-  designEngine(
-    F: number, // Lực vòng trên băng tải (N) (đề)
-    v: number, // Vận tốc băng tải (m/s) (đề)
-    T1: number, // Momen xoắn chế độ tải 1 (đề)
-    t1: number, // Thời gian hoạt động ở tải 1 (đề)
-    T2: number, // Momen xoắn chế độ tải 2 (đề)
-    t2: number, // Thời gian hoạt động ở tải 2 (đề)\
-    sprocket: {
-      // Đĩa xích
-      z: number; // Số răng đĩa xích tải dẫn (răng) (đề)
-      p: number; // Bước xích tải (mm) (đề)
-    }
-  ): { engi: CalculatedEngine; base_effi: Efficiency; base_ratio: TransRatio } {
+  storeDesignInput(
+    F: number,
+    v: number,
+    T1: number,
+    t1: number,
+    T2: number,
+    t2: number,
+    L: number,
+    output: any
+  ) {
+    this._designInputStats = {
+      F: F,
+      v: v,
+      T1: T1,
+      t1: t1,
+      T2: T2,
+      t2: t2,
+      L: L,
+      output: output,
+    };
+  }
+
+  designEngine(): { engi: CalculatedEngine; base_effi: Efficiency; base_ratio: TransRatio } {
     // Design strategy 2 implementation
     let baseEfficiency = new Efficiency([
       [{ type: "ol", value: 0.99 }, 4],
@@ -225,28 +249,28 @@ class DesignGearBox2 implements DesignStrategy {
       { type: "kn", value: 1 },
     ]);
     this._designEngineStats = {
-      F,
-      v,
-      T1,
-      t1,
-      T2,
-      t2,
+      F: this._designInputStats.F,
+      v: this._designInputStats.v,
+      T1: this._designInputStats.T1,
+      t1: this._designInputStats.t1,
+      T2: this._designInputStats.T2,
+      t2: this._designInputStats.t2,
       sprocket: {
-        z: sprocket.z,
-        p: sprocket.p,
+        z: this._designInputStats.output.z,
+        p: this._designInputStats.output.p,
       },
       efficiency: baseEfficiency,
       ratio: baseRatio,
     };
     return {
       engi: EngineController.generateCalculatedEngine(
-        F,
-        v,
-        sprocket.z * sprocket.p, // Chu vi của đĩa xích
-        T1,
-        t1,
-        T2,
-        t2,
+        this._designEngineStats.F,
+        this._designEngineStats.v,
+        this._designEngineStats.sprocket.z * this._designEngineStats.sprocket.p, // Chu vi của đĩa xích
+        this._designEngineStats.T1,
+        this._designEngineStats.t1,
+        this._designEngineStats.T2,
+        this._designEngineStats.t2,
         baseEfficiency,
         baseRatio
       ),
@@ -270,7 +294,6 @@ class DesignGearBox2 implements DesignStrategy {
 
   designMechDrive(input: any) {
     // Should be belt here
-    // this._designMechDriveStats = ChainController.generateCalculatedBelt(...);
   }
   continueCalcMechDrive(calculatedBelt: any, selectedBelt: any) {}
   designGear(input: any) {
@@ -284,8 +307,9 @@ export default class CalcController {
   private _effiency!: Efficiency;
   private _ratio!: TransRatio;
   private _calcEngine!: CalculatedEngine;
+  private _calcEnginePostStats!: any;
   private _calcMechDrive!: CalculatedChain; // || CalculatedBelt; nếu có belt
-  private _calcGear!: any; // any vì mỗi thiết kế lại có kiểu khác nhau
+  private _calcGearSet: GearSet[] | any[] = []; // any vì mỗi thiết kế lại có kiểu khác nhau
   // private _calcShaft: CalculatedShaft | null;
   private _gearBoxBuilder: GearBoxBuilder;
 
@@ -312,8 +336,13 @@ export default class CalcController {
     CalcController.instance = this;
     this._gearBoxBuilder = new GearBoxBuilder();
   }
-  calcEngineBase(F: number, v: number, T1: number, t1: number, T2: number, t2: number, output: any) {
-    let engiDes = this._designStrategy.designEngine(F, v, T1, t1, T2, t2, output);
+
+  initDesign(F: number, v: number, T1: number, t1: number, T2: number, t2: number, L: number, output: any) {
+    this._designStrategy.storeDesignInput(F, v, T1, t1, T2, t2, L, output);
+  }
+
+  calcEngineBase() {
+    let engiDes = this._designStrategy.designEngine();
     this._calcEngine = engiDes.engi;
     this._effiency = engiDes.base_effi;
     this._ratio = engiDes.base_ratio;
@@ -332,7 +361,9 @@ export default class CalcController {
   }
 
   getEnginePostStats() {
-    if (this._gearBoxBuilder && this._calcEngine) {
+    if (this._calcEnginePostStats) {
+      return this._calcEnginePostStats;
+    } else if (this._gearBoxBuilder && this._calcEngine) {
       try {
         const newTransRatio = EngineController.getNewTransRatio(
           this._calcEngine,
@@ -350,10 +381,11 @@ export default class CalcController {
           let rearrangedRatio = this._order
             .map((ratio_type) => newTransRatio.ratio_spec.find((ratio) => ratio.type === ratio_type))
             .reverse();
-          return {
+          this._calcEnginePostStats = {
             rearrangedRatio,
             newEngineShaftStats,
           };
+          return this._calcEnginePostStats;
         } else {
           return null;
         }
@@ -380,14 +412,49 @@ export default class CalcController {
   }
 
   chooseMechDrive(selected: SelectedChain | any) {
+    // Selected Chain chỉ mang tính chất chọn thiết kế chuẩn để tính tiếp, nên sẽ dùng calcMechDrive để lưu state
     this._designStrategy.continueCalcMechDrive(this._calcMechDrive, selected);
+    this._gearBoxBuilder.setMechDrive(this._calcMechDrive);
   }
 
   getCalcMechDrive(): CalculatedChain | any {
     return this._calcMechDrive;
   }
 
-  calcGear(input: GearSetInput) {
-    this._designStrategy.designGear(input);
+  calcGearSet(
+    input: {
+      sigma_b: [number, number];
+      sigma_ch: [number, number];
+      HB: [number, number];
+      S_max: [number, number];
+    },
+    inputShaftNo: number = 1 | 2 | 3
+  ) {
+    try {
+      this._calcGearSet.push(
+        this._designStrategy.designGear({
+          ...input,
+          shaftStats: {
+            u: this._calcEnginePostStats.rearrangedRatio[inputShaftNo].value,
+            n: this._calcEnginePostStats.newEngineShaftStats.n[inputShaftNo],
+            T: this._calcEnginePostStats.newEngineShaftStats.T[inputShaftNo],
+          },
+          K_qt: this._gearBoxBuilder.getEngine().T_max_T_dn,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        Alert.alert("Lỗi", error.message);
+        alert(`Lỗi khi tính toán bộ truyền: ${error.message}`);
+      }
+    }
+  }
+  getCalcGearSet(): any[] {
+    return this._calcGearSet;
+  }
+
+  setGearAll() {
+    this._gearBoxBuilder.setGearSet(this._calcGearSet);
   }
 }

@@ -29,8 +29,10 @@ export default class CalculatedChain {
   private _d_f1!: number; // Đường kính vòng đỉnh răng đĩa xích bị dẫn
   private _d_f2!: number; // Đường kính vòng chân răng đĩa xích bị dẫn
   private _d_l!: number;
+  private _d_c!: number;
   private _r!: number;
   private _A!: number;
+  private _B!: number;
 
   private _F_t!: number; // Lực vòng
   private _F_0!: number;
@@ -92,11 +94,15 @@ export default class CalculatedChain {
   }
   calc_after_choose(selectedChain: SelectedChain) {
     this._d_l = selectedChain.d_l;
+    this._d_c = selectedChain.d_c;
     this._A = selectedChain.A;
+    this._B = selectedChain.B;
     this._p = selectedChain.Step_p;
     this._a = this._p * 40; // Chọn luôn a = 40, đã tạm khóa select khoảng a là 30 tới 50
     const x =
-      (2 * this._a) / this._p + (this._z1 + this._z2) / 2 + ((this._z2 - this._z1) ** 2 * this._p) / (4 * this._a * Math.PI ** 2);
+      (2 * this._a) / this._p +
+      (this._z1 + this._z2) / 2 +
+      ((this._z2 - this._z1) ** 2 * this._p) / (4 * this._a * Math.PI ** 2);
     const rounded_x = Math.floor(x);
     if (rounded_x % 2 == 0) this._x_c = rounded_x;
     else {
@@ -107,7 +113,9 @@ export default class CalculatedChain {
       this._p *
       (this._x_c -
         0.5 * (this._z1 + this._z2) +
-        Math.sqrt((this._x_c - 0.5 * (this._z1 + this._z2)) ** 2 - 2 * ((this._z2 - this._z1) / Math.PI) ** 2));
+        Math.sqrt(
+          (this._x_c - 0.5 * (this._z1 + this._z2)) ** 2 - 2 * ((this._z2 - this._z1) / Math.PI) ** 2
+        ));
     const delta_a = 0.002 * a_recalc;
     this._a = Math.round((a_recalc - delta_a) / 10) * 10;
     this._i = (this._z1 * this._shaftStats.n) / (15 * this._x_c);
@@ -151,12 +159,17 @@ export default class CalculatedChain {
     const E = (2 * (210 * 10 ** 9) * (124 * 10 ** 9)) / (210 * 10 ** 9 + 124 * 10 ** 9);
     const F_vd = 13 * 10 ** -7 * this._shaftStats.n * this._p * 1;
     let k_r = 0;
-    if (this._z1 >= 15 && this._z1 < 20) k_r = 0.59 - Math.floor(((0.59 - 0.48) / (this._z1 % 5)) * 100) / 100;
-    if (this._z1 >= 20 && this._z1 < 30) k_r = 0.48 - Math.floor(((0.48 - 0.36) / (this._z1 % 10)) * 100) / 100;
-    if (this._z1 >= 30 && this._z1 < 40) k_r = 0.36 - Math.floor(((0.36 - 0.29) / (this._z1 % 10)) * 100) / 100;
-    if (this._z1 >= 40 && this._z1 < 50) k_r = 0.29 - Math.floor(((0.29 - 0.24) / (this._z1 % 10)) * 100) / 100;
-    if (this._z1 >= 50 && this._z1 < 60) k_r = 0.24 - Math.floor(((0.24 - 0.22) / (this._z1 % 10)) * 100) / 100;
-    console.log(k_r);
+    if (this._z1 >= 15 && this._z1 < 20)
+      k_r = 0.59 - Math.floor(((0.59 - 0.48) / (this._z1 % 5)) * 100) / 100;
+    if (this._z1 >= 20 && this._z1 < 30)
+      k_r = 0.48 - Math.floor(((0.48 - 0.36) / (this._z1 % 10)) * 100) / 100;
+    if (this._z1 >= 30 && this._z1 < 40)
+      k_r = 0.36 - Math.floor(((0.36 - 0.29) / (this._z1 % 10)) * 100) / 100;
+    if (this._z1 >= 40 && this._z1 < 50)
+      k_r = 0.29 - Math.floor(((0.29 - 0.24) / (this._z1 % 10)) * 100) / 100;
+    if (this._z1 >= 50 && this._z1 < 60)
+      k_r = 0.24 - Math.floor(((0.24 - 0.22) / (this._z1 % 10)) * 100) / 100;
+    // console.log(k_r);
     this._sigma_H = (0.47 * Math.sqrt((k_r * (this._F_t * this._k_d + F_vd) * E) / (this._A * 1))) / 1000; // Mặc định cho xích con lăn 1 dãy
     this._F_rx = 1.15 * this._F_t;
   }
@@ -164,14 +177,30 @@ export default class CalculatedChain {
   get P_t() {
     return this._P_t;
   }
+
+  getChainPostStats() {
+    return {
+      z1: this._z1, // Số bánh răng dẫn
+      z2: this._z2, // Số bánh răng bị dẫn
+      p: this._p, // Bước xích
+      B: this._B, // Chiều dài ống lót
+      d_c: this._d_c, // Đường kính chốt
+      x: this._x_c, // Số mắt xích
+      a: this._a, // Khoảng cách trục
+      d1: this._d1, // Đường kính vòng chia đĩa xích dẫn
+      d2: this._d2, // Đường kính vòng chia đĩa bị dẫn
+      F_rx: this._F_rx, // Lực tác dụng lên đĩa xích
+    };
+  }
 }
 
 export class SelectedChain {
   constructor(
+    public CHAIN_ID: string, // ID động cơ
     public Step_p: number, // Bước xích
     public d_c: number, // Đường kính chốt
     public d_l: number,
-    public B: number, // Chiều dài ống
+    public B: number, // Chiều dài ống lót
     public P_max: number, // Hệ số điều kiện sử dụng xích
     public Q: number, // Tải trọng pha hỏng
     public q_p: number, // Khối lượng 1 mét xích

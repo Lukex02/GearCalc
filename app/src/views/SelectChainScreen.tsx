@@ -2,51 +2,46 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList, Image, Alert } from "react-native";
 import { useRouter } from "expo-router"; // Khởi tạo router từ expo-router
 import styles from "../style/MainStyle"; // Sử dụng style đã tạo
-// import calcFooter from "../style/calcFooter";
 import CalcController from "../controller/CalcController";
-import EngineController from "../controller/EngineController";
-import { SelectedEngine } from "../models/EngineModel";
 import CalcFooter from "./CalcFooter";
 import LoadingScreen from "./LoadingScreen";
+import CalculatedChain, { SelectedChain } from "../models/Chain";
+import ChainController from "../controller/ChainController";
 
 export default function SelectChainScreen() {
-  const router = useRouter(); // Khởi tạo router để điều hướng
   const calcController = CalcController.getInstance();
-  const requiredPower = calcController.getCalcEngine().p_ct;
-  const requiredSpeed = calcController.getCalcEngine().n_sb;
-  const [selectedEngine, setSelectedEngine] = useState<SelectedEngine>();
-  const [engineList, setEngineList] = useState<SelectedEngine[]>([]);
+  const calcChain: CalculatedChain = calcController.getCalcMechDrive();
+  const calcPower = calcChain.P_t;
+  const [selectedChain, setSelectedChain] = useState<SelectedChain>();
+  const [chainList, setChainList] = useState<SelectedChain[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const handleSelectEngine = (engine: SelectedEngine) => {
-    setSelectedEngine(engine); // Lưu động cơ đã chọn
+  const handleSelectChain = (chain: SelectedChain) => {
+    setSelectedChain(chain);
   };
 
   const handleValidation = () => {
-    if (selectedEngine) {
-      calcController.chooseEngine(selectedEngine);
+    if (selectedChain) {
+      calcController.chooseMechDrive(selectedChain);
       return true;
     } else {
-      alert("Vui lòng chọn động cơ.");
-      Alert.alert("Thông báo", "Vui lòng chọn động cơ.");
+      alert("Vui lòng chọn thiết kế xích.");
+      Alert.alert("Thông báo", "Vui lòng chọn thiết kế xích.");
       return false;
     }
   };
 
-  // Lọc động cơ thỏa mãn các yêu cầu
-  const getEngineList = () => {
-    EngineController.getSelectedEngine(
-      requiredPower,
-      requiredSpeed,
-      calcController.getCalcEngine().T_mm
-    ).then((list) => {
-      setEngineList(list);
-      // console.log(list);
+  // Lọc xích thỏa mãn yêu cầu
+  const getChainList = () => {
+    ChainController.getSelectableChain(calcController.getCalcMechDrive().P_t).then((chainList) => {
+      setChainList(chainList);
+      // console.log(chainList);
       setLoading(false);
     });
   };
+
   useEffect(() => {
-    getEngineList();
+    getChainList();
   }, []);
 
   return (
@@ -56,50 +51,61 @@ export default function SelectChainScreen() {
       </View>
       <View style={styles.resultContainer}>
         <Text style={styles.resultText}>
-          Công suất cần thiết:{" "}
-          <Text style={{ color: "green", fontWeight: "bold" }}>{requiredPower.toFixed(3)}</Text> kW
-        </Text>
-        <Text style={styles.resultText}>
-          Tốc độ quay cần thiết:{" "}
-          <Text style={{ color: "green", fontWeight: "bold" }}>{requiredSpeed.toFixed(0)}</Text> rpm
+          Công suất tính toán:{" "}
+          <Text style={{ color: "green", fontWeight: "bold" }}>{calcPower.toFixed(3)}</Text> kW
         </Text>
       </View>
-      {/* Danh sách Xích */}
-      <Text style={styles.pageTitle}>Danh sách Xích thỏa mãn</Text>
+      {/* Danh sách thiết kế xích */}
+      <Text style={styles.pageTitle}>Danh sách thiết kế xích thỏa mãn (con lăn 1 dãy)</Text>
       {loading ? (
         <LoadingScreen />
       ) : (
-        <View style={styles.engineContainer}>
-          {engineList.length == 0 && <Text style={styles.noDataWarn}>Không có Xích thỏa mãn điều kiện!</Text>}
+        <View style={styles.selectContainer}>
+          {chainList.length == 0 && (
+            <Text style={styles.noDataWarn}>Không có thiết kế xích thỏa mãn điều kiện!</Text>
+          )}
           <FlatList
             // contentContainerStyle={{ flex: 1 }}
-            data={engineList}
-            keyExtractor={(item) => item.M_ID}
-            renderItem={({ item }) => (
-              <TouchableOpacity style={styles.engineItem} onPress={() => handleSelectEngine(item)}>
+            data={chainList}
+            keyExtractor={(item) => item.CHAIN_ID}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity style={styles.selectItem} onPress={() => handleSelectChain(item)}>
                 <Image
                   source={require("../img/wrench.png")}
-                  style={styles.engineImage}
+                  style={styles.selectImage}
                   resizeMode="contain"
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.engineName}>{item.name}</Text>
-                  <Text style={styles.engineDetails}>
-                    Công suất: <Text style={{ color: "green", fontWeight: "bold" }}>{item.power}</Text> kW
+                  <Text style={styles.selectName}>Loại {index + 1}</Text>
+                  <Text style={styles.selectDetails}>
+                    Bước xích: <Text style={{ color: "blue", fontWeight: "bold" }}>{item.Step_p} mm</Text>
                   </Text>
-                  <Text style={styles.engineDetails}>
-                    Tốc độ vòng quay: <Text style={{ color: "green", fontWeight: "bold" }}>{item.n_t}</Text>{" "}
-                    rpm
+                  <Text style={styles.selectDetails}>
+                    Công suất cho phép [P]:{" "}
+                    <Text style={{ color: "green", fontWeight: "bold" }}>{item.P_max} kW</Text>
                   </Text>
-                  <Text style={styles.engineDetails}>Hệ số công suất: {item.eng_effi} %</Text>
-                  <Text style={styles.engineDetails}>Hiệu suất động cơ: {item.H}</Text>
-                  <Text style={styles.engineDetails}>Hệ số momen khởi động: {item.T_k_T_dn} / T_dn</Text>
-                  <Text style={styles.engineDetails}>Hệ số momen tối đa: {item.T_max_T_dn} / T_dn</Text>
+                  <Text style={styles.selectDetails}>
+                    Đường kính chốt: <Text style={{ color: "blue", fontWeight: "bold" }}>{item.d_c} mm</Text>
+                  </Text>
+                  <Text style={styles.selectDetails}>
+                    Chiều dài ống: <Text style={{ color: "blue", fontWeight: "bold" }}>{item.B} mm</Text>
+                  </Text>
+                  <Text style={styles.selectDetails}>
+                    Tải trọng phá hỏng: <Text style={{ color: "blue", fontWeight: "bold" }}>{item.Q} kN</Text>
+                  </Text>
+                  <Text style={styles.selectDetails}>
+                    Khối lượng 1 mét xích q:{" "}
+                    <Text style={{ color: "blue", fontWeight: "bold" }}>{item.q_p} kg</Text>
+                  </Text>
+                  <Text style={styles.selectDetails}>
+                    Diện tích chiếu bản lề:{" "}
+                    <Text style={{ color: "blue", fontWeight: "bold" }}>{item.A} mm2</Text>
+                  </Text>
                 </View>
-                {selectedEngine?.M_ID === item.M_ID && (
+                {selectedChain?.CHAIN_ID === item.CHAIN_ID && (
                   <Image
                     source={require("../img/tick.jpg")}
-                    style={styles.engineImage}
+                    style={styles.selectImage}
                     resizeMode="contain"
                   />
                 )}
@@ -108,7 +114,7 @@ export default function SelectChainScreen() {
           />
         </View>
       )}
-      <CalcFooter onValidate={handleValidation} nextPage="./src/views/PostChainStatsView" />
+      <CalcFooter onValidate={handleValidation} nextPage="/src/views/PostChainStatsView" />
     </View>
   );
 }

@@ -43,7 +43,7 @@ export default function RootLayout() {
         <Stack.Screen name="src/views/SelectChainScreen" options={{ title: "Xích" }} />
         <Stack.Screen name="src/views/PostChainStatsView" options={{ title: "Xích" }} />
         <Stack.Screen name="src/views/GearFast" options={{ title: "Bánh răng" }} />
-        <Stack.Screen name="src/views/GearLow" options={{ title: "Bánh răng" }} />
+        <Stack.Screen name="src/views/GearSlow" options={{ title: "Bánh răng" }} />
         <Stack.Screen name="src/views/GearResult" options={{ title: "Bánh răng" }} />
       </Stack>
     </PaperProvider>

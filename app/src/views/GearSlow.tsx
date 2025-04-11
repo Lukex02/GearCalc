@@ -32,7 +32,7 @@ const label = {
   dw2: "Đường kính lăn bánh lớn (mm)",
 };
 
-export default function GearFastScreen() {
+export default function GearSlowScreen() {
   const calcController = CalcController.getInstance();
   const [gearSetStats, setGearSetStats] = useState({});
   const selectMats: typeof materialStats = materialStats;
@@ -53,7 +53,7 @@ export default function GearFastScreen() {
     if (HB.small.value - HB.big.value >= 10) {
       calcController.calcGearSet(
         { sigma_b: [950, 850], sigma_ch: [700, 550], HB: [HB.small.value, HB.big.value], S_max: [60, 100] },
-        1
+        2
       );
       setGearSetStats(
         calcController
@@ -92,12 +92,12 @@ export default function GearFastScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.pageTitle}>Bộ truyền bánh răng cấp nhanh</Text>
+      <Text style={styles.pageTitle}>Bộ truyền bánh răng cấp chậm</Text>
       <View style={styles.header}>
         <Text style={styles.pageTitle}>Chọn thông số vật liệu</Text>
       </View>
       <View style={styles.colContainer}>
-        {/* Chọn độ rắn cho cặp bánh răng bộ truyền cấp nhanh */}
+        {/* Chọn độ rắn cho cặp bánh răng bộ truyền cấp chậm */}
         <View style={styles.tableContainer}>
           <Text style={styles.tableTitle}>ĐỘ RẮN</Text>
           {selectMats && (
@@ -146,7 +146,7 @@ export default function GearFastScreen() {
         </Text>
       </View>
 
-      <CalcFooter onValidate={handleValidation} nextPage={"/src/views/GearSlow"} />
+      <CalcFooter onValidate={handleValidation} nextPage={"/src/views/GearResult"} />
       <Modal
         dismissable={false}
         visible={modalVisible}
@@ -154,7 +154,7 @@ export default function GearFastScreen() {
         contentContainerStyle={styles.overlay}
       >
         <View style={styles.modalView}>
-          <Text style={styles.pageTitle}>Thông số bộ truyền bánh răng cấp nhanh</Text>
+          <Text style={styles.pageTitle}>Thông số bộ truyền bánh răng cấp chậm</Text>
           <View style={{ flex: 1 }}>
             {/* Header */}
             <View style={styles.specHeaderRow}>

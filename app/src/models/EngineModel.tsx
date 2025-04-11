@@ -111,12 +111,14 @@ export default class EngineFactory {
     rpm: number,
     H: number,
     eng_effi: number,
-    T_max_T_dn: number,
+    T_max_T_dn: number | null,
     T_k_T_dn: number,
     T_mm_T: number // Tỷ số của momen mở máy
   ): SelectedEngine | null {
     // Kiểm tra điều kiện mở máy
-    if (T_mm_T <= T_k_T_dn) return new SelectedEngine(M_ID, name, power, rpm, H, eng_effi, T_max_T_dn, T_k_T_dn);
+    if (T_max_T_dn == null) T_max_T_dn = T_k_T_dn;
+    if (T_mm_T <= T_k_T_dn)
+      return new SelectedEngine(M_ID, name, power, rpm, H, eng_effi, T_max_T_dn, T_k_T_dn);
     else return null;
   }
 }

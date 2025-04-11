@@ -1,24 +1,48 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import CalcFooter from "./CalcFooter";
 import styles from "../style/MainStyle";
+import CalcController from "../controller/CalcController";
+import { scale, verticalScale } from "react-native-size-matters";
+import LoadingScreen from "./LoadingScreen";
 
 export default function GearResult() {
-  // Các thông số giả lập (mock data)
-  const [da2, setDa2] = useState(100); // Đường kính đỉnh bánh răng 2
-  const [df2, setDf2] = useState(90); // Đường kính chân răng bánh răng 2
-  const [da4, setDa4] = useState(150); // Đường kính đỉnh bánh răng 4
-  const [h2, setH2] = useState(10); // Chiều cao dầu bôi trơn
-  const [H, setH] = useState({ min: 8, max: 12 }); // Điều kiện bôi trơn
+  const [gearSetFast, setGearSetFast] = useState<any>(null);
+  const [gearSetSlow, setGearSetSlow] = useState<any>(null);
+
+  const [da4Over3, setda4Over3] = useState<number>(0); // Đường kính đỉnh bánh răng 4
+  const [h2, setH2] = useState<number>(0); // Chiều cao bánh răng lớn cấp nhanh
+  const [H, setH] = useState<{ min: number; max: number }>({ min: 0, max: 0 }); // Mức dầu
   const [lubricationSatisfied, setLubricationSatisfied] = useState(false); // Điều kiện bôi trơn
+  const [isValid, setIsValid] = useState(false);
+
+  const handleValidation = () => {
+    return lubricationSatisfied;
+  };
 
   useEffect(() => {
     // Kiểm tra điều kiện bôi trơn
-    const da4Over3 = da4 / 3;
-    setLubricationSatisfied(h2 >= H.min && h2 <= H.max && da4Over3 > 0);
-  }, [da2, df2, da4, h2, H]);
+    const calcController = CalcController.getInstance();
+    calcController.getCalcGearSet().forEach((gearSet, index) => {
+      if (index == 0) {
+        setGearSetFast(gearSet.returnPostStats());
+      } else if (index == 1) {
+        setGearSetSlow(gearSet.returnPostStats());
+      }
+    });
+  }, []);
 
-  return (
+  useEffect(() => {
+    if (gearSetFast && gearSetSlow) {
+      setH2((gearSetFast.da2 - gearSetSlow.df2) / 2);
+      setda4Over3(gearSetSlow.da2 / 3);
+      setH({ min: gearSetFast.da2 / 2 - 10 - 15, max: gearSetFast.da2 / 2 - 10 - 10 });
+      setLubricationSatisfied(h2 < 10 && H.min >= da4Over3 && H.max >= da4Over3);
+      setIsValid(true);
+    }
+  }, [gearSetSlow, gearSetFast]);
+
+  return isValid ? (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.pageTitle}>Kết quả tính toán</Text>
@@ -26,85 +50,83 @@ export default function GearResult() {
 
       {/* Bảng hiển thị thông số */}
       <View style={localStyles.table}>
-        <View style={localStyles.row}>
+        <View
+          style={{ ...localStyles.row, backgroundColor: "rgba(202, 202, 202, 0.38)", borderBottomWidth: 1 }}
+        >
           <Text style={localStyles.cell}>Thông số</Text>
-          <Text style={localStyles.cell}>Giá trị</Text>
+          <Text style={localStyles.cell}>Giá trị (mm)</Text>
         </View>
         <View style={localStyles.row}>
-          <Text style={localStyles.cell}>da2</Text>
-          <Text style={localStyles.cell}>{da2.toFixed(2)}</Text>
-        </View>
-        <View style={localStyles.row}>
-          <Text style={localStyles.cell}>df2</Text>
-          <Text style={localStyles.cell}>{df2.toFixed(2)}</Text>
-        </View>
-        <View style={localStyles.row}>
-          <Text style={localStyles.cell}>da4</Text>
-          <Text style={localStyles.cell}>{da4.toFixed(2)}</Text>
-        </View>
-        <View style={localStyles.row}>
-          <Text style={localStyles.cell}>h2</Text>
+          <Text style={localStyles.cell}>Chiều cao răng của bánh răng lớn cấp nhanh</Text>
           <Text style={localStyles.cell}>{h2.toFixed(2)}</Text>
         </View>
         <View style={localStyles.row}>
-          <Text style={localStyles.cell}>H (min - max)</Text>
+          <Text style={localStyles.cell}>Mức dầu thấp nhất và mức dầu cao nhất</Text>
           <Text style={localStyles.cell}>
-            {H.min.toFixed(2)} - {H.max.toFixed(2)}
+            {H.min.toFixed(2)} ÷ {H.max.toFixed(2)}
           </Text>
         </View>
         <View style={localStyles.row}>
-          <Text style={localStyles.cell}>da4/3</Text>
-          <Text style={localStyles.cell}>{(da4 / 3).toFixed(2)}</Text>
+          <Text style={localStyles.cell}>1/3 bán kính bánh lớn phần cấp chậm</Text>
+          <Text style={localStyles.cell}>{da4Over3.toFixed(2)}</Text>
         </View>
       </View>
 
       {/* Thông báo điều kiện bôi trơn */}
       <View style={localStyles.lubricationContainer}>
         {lubricationSatisfied ? (
-          <Text style={localStyles.lubricationSatisfied}>Bộ truyền thỏa mãn điều kiện bôi trơn</Text>
+          <Text style={localStyles.lubricationSatisfied}>
+            Bộ truyền thỏa mãn điều kiện bôi trơn {H.min.toFixed(2)} ÷ {H.max.toFixed(2)} {">"}{" "}
+            {da4Over3.toFixed(2)}
+          </Text>
         ) : (
           <Text style={localStyles.lubricationNotSatisfied}>Bộ truyền không thỏa mãn điều kiện bôi trơn</Text>
         )}
       </View>
 
-      <CalcFooter nextPage={"./src/views/SelectEngineScreen"} />
+      <CalcFooter onValidate={handleValidation} nextPage={"/"} />
     </View>
+  ) : (
+    <LoadingScreen />
   );
 }
 
 const localStyles = StyleSheet.create({
   table: {
-    marginTop: 20,
+    maxHeight: verticalScale(380),
+    width: "100%",
     borderWidth: 2,
     borderColor: "white",
     borderRadius: 8,
     overflow: "hidden",
+    flexDirection: "column",
+    justifyContent: "space-between",
     backgroundColor: "white",
   },
   row: {
     flexDirection: "row",
-    borderBottomWidth: 1.5,
-    borderBottomColor: "#ccc",
+    paddingVertical: scale(5),
   },
   cell: {
+    marginVertical: "auto",
     flex: 1,
-    padding: 20,
+    padding: scale(10),
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: scale(16),
   },
   lubricationContainer: {
-    marginTop: 30,
     alignItems: "center",
   },
   lubricationSatisfied: {
     color: "green",
     fontWeight: "bold",
-    fontSize: 20,
+    textAlign: "center",
+    fontSize: scale(20),
   },
   lubricationNotSatisfied: {
     color: "red",
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: scale(20),
   },
 });
