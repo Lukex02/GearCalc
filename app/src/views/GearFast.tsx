@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList } from "react-native";
-import { Modal, Button } from "react-native-paper";
+import { View, Text, FlatList, Modal } from "react-native";
+import { Button } from "react-native-paper";
 // import { useRouter } from "expo-router";
 import Slider from "@react-native-community/slider"; // Import Slider
 import styles from "../style/MainStyle";
@@ -61,7 +61,7 @@ export default function GearFastScreen() {
           .findLast((gear) => gear)
           .returnPostStats()
       );
-      setModalVisible(true);
+      if (!verify) setModalVisible(true);
       return verify;
     } else {
       alert("Bánh nhỏ và bánh lớn độ bền không phù hợp");
@@ -88,6 +88,7 @@ export default function GearFastScreen() {
     } else {
       setHBColor("red");
     }
+    setVerify(false);
   }, [HB]);
 
   return (
@@ -148,48 +149,52 @@ export default function GearFastScreen() {
 
       <CalcFooter onValidate={handleValidation} nextPage={"/src/views/GearSlow"} />
       <Modal
-        dismissable={false}
+        transparent={true}
+        onRequestClose={() => setModalVisible(false)}
+        animationType="fade"
         visible={modalVisible}
         onDismiss={() => setModalVisible(false)}
-        contentContainerStyle={styles.overlay}
+        style={styles.overlay}
       >
-        <View style={styles.modalView}>
-          <Text style={styles.pageTitle}>Thông số bộ truyền bánh răng cấp nhanh</Text>
-          <View style={{ flex: 1 }}>
-            {/* Header */}
-            <View style={styles.specHeaderRow}>
-              <Text style={styles.specHeaderCell}>Thông số</Text>
-              <Text style={styles.specHeaderCell}>Giá trị</Text>
+        <View style={styles.overlay}>
+          <View style={styles.modalView}>
+            <Text style={styles.pageTitle}>Thông số bộ truyền bánh răng cấp nhanh</Text>
+            <View style={{ height: Math.floor(verticalScale(400)) }}>
+              {/* Header */}
+              <View style={styles.specHeaderRow}>
+                <Text style={styles.specHeaderCell}>Thông số</Text>
+                <Text style={styles.specHeaderCell}>Giá trị</Text>
+              </View>
+              <FlatList
+                data={Object.keys(gearSetStats)}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => (
+                  <View key={item} style={styles.specRow}>
+                    <Text style={styles.specCellRow}>{label[item as keyof typeof label]}</Text>
+                    <Text style={styles.specCellRow}>{gearSetStats[item as keyof typeof gearSetStats]}</Text>
+                  </View>
+                )}
+              />
             </View>
-            <FlatList
-              data={Object.keys(gearSetStats)}
-              keyExtractor={(item) => item}
-              renderItem={({ item }) => (
-                <View key={item} style={styles.specRow}>
-                  <Text style={styles.specCellRow}>{label[item as keyof typeof label]}</Text>
-                  <Text style={styles.specCellRow}>{gearSetStats[item as keyof typeof gearSetStats]}</Text>
-                </View>
-              )}
-            />
-          </View>
-          <View style={CalcFooterStyle.buttonFooter}>
-            <Button
-              mode="contained"
-              style={{ ...styles.mainBtnSmall, backgroundColor: "red" }}
-              labelStyle={{ ...styles.mainBtnSmallTxt, color: "white" }}
-              onPress={handleChange}
-              rippleColor={"rgba(0, 0, 0, 0.29)"}
-            >
-              Thay đổi
-            </Button>
-            <Button
-              mode="contained"
-              style={styles.mainBtnSmall}
-              labelStyle={styles.mainBtnSmallTxt}
-              onPress={handleVerification}
-            >
-              Xác nhận
-            </Button>
+            <View style={CalcFooterStyle.buttonFooter}>
+              <Button
+                mode="contained"
+                style={{ ...styles.mainBtnSmall, backgroundColor: "red" }}
+                labelStyle={{ ...styles.mainBtnSmallTxt, color: "white" }}
+                onPress={handleChange}
+                rippleColor={"rgba(0, 0, 0, 0.29)"}
+              >
+                Hủy
+              </Button>
+              <Button
+                mode="contained"
+                style={styles.mainBtnSmall}
+                labelStyle={styles.mainBtnSmallTxt}
+                onPress={handleVerification}
+              >
+                Xác nhận
+              </Button>
+            </View>
           </View>
         </View>
       </Modal>

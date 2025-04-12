@@ -41,7 +41,7 @@ export default class DatabaseService {
       // console.log(data.session);
       return data.session;
     } else {
-      console.log("Session không hợp lệ, user cần đăng nhập lại.", error);
+      // console.log("Session không hợp lệ, user cần đăng nhập lại.", error);
       return null;
     }
   }
