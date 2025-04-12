@@ -12,7 +12,7 @@ const history_prop = [
   { id: 4, design: "Hộp giảm tốc trục vít bánh răng", time: "10h10" },
 ];
 
-export default function SelectEngineScreen() {
+export default function AccountScreen() {
   const [user, setUser] = useState<any>();
   const [loading, setLoading] = useState(true);
 
@@ -33,7 +33,11 @@ export default function SelectEngineScreen() {
         <View style={styles.container}>
           <Text style={styles.pageTitle}>Thông tin tài khoản</Text>
           <View style={styles.colContainer}>
-            <Image style={styles.profileImg} source={require("../img/default-avatar.jpg")} resizeMode="contain"></Image>
+            <Image
+              style={styles.profileImg}
+              source={require("../img/default-avatar.jpg")}
+              resizeMode="contain"
+            ></Image>
             <View style={styles.tableContainerPad10}>
               <Text>
                 <Text style={{ fontWeight: "bold" }}>Tên người dùng: </Text>
@@ -68,10 +72,16 @@ export default function SelectEngineScreen() {
                 <View style={styles.historyRow}>
                   <Text style={styles.historyCell}>{item.design}</Text>
                   <Text style={styles.historyCell}>{item.time}</Text>
-                  <TouchableOpacity style={styles.historySpecBtn} onPress={() => console.log("TouchableOpacity Pressed")}>
+                  <TouchableOpacity
+                    style={styles.historySpecBtn}
+                    onPress={() => console.log("TouchableOpacity Pressed")}
+                  >
                     <Text>Hiện</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.historyPrintBtn} onPress={() => console.log("TouchableOpacity Pressed")}>
+                  <TouchableOpacity
+                    style={styles.historyPrintBtn}
+                    onPress={() => console.log("TouchableOpacity Pressed")}
+                  >
                     <Text>In</Text>
                   </TouchableOpacity>
                 </View>

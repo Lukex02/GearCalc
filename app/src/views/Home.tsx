@@ -3,7 +3,7 @@ import { ScrollView, View, Text, TouchableOpacity, Image } from "react-native";
 import { useRouter } from "expo-router";
 import styles from "../style/MainStyle";
 
-export default function GearCalc() {
+export default function Home() {
   const router = useRouter();
 
   const handleGoToDesign = () => {
@@ -12,7 +12,6 @@ export default function GearCalc() {
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.rowContainer}> */}
       <View style={styles.optionCard}>
         <Image source={require("../img/wrench.png")} style={styles.optionCardImg} resizeMode="contain" />
         <TouchableOpacity style={styles.mainBtn} onPress={handleGoToDesign}>
@@ -32,7 +31,6 @@ export default function GearCalc() {
           <Text style={styles.mainBtnTxt}>Tra cứu catalog</Text>
         </TouchableOpacity>
       </View>
-      {/* </View> */}
     </View>
   );
 }

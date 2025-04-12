@@ -5,7 +5,7 @@ import styles from "../style/MainStyle";
 import CalcFooter from "./CalcFooter";
 import CalcController from "../controller/CalcController";
 import ChainController from "../controller/ChainController";
-import { Icon, List } from "react-native-paper";
+import { Chip, Icon, List } from "react-native-paper";
 
 type KProps = {
   k_0: any;
@@ -33,8 +33,8 @@ const dummyShaft3Stats = {
 };
 
 export default function InputChain() {
-  const calcController = CalcController.getInstance();
-  const enginePostStats = calcController.getEnginePostStats();
+  // const calcController = CalcController.getInstance();
+  // const enginePostStats = calcController.getEnginePostStats();
 
   const [selectedValues, setSelectedValues] = useState<KProps>({
     k_0: 1,
@@ -112,20 +112,20 @@ export default function InputChain() {
       return false;
     } else {
       // Tính toán với các giá trị đã chọn
-      if (enginePostStats) {
-        calcController.calcMechDriveBase({
-          P: enginePostStats.newEngineShaftStats.p[3] ?? dummyShaft3Stats.P,
-          u_x: enginePostStats.rearrangedRatio[3].value ?? dummyShaft3Stats.u,
-          n: enginePostStats.newEngineShaftStats.n[3] ?? dummyShaft3Stats.n,
-          k_0: selectedValues.k_0,
-          k_a: selectedValues.k_a,
-          k_dc: selectedValues.k_dc,
-          k_bt: selectedValues.k_bt,
-          k_d: selectedValues.k_d,
-          k_c: selectedValues.k_c,
-        });
-        return true;
-      }
+      // if (enginePostStats) {
+      //   calcController.calcMechDriveBase({
+      //     P: enginePostStats.newEngineShaftStats.p[3] ?? dummyShaft3Stats.P,
+      //     u_x: enginePostStats.rearrangedRatio[3].value ?? dummyShaft3Stats.u,
+      //     n: enginePostStats.newEngineShaftStats.n[3] ?? dummyShaft3Stats.n,
+      //     k_0: selectedValues.k_0,
+      //     k_a: selectedValues.k_a,
+      //     k_dc: selectedValues.k_dc,
+      //     k_bt: selectedValues.k_bt,
+      //     k_d: selectedValues.k_d,
+      //     k_c: selectedValues.k_c,
+      //   });
+      //   return true;
+      // }
       return false;
     }
   };
@@ -168,7 +168,20 @@ export default function InputChain() {
                 {k_opt[key as keyof typeof k_opt].map((item: any) => (
                   <List.Item
                     key={item.value}
-                    title={item.label}
+                    title={() => (
+                      <Text
+                        style={{
+                          fontWeight: "bold",
+                          color:
+                            selectedValues[key as keyof typeof selectedValues] === item.value
+                              ? "blue"
+                              : "black",
+                        }}
+                        numberOfLines={0} // Cho phép nhiều dòng
+                      >
+                        {item.label}
+                      </Text>
+                    )}
                     disabled={item.disabled}
                     titleStyle={{
                       fontWeight: "bold",
