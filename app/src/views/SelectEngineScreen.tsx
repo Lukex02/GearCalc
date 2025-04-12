@@ -8,6 +8,7 @@ import EngineController from "../controller/EngineController";
 import { SelectedEngine } from "../models/EngineModel";
 import CalcFooter from "./CalcFooter";
 import LoadingScreen from "./LoadingScreen";
+import { Avatar, Icon } from "react-native-paper";
 
 export default function SelectEngineScreen() {
   const router = useRouter(); // Khởi tạo router để điều hướng
@@ -98,10 +99,11 @@ export default function SelectEngineScreen() {
                   <Text style={styles.selectDetails}>Hệ số momen tối đa: {item.T_max_T_dn} / T_dn</Text>
                 </View>
                 {selectedEngine?.M_ID === item.M_ID && (
-                  <Image
-                    source={require("../img/tick.jpg")}
-                    style={styles.selectImage}
-                    resizeMode="contain"
+                  <Avatar.Icon
+                    icon="check-decagram"
+                    size={60}
+                    color="green"
+                    style={{ backgroundColor: "white" }}
                   />
                 )}
               </TouchableOpacity>

@@ -138,41 +138,6 @@ export default function InputChain() {
   };
 
   return (
-    // <View style={styles.container}>
-    //   <View style={styles.header}>
-    //     <Text style={styles.pageTitle}>Chọn điều kiện xích</Text>
-    //   </View>
-    //   <ScrollView style={styles.inputContainer} nestedScrollEnabled={true}>
-    //     {k_key.map(({ key, label }) => (
-    //       // <View key={key}>
-    //       <View key={key} style={{ zIndex: 1000 - Object.keys(k_opt).indexOf(key) }}>
-    //         <Text style={styles.inputFieldLabel}>
-    //           {label} (hệ số {key}:{" "}
-    //           <Text style={{ color: "blue", fontWeight: "bold" }}>
-    //             {selectedValues[key as keyof typeof selectedValues]}
-    //           </Text>
-    //           )
-    //         </Text>
-    //         <DropDownPicker
-    //           open={open[key as keyof KProps]}
-    //           value={selectedValues[key as keyof typeof selectedValues]}
-    //           placeholder={`Điều kiện làm việc...`}
-    //           items={k_opt[key as keyof KProps]}
-    //           setOpen={(isOpen) => handleOpenChange(key as keyof KProps, isOpen)}
-    //           setValue={(callback) => handleValueChange(key as keyof KProps, callback(selectedValues[key]))}
-    //           style={styles.dropdown}
-    //           dropDownContainerStyle={{
-    //             zIndex: 1000 - Object.keys(k_opt).indexOf(key),
-    //             ...styles.dropdownContainer,
-    //           }}
-    //           dropDownDirection="BOTTOM"
-    //           listMode="SCROLLVIEW"
-    //         />
-    //       </View>
-    //     ))}
-    //   </ScrollView>
-    //   <CalcFooter onValidate={handleValidation} nextPage="/src/views/SelectChainScreen" />
-    // </View>
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.pageTitle}>Chọn điều kiện xích</Text>

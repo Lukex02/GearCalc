@@ -13,10 +13,10 @@ export const shadows = {
       elevation: 5,
     },
     web: {
-      boxShadowColor: "#000",
-      boxShadowOffset: { width: 5, height: 5 },
-      boxShadowOpacity: 0.25,
-      boxShadowRadius: 10,
+      shadowColor: "#000",
+      shadowOffset: { width: 5, height: 5 },
+      shadowOpacity: 0.25,
+      shadowRadius: 10,
     },
   }),
 };

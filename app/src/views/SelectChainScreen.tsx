@@ -7,6 +7,7 @@ import CalcFooter from "./CalcFooter";
 import LoadingScreen from "./LoadingScreen";
 import CalculatedChain, { SelectedChain } from "../models/Chain";
 import ChainController from "../controller/ChainController";
+import { Avatar } from "react-native-paper";
 
 export default function SelectChainScreen() {
   const calcController = CalcController.getInstance();
@@ -102,10 +103,11 @@ export default function SelectChainScreen() {
                   </Text>
                 </View>
                 {selectedChain?.CHAIN_ID === item.CHAIN_ID && (
-                  <Image
-                    source={require("../img/tick.jpg")}
-                    style={styles.selectImage}
-                    resizeMode="contain"
+                  <Avatar.Icon
+                    icon="check-decagram"
+                    size={60}
+                    color="green"
+                    style={{ backgroundColor: "white" }}
                   />
                 )}
               </TouchableOpacity>
