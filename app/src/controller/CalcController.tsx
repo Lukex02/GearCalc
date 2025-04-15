@@ -6,8 +6,9 @@ import TransRatio, { TransRatioType1, TransRatioType2 } from "../models/GearRati
 import ChainController from "./ChainController";
 import GearController from "./GearController";
 import CalculatedChain, { SelectedChain } from "../models/Chain";
-import { Alert } from "react-native";
 import GearSet from "../models/Gear";
+import ShaftController from "./ShaftController";
+import CalculatedShaft from "../models/Shaft";
 
 type GearBox1GearSetInput = {
   sigma_b: [number, number];
@@ -63,6 +64,11 @@ interface DesignStrategy {
   designMechDrive(input: MechDriveInput): any;
   continueCalcMechDrive(calculated: CalculatedChain | any, selected: SelectedChain | any): void;
   designGear(input: GearSetInput): GearSet | any; // Sẽ chỉ làm 1 hàm tính bánh răng dùng chung
+  designShaft(
+    input: { sigma_b: number; sigma_ch: number; HB: number },
+    order: string[],
+    distributedTorque: number[],
+  ): any;
 }
 
 // Hộp giảm tốc 2 cấp khai triển (2 cặp bánh răng)
@@ -200,6 +206,22 @@ class DesignGearBox1 implements DesignStrategy {
       input.K_qt,
     );
   }
+  designShaft(
+    input: { sigma_b: number; sigma_ch: number; HB: number; k1: number; k2: number; k3: number; h_n: number },
+    order: string[],
+    distributedTorque: number[],
+  ) {
+    // Design shaft here
+    const shaft = ShaftController.generateShaft(
+      input.sigma_b,
+      input.sigma_ch,
+      input.HB,
+      distributedTorque,
+      [15, 20, 30],
+    );
+    shaft.add_distance({ k1: input.k1, k2: input.k2, k3: input.k3, h_n: input.h_n });
+    shaft.calc_hub_length(order);
+  }
 }
 
 // Hộp giảm tốc bánh răng trục vít 1 cấp
@@ -297,6 +319,13 @@ class DesignGearBox2 implements DesignStrategy {
   designGear(input: any) {
     // Design gears here
   }
+  designShaft(
+    input: { sigma_b: number; sigma_ch: number; HB: number },
+    order: string[],
+    distributedTorque: number[],
+  ) {
+    // Design shaft here
+  }
 }
 
 export default class CalcController {
@@ -380,8 +409,8 @@ export default class CalcController {
             .map((ratio_type) => newTransRatio.ratio_spec.find((ratio) => ratio.type === ratio_type))
             .reverse();
           this._calcEnginePostStats = {
-            rearrangedRatio,
-            newEngineShaftStats,
+            ratio: rearrangedRatio,
+            distShaft: newEngineShaftStats,
           };
           return this._calcEnginePostStats;
         } else {
@@ -432,9 +461,9 @@ export default class CalcController {
         this._designStrategy.designGear({
           ...input,
           distributedShaftStats: {
-            u: this._calcEnginePostStats.rearrangedRatio[inputShaftNo].value,
-            n: this._calcEnginePostStats.newEngineShaftStats.n[inputShaftNo],
-            T: this._calcEnginePostStats.newEngineShaftStats.T[inputShaftNo],
+            u: this._calcEnginePostStats.ratio[inputShaftNo].value,
+            n: this._calcEnginePostStats.distShaft.n[inputShaftNo],
+            T: this._calcEnginePostStats.distShaft.T[inputShaftNo],
           },
           K_qt: this._gearBoxBuilder.getEngine().T_max_T_dn,
         }),
@@ -452,5 +481,21 @@ export default class CalcController {
 
   setGearAll() {
     this._gearBoxBuilder.setGearSet(this._calcGearSet);
+  }
+
+  calcShaft(input: { sigma_b: number; sigma_ch: number; HB: number }) {
+    // Calculate shaft here
+    try {
+      this._designStrategy.designShaft(
+        input,
+        this._order,
+        this._calcEnginePostStats.distShaft.T.slice(1, this._calcEnginePostStats.distShaft.T.length - 1),
+      );
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        alert(`Lỗi khi tính toán bộ truyền: ${error.message}`);
+      }
+    }
   }
 }

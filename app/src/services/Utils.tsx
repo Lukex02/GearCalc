@@ -112,6 +112,12 @@ function getCoeffLoad(v: number): CoeffLoadResult {
   };
 }
 
+const d_bOTables = [15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 47];
+function getBO(d: number): number {
+  const idx = d_bOTables.indexOf(d);
+  return d_bOTables[idx];
+}
+
 async function printReportPDF() {
   const report = `
 <html>
@@ -137,5 +143,6 @@ export default {
   CalcU_tv,
   getG0,
   getCoeffLoad,
+  getBO,
   printReportPDF,
 };
