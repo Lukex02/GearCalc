@@ -57,7 +57,7 @@ interface DesignStrategy {
     T2: number,
     t2: number,
     L: number,
-    output: any,
+    output: any
   ): void;
   designEngine(): { engi: CalculatedEngine; base_effi: Efficiency; base_ratio: TransRatio };
   recalcEngine(efficiency: Efficiency, ratio: TransRatio): CalculatedEngine;
@@ -68,6 +68,14 @@ interface DesignStrategy {
     input: { sigma_b: number; sigma_ch: number; HB: number },
     order: string[],
     distributedTorque: number[],
+    hubParam: {
+      hub_d_x_brt?: number; // Hệ số tính chiều dài mayơ bánh đai, dĩa xích, bánh răng trụ
+      hub_kn_tvdh?: number; // Hệ số tính chiếu dài mayơ nửa khớp nối đối với trục vòng đàn hồi
+      hub_kn_tr?: number; // Hệ số tính chiều dài mayơ nửa khớp nối đối với trục răng, có thể sẽ define sau nếu có làm thiết kế liên quan
+      hub_bv?: number; // Hệ só tính chiều dài mayơ bánh vít
+      hub_brc?: number; // Hệ só tính chiều dài mayơ bánh răng côn
+    },
+    gears: any
   ): any;
 }
 
@@ -87,7 +95,7 @@ class DesignGearBox1 implements DesignStrategy {
     T2: number,
     t2: number,
     L: number,
-    output: any,
+    output: any
   ) {
     this._designInputStats = {
       F: F,
@@ -137,7 +145,7 @@ class DesignGearBox1 implements DesignStrategy {
         this._designEngineStats.T2,
         this._designEngineStats.t2,
         baseEfficiency,
-        baseRatio,
+        baseRatio
       ),
       base_effi: baseEfficiency,
       base_ratio: baseRatio,
@@ -153,7 +161,7 @@ class DesignGearBox1 implements DesignStrategy {
       this._designEngineStats.T2,
       this._designEngineStats.t2,
       (this._designEngineStats.efficiency = efficiency),
-      (this._designEngineStats.ratio = ratio),
+      (this._designEngineStats.ratio = ratio)
     );
   }
 
@@ -168,7 +176,7 @@ class DesignGearBox1 implements DesignStrategy {
         input.k_dc,
         input.k_bt,
         input.k_d,
-        input.k_c,
+        input.k_c
       );
     } catch (error) {
       console.log(error);
@@ -203,13 +211,31 @@ class DesignGearBox1 implements DesignStrategy {
         t2: this._designInputStats.t2,
         L_h: this._designInputStats.L,
       },
-      input.K_qt,
+      input.K_qt
     );
   }
   designShaft(
     input: { sigma_b: number; sigma_ch: number; HB: number; k1: number; k2: number; k3: number; h_n: number },
     order: string[],
     distributedTorque: number[],
+    hubParam: {
+      hub_d_x_brt?: number;
+      hub_kn_tvdh?: number;
+      hub_kn_tr?: number;
+      hub_bv?: number;
+      hub_brc?: number;
+    },
+    gears: {
+      fastGear: {
+        a_tw: number;
+        b_w: number;
+        d1: number;
+        beta: number;
+      };
+      slowGear: {
+        b_w: number;
+      };
+    }
   ) {
     // Design shaft here
     const shaft = ShaftController.generateShaft(
@@ -217,10 +243,46 @@ class DesignGearBox1 implements DesignStrategy {
       input.sigma_ch,
       input.HB,
       distributedTorque,
-      [15, 20, 30],
+      [15, 20, 30]
     );
-    shaft.add_distance({ k1: input.k1, k2: input.k2, k3: input.k3, h_n: input.h_n });
-    shaft.calc_hub_length(order);
+    shaft.add_distance(input.k1, input.k2, input.k3, input.h_n);
+    shaft.calc_hub_length(
+      order,
+      gears.fastGear.b_w,
+      gears.slowGear.b_w,
+      hubParam.hub_d_x_brt,
+      hubParam.hub_kn_tvdh,
+      hubParam.hub_kn_tr,
+      hubParam.hub_bv,
+      hubParam.hub_brc
+    );
+
+    // ------ Tính chiều dài trục II
+    // l22 = 0,5(lm22 + b_o2) + k1 + k2
+    const l22 = shaft.getHubLength("lm22") + shaft.getBO(1) + shaft.k1 + shaft.k2;
+    // l23 = l22 + 0.5(lm22 + lm23) + k1
+    const l23 = l22 + 0.5 * (shaft.getHubLength("lm22") + shaft.getHubLength("lm23")) + shaft.k1;
+    // l21 = lm22 + lm23 + 3k1 + 2k2 + b_o2
+    const l21 =
+      shaft.getHubLength("lm22") + shaft.getHubLength("lm23") + 3 * shaft.k1 + 2 * shaft.k2 + shaft.getBO(2);
+
+    // ------ Tính chiều dài trục I
+    const l13 = l22;
+    const l12 = 0.5 * (shaft.getHubLength("lm12") + shaft.getBO(1)) + shaft.k3 + shaft.h_n;
+    const l11 = l21;
+
+    // ------ Tính chiều dài trục III
+    const l32 = l23;
+    const l31 = l21;
+    const l33 = l31 + 0.5 * (shaft.getHubLength("lm33") + shaft.getBO(3)) + shaft.k3 + shaft.h_n;
+
+    // ------ Xác định lực tác dụng lên trục I
+    // Lực tác dụng từ khớp nối, lực hướng tâm
+    const F_r = 0.2 * 2 * distributedTorque[0];
+    // Lực trên bánh răng nhỏ của bộ truyền cấp nhanh
+    const F_t1 = (2 * distributedTorque[0]) / gears.fastGear.d1; // Lực vòng
+    const F_a1 = F_t1 * Math.tan(gears.fastGear.beta); // Lực dọc trục
+    const F_r1 = (F_t1 * Math.tan(gears.fastGear.a_tw)) / Math.cos((gears.fastGear.beta * Math.PI) / 180); // Lực trên bánh răng
   }
 }
 
@@ -239,7 +301,7 @@ class DesignGearBox2 implements DesignStrategy {
     T2: number,
     t2: number,
     L: number,
-    output: any,
+    output: any
   ) {
     this._designInputStats = {
       F: F,
@@ -292,7 +354,7 @@ class DesignGearBox2 implements DesignStrategy {
         this._designEngineStats.T2,
         this._designEngineStats.t2,
         baseEfficiency,
-        baseRatio,
+        baseRatio
       ),
       base_effi: baseEfficiency,
       base_ratio: baseRatio,
@@ -308,7 +370,7 @@ class DesignGearBox2 implements DesignStrategy {
       this._designEngineStats.T2,
       this._designEngineStats.t2,
       (this._designEngineStats.efficiency = efficiency),
-      (this._designEngineStats.ratio = ratio),
+      (this._designEngineStats.ratio = ratio)
     );
   }
 
@@ -322,7 +384,7 @@ class DesignGearBox2 implements DesignStrategy {
   designShaft(
     input: { sigma_b: number; sigma_ch: number; HB: number },
     order: string[],
-    distributedTorque: number[],
+    distributedTorque: number[]
   ) {
     // Design shaft here
   }
@@ -395,7 +457,7 @@ export default class CalcController {
         const newTransRatio = EngineController.getNewTransRatio(
           this._calcEngine,
           this._gearBoxBuilder.getEngine(),
-          this._ratio,
+          this._ratio
         );
         if (newTransRatio) {
           const newEngineShaftStats = EngineController.getShaftStats(
@@ -403,7 +465,7 @@ export default class CalcController {
             this._calcEngine.p_lv,
             this._effiency,
             newTransRatio,
-            this._order,
+            this._order
           );
           let rearrangedRatio = this._order
             .map((ratio_type) => newTransRatio.ratio_spec.find((ratio) => ratio.type === ratio_type))
@@ -454,7 +516,7 @@ export default class CalcController {
       HB: [number, number];
       S_max: [number, number];
     },
-    inputShaftNo: number = 1 | 2 | 3,
+    inputShaftNo: number = 1 | 2 | 3
   ) {
     try {
       this._calcGearSet.push(
@@ -466,7 +528,7 @@ export default class CalcController {
             T: this._calcEnginePostStats.distShaft.T[inputShaftNo],
           },
           K_qt: this._gearBoxBuilder.getEngine().T_max_T_dn,
-        }),
+        })
       );
     } catch (error) {
       console.log(error);
@@ -483,13 +545,34 @@ export default class CalcController {
     this._gearBoxBuilder.setGearSet(this._calcGearSet);
   }
 
-  calcShaft(input: { sigma_b: number; sigma_ch: number; HB: number }) {
+  calcShaft(
+    mats: { sigma_b: number; sigma_ch: number; HB: number },
+    hubParam: {
+      hub_d_x_brt?: number;
+      hub_kn_tvdh?: number;
+      hub_kn_tr?: number;
+      hub_bv?: number;
+      hub_brc?: number;
+    }
+  ) {
     // Calculate shaft here
     try {
       this._designStrategy.designShaft(
-        input,
+        mats,
         this._order,
         this._calcEnginePostStats.distShaft.T.slice(1, this._calcEnginePostStats.distShaft.T.length - 1),
+        hubParam,
+        {
+          fastGear: {
+            b_w: this._calcGearSet[0].returnPostStats().b_w,
+            d1: this._calcGearSet[0].returnPostStats().d1,
+            beta: this._calcGearSet[0].returnPostStats().beta,
+            a_tw: this._calcGearSet[0].a_tw,
+          },
+          slowGear: {
+            b_w: this._calcGearSet[1].returnPostStats().b_w,
+          },
+        } // Gears
       );
     } catch (error) {
       console.log(error);
