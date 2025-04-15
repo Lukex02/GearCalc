@@ -11,24 +11,11 @@ export default class ChainController {
     k_dc: number,
     k_bt: number,
     k_d: number,
-    k_c: number
+    k_c: number,
   ) {
     return new CalculatedChain(P, u_x, n, k_0, k_a, k_dc, k_bt, k_d, k_c);
   }
   static async getSelectableChain(P_ct: number): Promise<SelectedChain[]> {
-    // const dataList = [
-    //   {
-    //     CHAIN_ID: "1",
-    //     Step_p: 38.1,
-    //     d_c: 11.12,
-    //     d_l: 22.23,
-    //     B: 35.46,
-    //     P_max: 10.5,
-    //     Q: 127,
-    //     q_p: 5.5,
-    //     A: 395,
-    //   },
-    // ];
     // getChain from Db
     const dataList = await DatabaseService.getSelectableChain(P_ct);
     if (dataList.length > 0) {
@@ -44,7 +31,7 @@ export default class ChainController {
               chain.P_max,
               chain.Q,
               chain.q_p,
-              chain.A
+              chain.A,
             );
           }
         })

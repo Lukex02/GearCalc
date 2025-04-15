@@ -14,7 +14,7 @@ type GearBox1GearSetInput = {
   sigma_ch: [number, number];
   HB: [number, number];
   S_max: [number, number];
-  shaftStats: {
+  distributedShaftStats: {
     u: number;
     n: number;
     T: number;
@@ -56,7 +56,7 @@ interface DesignStrategy {
     T2: number,
     t2: number,
     L: number,
-    output: any
+    output: any,
   ): void;
   designEngine(): { engi: CalculatedEngine; base_effi: Efficiency; base_ratio: TransRatio };
   recalcEngine(efficiency: Efficiency, ratio: TransRatio): CalculatedEngine;
@@ -81,7 +81,7 @@ class DesignGearBox1 implements DesignStrategy {
     T2: number,
     t2: number,
     L: number,
-    output: any
+    output: any,
   ) {
     this._designInputStats = {
       F: F,
@@ -131,7 +131,7 @@ class DesignGearBox1 implements DesignStrategy {
         this._designEngineStats.T2,
         this._designEngineStats.t2,
         baseEfficiency,
-        baseRatio
+        baseRatio,
       ),
       base_effi: baseEfficiency,
       base_ratio: baseRatio,
@@ -147,7 +147,7 @@ class DesignGearBox1 implements DesignStrategy {
       this._designEngineStats.T2,
       this._designEngineStats.t2,
       (this._designEngineStats.efficiency = efficiency),
-      (this._designEngineStats.ratio = ratio)
+      (this._designEngineStats.ratio = ratio),
     );
   }
 
@@ -162,7 +162,7 @@ class DesignGearBox1 implements DesignStrategy {
         input.k_dc,
         input.k_bt,
         input.k_d,
-        input.k_c
+        input.k_c,
       );
     } catch (error) {
       console.log(error);
@@ -189,7 +189,7 @@ class DesignGearBox1 implements DesignStrategy {
       input.sigma_ch,
       input.HB,
       input.S_max,
-      input.shaftStats,
+      input.distributedShaftStats,
       {
         T1: this._designInputStats.T1,
         t1: this._designInputStats.t1,
@@ -197,7 +197,7 @@ class DesignGearBox1 implements DesignStrategy {
         t2: this._designInputStats.t2,
         L_h: this._designInputStats.L,
       },
-      input.K_qt
+      input.K_qt,
     );
   }
 }
@@ -217,7 +217,7 @@ class DesignGearBox2 implements DesignStrategy {
     T2: number,
     t2: number,
     L: number,
-    output: any
+    output: any,
   ) {
     this._designInputStats = {
       F: F,
@@ -270,7 +270,7 @@ class DesignGearBox2 implements DesignStrategy {
         this._designEngineStats.T2,
         this._designEngineStats.t2,
         baseEfficiency,
-        baseRatio
+        baseRatio,
       ),
       base_effi: baseEfficiency,
       base_ratio: baseRatio,
@@ -286,7 +286,7 @@ class DesignGearBox2 implements DesignStrategy {
       this._designEngineStats.T2,
       this._designEngineStats.t2,
       (this._designEngineStats.efficiency = efficiency),
-      (this._designEngineStats.ratio = ratio)
+      (this._designEngineStats.ratio = ratio),
     );
   }
 
@@ -366,7 +366,7 @@ export default class CalcController {
         const newTransRatio = EngineController.getNewTransRatio(
           this._calcEngine,
           this._gearBoxBuilder.getEngine(),
-          this._ratio
+          this._ratio,
         );
         if (newTransRatio) {
           const newEngineShaftStats = EngineController.getShaftStats(
@@ -374,7 +374,7 @@ export default class CalcController {
             this._calcEngine.p_lv,
             this._effiency,
             newTransRatio,
-            this._order
+            this._order,
           );
           let rearrangedRatio = this._order
             .map((ratio_type) => newTransRatio.ratio_spec.find((ratio) => ratio.type === ratio_type))
@@ -425,19 +425,19 @@ export default class CalcController {
       HB: [number, number];
       S_max: [number, number];
     },
-    inputShaftNo: number = 1 | 2 | 3
+    inputShaftNo: number = 1 | 2 | 3,
   ) {
     try {
       this._calcGearSet.push(
         this._designStrategy.designGear({
           ...input,
-          shaftStats: {
+          distributedShaftStats: {
             u: this._calcEnginePostStats.rearrangedRatio[inputShaftNo].value,
             n: this._calcEnginePostStats.newEngineShaftStats.n[inputShaftNo],
             T: this._calcEnginePostStats.newEngineShaftStats.T[inputShaftNo],
           },
           K_qt: this._gearBoxBuilder.getEngine().T_max_T_dn,
-        })
+        }),
       );
     } catch (error) {
       console.log(error);

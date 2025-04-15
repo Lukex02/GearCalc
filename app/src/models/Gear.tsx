@@ -71,7 +71,7 @@ export class CalculatedGear {
     T2: number,
     t2: number,
     L_h: number,
-    isSmall: 0 | 1 // Bánh nhỏ thì có chia u, bánh lớn thì không
+    isSmall: 0 | 1, // Bánh nhỏ thì có chia u, bánh lớn thì không
   ) {
     this._N_HE = 60 * 1 * (n / u ** isSmall) * L_h * ((T1 ** 3 * t1) / 60 + (T2 ** 3 * t2) / 60);
     if (this._N_HE > this._N_HO) {
@@ -90,7 +90,7 @@ export class CalculatedGear {
     T2: number,
     t2: number,
     L_h: number,
-    isSmall: 0 | 1 // Bánh nhỏ thì có chia u, bánh lớn thì không
+    isSmall: 0 | 1, // Bánh nhỏ thì có chia u, bánh lớn thì không
   ) {
     this._N_FE =
       60 * 1 * (n / u ** isSmall) * L_h * ((T1 ** this._m_F * t1) / 60 + (T2 ** this._m_F * t2) / 60);
@@ -158,7 +158,7 @@ export default class GearSet {
     sigma_ch: [number, number],
     HB: [number, number],
     S_max: [number, number],
-    shaftStats: {
+    distributedShaftStats: {
       u: number;
       n: number;
       T: number;
@@ -170,50 +170,50 @@ export default class GearSet {
       t2: number;
       L_h: number;
     },
-    fast: boolean
+    fast: boolean,
   ) {
     this._gear_small = new CalculatedGear(sigma_b[0], sigma_ch[0], HB[0], S_max[0]);
     this._gear_big = new CalculatedGear(sigma_b[1], sigma_ch[1], HB[1], S_max[1]);
     // Tính sigma này là lấy sơ bộ Z_R * Z_v * K_xH = 1
     this._gear_small.calcSigma_H_allow(
-      shaftStats.u,
-      shaftStats.n,
+      distributedShaftStats.u,
+      distributedShaftStats.n,
       desStats.T1,
       desStats.t1,
       desStats.T2,
       desStats.t2,
       desStats.L_h,
-      1
+      1,
     );
     this._gear_small.calcSigma_F_allow(
-      shaftStats.u,
-      shaftStats.n,
+      distributedShaftStats.u,
+      distributedShaftStats.n,
       desStats.T1,
       desStats.t1,
       desStats.T2,
       desStats.t2,
       desStats.L_h,
-      1
+      1,
     );
     this._gear_big.calcSigma_H_allow(
-      shaftStats.u,
-      shaftStats.n,
+      distributedShaftStats.u,
+      distributedShaftStats.n,
       desStats.T1,
       desStats.t1,
       desStats.T2,
       desStats.t2,
       desStats.L_h,
-      0
+      0,
     );
     this._gear_big.calcSigma_F_allow(
-      shaftStats.u,
-      shaftStats.n,
+      distributedShaftStats.u,
+      distributedShaftStats.n,
       desStats.T1,
       desStats.t1,
       desStats.T2,
       desStats.t2,
       desStats.L_h,
-      0
+      0,
     );
     this._sigma_H_allow = (this._gear_small.sigma_H_allow + this._gear_big.sigma_H_allow) / 2;
     if (this._sigma_H_allow > 1.25 * Math.min(this._gear_small.sigma_H_allow, this._gear_big.sigma_H_allow)) {
@@ -226,20 +226,21 @@ export default class GearSet {
     // Lấy mặc định là u + 1 do bánh răng ăn khớp ngoài
     if (fast) this._soDo = 3;
     else this._soDo = 5;
-    let psi_bd = Math.floor(0.53 * this._psi_ba * (shaftStats.u + 1) * 10) / 10;
+    let psi_bd = Math.floor(0.53 * this._psi_ba * (distributedShaftStats.u + 1) * 10) / 10;
     if ((psi_bd * 10) % 2 !== 0) psi_bd = Math.round((psi_bd + 0.1) * 10) / 10;
     const psi_bdIndex = psi_bdValues.indexOf(psi_bd);
     this._K_Hbeta = K_HBetaTable[psi_bdIndex][this._soDo - 1];
 
     this._a_w_calc =
       this._K_a *
-      (shaftStats.u + 1) *
+      (distributedShaftStats.u + 1) *
       Math.pow(
-        (shaftStats.T * this._K_Hbeta) / (this._sigma_H_allow ** 2 * shaftStats.u * this._psi_ba),
-        1 / 3
+        (distributedShaftStats.T * this._K_Hbeta) /
+          (this._sigma_H_allow ** 2 * distributedShaftStats.u * this._psi_ba),
+        1 / 3,
       );
     this._a_w = a_wValues.reduce((prev, curr) =>
-      curr > this._a_w_calc && prev < this._a_w_calc ? curr : prev
+      curr > this._a_w_calc && prev < this._a_w_calc ? curr : prev,
     );
     const m_min = 0.01 * this._a_w;
     const m_max = 0.02 * this._a_w;
@@ -249,8 +250,8 @@ export default class GearSet {
         break;
       }
     }
-    this._z1 = Math.floor((2 * this._a_w * this._cosBeta) / (this._m * (shaftStats.u + 1)));
-    this._z2 = Math.floor(shaftStats.u * this._z1);
+    this._z1 = Math.floor((2 * this._a_w * this._cosBeta) / (this._m * (distributedShaftStats.u + 1)));
+    this._z2 = Math.floor(distributedShaftStats.u * this._z1);
     this._u_m = this._z2 / this._z1; // Tỉ số truyền thực
     // Tính lại góc beta
     this._cosBeta = (this._m * (this._z1 + this._z2)) / (2 * this._a_w);
@@ -258,7 +259,7 @@ export default class GearSet {
 
     // Kiểm nghiệm răng về độ bền tiếp xúc
     const alpha_tw_rad = Math.atan(
-      Math.tan((20 * Math.PI) / 180) * Math.cos((this._Beta_angle * Math.PI) / 180)
+      Math.tan((20 * Math.PI) / 180) * Math.cos((this._Beta_angle * Math.PI) / 180),
     ); // (radian)
     const beta_b_rad = Math.tan(Math.cos(alpha_tw_rad) * Math.tan((this._Beta_angle * Math.PI) / 180)); // Góc nghiêng của răng trên hình trụ cơ sở (radian)
     this._Z_H = Math.sqrt((2 * Math.cos(beta_b_rad)) / Math.sin(2 * alpha_tw_rad));
@@ -276,7 +277,7 @@ export default class GearSet {
     }
 
     const d_w = (2 * this._a_w) / (this._u_m + 1);
-    const v = (Math.PI * d_w * shaftStats.n) / 60000;
+    const v = (Math.PI * d_w * distributedShaftStats.n) / 60000;
 
     // Xét thẳng luôn trường hợp bánh răng trụ răng nghiệng
     const coeffValue = Utils.getCoeffLoad(v);
@@ -285,14 +286,14 @@ export default class GearSet {
     this._K_Halpha = coeffValue.K_HAlpha;
 
     const v_H = 0.002 * Utils.getG0(this._m, this._precision_level) * Math.sqrt(this._a_w / this._u_m);
-    const K_Hv = 1 + (v_H * this._b_w * d_w) / (2 * shaftStats.T * this._K_Hbeta * this._K_Halpha);
+    const K_Hv = 1 + (v_H * this._b_w * d_w) / (2 * distributedShaftStats.T * this._K_Hbeta * this._K_Halpha);
     const K_H = this._K_Hbeta * this._K_Halpha * K_Hv;
 
     this._sigma_H =
       this._Z_M *
       this._Z_H *
       this._Z_epsi *
-      Math.sqrt((2 * shaftStats.T * K_H * (this._u_m + 1)) / (this._b_w * this._u_m * d_w ** 2));
+      Math.sqrt((2 * distributedShaftStats.T * K_H * (this._u_m + 1)) / (this._b_w * this._u_m * d_w ** 2));
 
     // Kiểm nghiệm răng về độ bền uốn
     const Y_epsi = 1 / epsi_alpha;
@@ -301,10 +302,10 @@ export default class GearSet {
     const z_v1 = this._z1 / this._cosBeta ** 3;
     const z_v2 = this._z2 / this._cosBeta ** 3;
     const z_v1Idx = z_vValues.indexOf(
-      z_vValues.reduce((prev, curr) => (Math.abs(curr - z_v1) < Math.abs(prev - z_v1) ? curr : prev))
+      z_vValues.reduce((prev, curr) => (Math.abs(curr - z_v1) < Math.abs(prev - z_v1) ? curr : prev)),
     );
     const z_v2Idx = z_vValues.indexOf(
-      z_vValues.reduce((prev, curr) => (Math.abs(curr - z_v2) < Math.abs(prev - z_v2) ? curr : prev))
+      z_vValues.reduce((prev, curr) => (Math.abs(curr - z_v2) < Math.abs(prev - z_v2) ? curr : prev)),
     );
     const Y_F1 = Y_FValues[z_v1Idx];
     const Y_F2 = Y_FValues[z_v2Idx];
@@ -313,10 +314,11 @@ export default class GearSet {
     this._K_Falpha = coeffValue.K_FAlpha;
 
     const v_F = 0.006 * Utils.getG0(this._m, this._precision_level) * Math.sqrt(this._a_w / this._u_m);
-    const K_Fv = 1 + (v_F * this._b_w * d_w) / (2 * shaftStats.T * this._K_Fbeta * this._K_Falpha);
+    const K_Fv = 1 + (v_F * this._b_w * d_w) / (2 * distributedShaftStats.T * this._K_Fbeta * this._K_Falpha);
     const K_F = this._K_Hbeta * this._K_Falpha * K_Fv;
 
-    this._sigma_F1 = (2 * shaftStats.T * K_F * Y_epsi * Y_beta * Y_F1) / (this._b_w * d_w * this._m);
+    this._sigma_F1 =
+      (2 * distributedShaftStats.T * K_F * Y_epsi * Y_beta * Y_F1) / (this._b_w * d_w * this._m);
     this._sigma_F2 = (this._sigma_F1 * Y_F2) / Y_F1;
   }
   contactDuraCheck(): boolean {

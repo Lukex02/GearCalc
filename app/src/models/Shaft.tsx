@@ -1,7 +1,7 @@
 import Efficiency, { IEfficiency } from "./Efficiency";
 import TransRatio from "./GearRatio";
 
-export default class ShaftStats {
+export class DistributedShaftStats {
   private _n: number[]; // Tốc độ quay trên các trục, [n_dc, n1, n2, n3,..., n_ct]
   private _p: number[]; // Công suất trên các trục, [p_dc, p1, p2, p3,..., p_ct]
   private _T: number[]; // Momen xoắn trên các trục [t_dc, t1, t2, t3,..., t_ct] (ct là công tác, hay là output cuối)
@@ -44,3 +44,5 @@ export default class ShaftStats {
     return this._T;
   }
 }
+
+export default class CalculatedShaft {}

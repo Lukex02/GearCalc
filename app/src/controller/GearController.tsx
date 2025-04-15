@@ -6,7 +6,7 @@ export default class GearController {
     sigma_ch: [number, number],
     HB: [number, number],
     S_max: [number, number],
-    shaftStats: {
+    distributedShaftStats: {
       u: number;
       n: number;
       T: number;
@@ -18,9 +18,9 @@ export default class GearController {
       t2: number;
       L_h: number;
     },
-    K_qt: number
+    K_qt: number,
   ): GearSet {
-    const gearSet = new GearSet(sigma_b, sigma_ch, HB, S_max, shaftStats, desStats, true);
+    const gearSet = new GearSet(sigma_b, sigma_ch, HB, S_max, distributedShaftStats, desStats, true);
     if (!gearSet.contactDuraCheck()) {
       console.log(gearSet);
       throw new Error("Bánh răng không đạt yêu cầu độ bền tiếp xúc");
