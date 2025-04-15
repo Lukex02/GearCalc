@@ -81,55 +81,52 @@ const CatalogPage = () => {
         </ScrollView>
       )}
       {/* <View style={{ alignSelf: "flex-start" }}> */}
-      <Portal>
-        <FAB.Group
-          open={open}
-          visible
-          fabStyle={{ backgroundColor: "black" }}
-          color="#9CF2D4"
-          icon={open ? "backup-restore" : "menu"}
-          actions={[
-            {
-              icon: "cogs",
-              label: "Ổ lăn",
-              color: "black",
-              style: { backgroundColor: "#9CF2D4" },
-              onPress: () => {},
-            },
-            {
-              icon: "cogs",
-              label: "Then",
-              color: "black",
-              style: { backgroundColor: "#9CF2D4" },
-              onPress: () => {},
-            },
-            {
-              icon: "cogs",
-              label: "Xích",
-              color: "black",
-              style: { backgroundColor: "#9CF2D4" },
-              onPress: () => filterByType("chain"),
-            },
-            {
-              icon: "engine",
-              label: "Động cơ điện",
-              color: "black",
-              style: { backgroundColor: "#9CF2D4" },
-              onPress: () => filterByType("Engine"),
-            },
-            {
-              icon: "select-all",
-              label: "Tất cả",
-              color: "black",
-              style: { backgroundColor: "#9CF2D4" },
-              onPress: () => filterByType("all"),
-            },
-          ]}
-          onStateChange={onStateChange}
-        />
-      </Portal>
+      <FAB.Group
+        open={open}
+        visible
+        fabStyle={{ backgroundColor: "black" }}
+        color="#9CF2D4"
+        icon={open ? "backup-restore" : "menu"}
+        actions={[
+          {
+            icon: "cogs",
+            label: "Ổ lăn",
+            color: "black",
+            style: { backgroundColor: "#9CF2D4" },
+            onPress: () => {},
+          },
+          {
+            icon: "cogs",
+            label: "Then",
+            color: "black",
+            style: { backgroundColor: "#9CF2D4" },
+            onPress: () => {},
+          },
+          {
+            icon: "cogs",
+            label: "Xích",
+            color: "black",
+            style: { backgroundColor: "#9CF2D4" },
+            onPress: () => filterByType("chain"),
+          },
+          {
+            icon: "engine",
+            label: "Động cơ điện",
+            color: "black",
+            style: { backgroundColor: "#9CF2D4" },
+            onPress: () => filterByType("Engine"),
+          },
+          {
+            icon: "select-all",
+            label: "Tất cả",
+            color: "black",
+            style: { backgroundColor: "#9CF2D4" },
+            onPress: () => filterByType("all"),
+          },
+        ]}
+        onStateChange={onStateChange}
+      />
     </View>
-    // </View>
   );
 };
 

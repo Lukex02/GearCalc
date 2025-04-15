@@ -1,12 +1,9 @@
-import { Stack, useRouter } from "expo-router";
-import React, { useState, useEffect } from "react";
-import { IconButton, Menu, PaperProvider } from "react-native-paper";
+import { Stack } from "expo-router";
+import { PaperProvider } from "react-native-paper";
 import styles from "./src/style/MainStyle";
 import AccIcon from "./src/views/AccIcon";
 
 export default function RootLayout() {
-  const router = useRouter();
-
   return (
     <PaperProvider>
       {/* Ở đây mang tính chất hiển thị và đặt tên, không có link trang với nhau */}
