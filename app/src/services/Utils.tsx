@@ -1,7 +1,17 @@
 import { create, all } from "mathjs";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
+import React, { useState, useEffect, useRef } from "react";
+import Svg, { Line, Path, Text } from "react-native-svg";
+import { View, StyleSheet, ColorValue } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedProps,
+  withTiming,
+  useAnimatedStyle,
+} from "react-native-reanimated";
 const math = create(all);
+const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 function CalcU_tv(u_h: number, tan_gamma: number, initialGuess = 1): number {
   // Giải u_tv theo thuật toán Newton-Raphson
@@ -118,6 +128,141 @@ function getBO(d: number): number {
   return d_bOTables[idx];
 }
 
+function getSigmaAllowInShaft(d: number) {
+  if (d <= 30) return 63;
+  else if (d <= 50) return 50;
+  else return 48; // < 100
+}
+
+interface ForceOnShaftDataProps {
+  data: ForceOnShaftDataPoint[];
+  fillColor: ColorValue;
+  lineColor: ColorValue;
+}
+
+export interface ForceOnShaftDataPoint {
+  x: number;
+  y: number;
+}
+
+const ForceOnShaftDiagram = ({ data, fillColor, lineColor }: ForceOnShaftDataProps) => {
+  const diagramWidth = 350;
+  const diagramHeight = 200;
+  const padding = 30;
+  const maxX = Math.max(...data.map((p) => p.x));
+  const minY = Math.min(...data.map((p) => p.y), 0);
+  const maxY = Math.max(...data.map((p) => p.y), 0);
+  const originY =
+    padding + (Math.max(...data.map((p) => p.y), 0) * (diagramHeight - 2 * padding)) / (maxY - minY);
+
+  const scaleX = (diagramWidth - 2 * padding) / maxX;
+  const scaleY = (diagramHeight - 2 * padding) / (maxY - minY);
+
+  const startX = padding + data[0].x * scaleX;
+  const endX = padding + data[data.length - 1].x * scaleX;
+
+  const pathFill =
+    data
+      .map((point, index) => {
+        const x = padding + point.x * scaleX;
+        const y = originY - point.y * scaleY;
+        return `${index === 0 ? "M" : "L"} ${x},${y}`;
+      })
+      .join(" ") + ` L ${endX},${originY} L ${startX},${originY} Z`;
+
+  const animatedScaleY = useSharedValue(0);
+
+  useEffect(() => {
+    animatedScaleY.value = withTiming(1, {
+      duration: 1500,
+    });
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: originY,
+        },
+        {
+          scaleY: animatedScaleY.value,
+        },
+        {
+          translateY: -originY,
+        },
+      ],
+    };
+  });
+  const animatedProps = useAnimatedProps(() => ({
+    transform: `translate(0, ${originY}) scale(1, ${animatedScaleY.value}) translate(0, ${-originY})`,
+  }));
+
+  return (
+    <View
+      style={{
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Svg width={diagramWidth} height={diagramHeight}>
+        {/* Vùng tô  */}
+        <AnimatedPath
+          d={pathFill}
+          fill={fillColor}
+          animatedProps={animatedProps}
+          stroke={lineColor}
+          strokeWidth={2}
+        />
+
+        {/* Trục x */}
+        <Line
+          x1={padding}
+          y1={originY}
+          x2={diagramWidth - padding}
+          y2={originY}
+          stroke="black"
+          strokeWidth={1}
+        />
+
+        {/* Trục y */}
+        <Line
+          x1={padding}
+          y1={padding}
+          x2={padding}
+          y2={diagramHeight - padding}
+          stroke="black"
+          strokeWidth={1}
+        />
+
+        {/* Giá trị  */}
+        {data.map((point, index) => {
+          const x = padding + point.x * scaleX;
+          const y = originY - point.y * scaleY;
+
+          return (
+            <React.Fragment key={`label-${index}`}>
+              {/* Nhãn giá trị lực (trục y) */}
+              <Text x={padding - 40} y={y + 4} fontSize={10} fill="black">
+                {point.y.toFixed(2)}
+              </Text>
+
+              {/* Nhãn trục x (tọa độ x) */}
+              <Text x={x + 4} y={originY + 15} fontSize={10} fill="black">
+                {Math.round(point.x)}
+              </Text>
+            </React.Fragment>
+          );
+        })}
+
+        {/* Ký hiệu trục */}
+        <Text x={diagramWidth - padding - 40} y={padding - 5} fontSize={10} fill={lineColor}>
+          (N)
+        </Text>
+      </Svg>
+    </View>
+  );
+};
+
 async function printReportPDF() {
   const report = `
 <html>
@@ -144,5 +289,7 @@ export default {
   getG0,
   getCoeffLoad,
   getBO,
+  getSigmaAllowInShaft,
+  ForceOnShaftDiagram,
   printReportPDF,
 };

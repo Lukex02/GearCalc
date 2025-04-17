@@ -9,6 +9,7 @@ import CalculatedChain, { SelectedChain } from "../models/Chain";
 import GearSet from "../models/Gear";
 import ShaftController from "./ShaftController";
 import CalculatedShaft from "../models/Shaft";
+import Utils from "../services/Utils";
 
 type GearBox1GearSetInput = {
   sigma_b: [number, number];
@@ -84,6 +85,7 @@ interface DesignStrategy {
 class DesignGearBox1 implements DesignStrategy {
   _designInputStats: any;
   _designEngineStats: any;
+  _diagramData: any;
   // _designMechDriveStats: any;
   // _designGearStats: any;
 
@@ -283,6 +285,63 @@ class DesignGearBox1 implements DesignStrategy {
     const F_t1 = (2 * distributedTorque[0]) / gears.fastGear.d1; // Lực vòng
     const F_a1 = F_t1 * Math.tan(gears.fastGear.beta); // Lực dọc trục
     const F_r1 = (F_t1 * Math.tan(gears.fastGear.a_tw)) / Math.cos((gears.fastGear.beta * Math.PI) / 180); // Lực trên bánh răng
+
+    const R_Bz = F_a1;
+    const R_Bx = (F_r * (l11 + l12) + F_t1 * (l11 - l13)) / l11;
+    const R_By = (F_r1 * (l11 - l13) + (F_a1 * gears.fastGear.d1) / 2) / l11;
+    const R_Dx = F_r - R_Bx + F_t1;
+    const R_Dy = F_r1 - R_By;
+
+    const Qx = [
+      { x: 0, y: -F_r },
+      { x: l12, y: -F_r },
+      { x: l12, y: -F_r + R_By },
+      { x: l12 + l13, y: -F_r + R_By },
+      { x: l12 + l13, y: -F_r + R_By - F_t1 },
+      { x: l12 + l11, y: -F_r + R_By - F_t1 },
+    ];
+
+    const Qy = [
+      // { x: 0, y: 0 },
+      { x: l12, y: 0 },
+      { x: l12, y: R_By },
+      { x: l12 + l13, y: R_By },
+      { x: l12 + l13, y: R_By - F_r1 },
+      { x: l12 + l11, y: R_By - F_r1 },
+    ];
+
+    const Mx = [
+      { x: l12, y: 0 }, // MxB
+      { x: l12 + l13, y: R_By * l13 }, // MxC1
+      { x: l12 + l13, y: R_By * l13 - (F_a1 * gears.fastGear.d1) / 2 }, // MxC2
+      { x: l12 + l11, y: 0 }, // MxD
+    ];
+
+    const My = [
+      { x: 0, y: 0 }, // MyA
+      { x: l12, y: F_r * l12 }, // MyB
+      { x: l12 + l13, y: F_r * l12 - (-F_r + R_By) * l13 }, // MyC
+      { x: l12 + l11, y: 0 }, // MyA
+    ];
+
+    const Mz = [
+      { x: 0, y: this._designInputStats.T1 },
+      { x: l12 + l13, y: this._designInputStats.T1 },
+    ];
+    this._diagramData = { ...this._diagramData, Shaft1: { Qx, Qy, Mx, My, Mz } };
+    const MtdA = Math.sqrt(0.75 * this._designInputStats.T1 ** 2);
+    const MtdB = Math.sqrt(F_r * l12 ** 2 + 0.75 * this._designInputStats.T1 ** 2);
+    const MtdC = Math.sqrt(
+      R_By * l13 ** 2 + (l12 - (-F_r + R_By) * l13) ** 2 + 0.75 * this._designInputStats.T1 ** 2
+    );
+    const sigma_allow = Utils.getSigmaAllowInShaft(shaft.getD(1));
+    const dA_sb = Math.pow(MtdA / (0.1 * sigma_allow), 1 / 3);
+    const dB_sb = Math.pow(MtdB / (0.1 * sigma_allow), 1 / 3);
+    const dC_sb = Math.pow(MtdC / (0.1 * sigma_allow), 1 / 3);
+    // const dA = Math.ceil(Math.pow(MtdA / (0.1 * sigma_allow), 1 / 3) / 5) * 5;
+    // const dB = Math.ceil(Math.pow(MtdB / (0.1 * sigma_allow), 1 / 3) / 5) * 5;
+    // const dC = Math.ceil(Math.pow(MtdC / (0.1 * sigma_allow), 1 / 3) / 5) * 5;
+    // const dD = dB;
   }
 }
 

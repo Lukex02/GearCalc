@@ -69,7 +69,7 @@ export default class CalculatedShaft {
     this._sigma_ch = sigma_ch;
     this._HB = HB;
     this._d = distributedTorque.map((torque, idx) => {
-      return Math.ceil(torque / (0.2 * tau_allow[idx]));
+      return Math.ceil(Math.pow(torque / (0.2 * tau_allow[idx]), 1 / 3) / 5) * 5;
     });
     this._bO = this._d.map((d) => Utils.getBO(d));
   }
@@ -125,6 +125,9 @@ export default class CalculatedShaft {
   }
   getBO(idx: number) {
     return this._bO[idx - 1]; // Vì sẽ gọi idx theo như ký hiệu trong sách/thiết kế nên khi tra mảng phải -1
+  }
+  getD(idx: number) {
+    return this._d[idx - 1];
   }
   get k1() {
     return this._k1;
