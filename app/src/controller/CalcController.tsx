@@ -1,7 +1,7 @@
 import EngineController from "./EngineController";
 import Efficiency, { IEfficiency } from "../models/Efficiency";
 import { CalculatedEngine, SelectedEngine } from "../models/EngineModel";
-import GearBox, { GearBoxBuilder } from "../models/GearBox";
+import GearBoxBuilder from "../models/GearBox";
 import TransRatio, { TransRatioType1, TransRatioType2 } from "../models/GearRatio";
 import ChainController from "./ChainController";
 import GearController from "./GearController";
@@ -52,8 +52,6 @@ type MechDriveInput = GearBox1MechDriveInput | GearBox2MechDriveInput;
 interface DesignStrategy {
   _designInputStats: any;
   _designEngineStats: any;
-  // _designMechDriveStats: any;
-  // _designGearStats: any;
   _shaftDiagramData: any;
 
   storeDesignInput(
@@ -100,8 +98,6 @@ class DesignGearBox1 implements DesignStrategy {
   _designInputStats: any;
   _designEngineStats: any;
   _shaftDiagramData: any;
-  // _designMechDriveStats: any;
-  // _designGearStats: any;
 
   storeDesignInput(
     F: number,
@@ -827,6 +823,7 @@ export default class CalcController {
             ratio: rearrangedRatio,
             distShaft: newEngineShaftStats,
           };
+          this._gearBoxBuilder.setCalcEnginePostStats(this._calcEnginePostStats);
           return this._calcEnginePostStats;
         } else {
           return null;
@@ -971,6 +968,7 @@ export default class CalcController {
       try {
         // Kiểm nghiệm trục
         this._designStrategy.testDurability(this._calcShaft);
+        this._gearBoxBuilder.setShaft(this._calcShaft);
       } catch (error) {
         console.log(error);
         if (error instanceof Error) {

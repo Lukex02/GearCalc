@@ -1,12 +1,21 @@
 import CalculatedChain from "./Chain";
-import { SelectedEngine } from "./EngineModel";
+import { CalculatedEngine, SelectedEngine } from "./EngineModel";
 import { CalculatedGear } from "./Gear";
+import CalculatedShaft from "./Shaft";
 
-export default class GearBox {
-  private _engine!: SelectedEngine;
-  private _mechDrive!: any;
-  private _gearSet!: CalculatedGear[] | any;
+class GearBox {
+  private _calcEnginePostStats: any;
+  private _engine: SelectedEngine | any;
+  private _mechDrive: CalculatedChain | any;
+  private _gearSet: CalculatedGear[] | any;
+  private _shaft: CalculatedShaft | any;
 
+  set calcEngine(calcEngine: any) {
+    this._calcEnginePostStats = calcEngine;
+  }
+  get calcEngine(): any {
+    return this._calcEnginePostStats;
+  }
   set engine(engine: SelectedEngine) {
     this._engine = engine;
   }
@@ -25,19 +34,27 @@ export default class GearBox {
   get gearSet(): CalculatedGear[] | any {
     return this._gearSet;
   }
+  set shaft(shaft: CalculatedShaft) {
+    this._shaft = shaft;
+  }
+  get shaft(): CalculatedShaft {
+    return this._shaft;
+  }
 }
 
-// This is where the builder of Gear Box will be created
+//
+// ------------- Builder of Gear Box will be created
+//
 interface Builder {
   reset(): void;
   setEngine(engine: SelectedEngine): void;
   setMechDrive(mechDrive: CalculatedChain | any): void;
   setGearSet(gears: CalculatedGear[] | any): void;
-  // setShaft(shaft: Shaft): void;
+  setShaft(shaft: CalculatedShaft): void;
   build(): GearBox;
 }
 
-export class GearBoxBuilder implements Builder {
+export default class GearBoxBuilder implements Builder {
   private _gearBox!: GearBox;
 
   constructor() {
@@ -47,7 +64,12 @@ export class GearBoxBuilder implements Builder {
   reset(): void {
     this._gearBox = new GearBox();
   }
-
+  setCalcEnginePostStats(calcEngine: any): void {
+    this._gearBox.calcEngine = calcEngine;
+  }
+  getCalcEnginePostStats(): CalculatedEngine {
+    return this._gearBox.calcEngine;
+  }
   setEngine(engine: SelectedEngine): void {
     this._gearBox.engine = engine;
   }
@@ -65,6 +87,12 @@ export class GearBoxBuilder implements Builder {
   }
   getGearSet(): any {
     return this._gearBox.gearSet;
+  }
+  setShaft(shaft: CalculatedShaft): void {
+    this._gearBox.shaft = shaft;
+  }
+  getShaft(): CalculatedShaft {
+    return this._gearBox.shaft;
   }
 
   build(): GearBox {
