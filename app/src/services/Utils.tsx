@@ -10,6 +10,7 @@ import Animated, {
   withTiming,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 const math = create(all);
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
@@ -128,10 +129,23 @@ function getBO(d: number): number {
   return d_bOTables[idx];
 }
 
+// [Sigma] này được lấy theo cột Thép CT6, 45 có sigma_b >= 600
 function getSigmaAllowInShaft(d: number) {
   if (d <= 30) return 63;
   else if (d <= 50) return 50;
   else return 48; // < 100
+}
+
+// Epsilon được chọn theo thép cacbon
+function getEpsilonSigmaAndTau(d: number) {
+  if (d <= 15) return { epsi_sigma: 0.95, epsi_tau: 0.92 };
+  else if (d <= 20) return { epsi_sigma: 0.92, epsi_tau: 0.89 };
+  else if (d <= 30) return { epsi_sigma: 0.88, epsi_tau: 0.81 };
+  else if (d <= 40) return { epsi_sigma: 0.85, epsi_tau: 0.78 };
+  else if (d <= 50) return { epsi_sigma: 0.81, epsi_tau: 0.76 };
+  else if (d <= 70) return { epsi_sigma: 0.76, epsi_tau: 0.73 };
+  else if (d <= 80) return { epsi_sigma: 0.73, epsi_tau: 0.71 };
+  else return { epsi_sigma: 0.7, epsi_tau: 0.7 }; // Assume < 100
 }
 
 interface ForceOnShaftDataProps {
@@ -290,6 +304,7 @@ export default {
   getCoeffLoad,
   getBO,
   getSigmaAllowInShaft,
+  getEpsilonSigmaAndTau,
   ForceOnShaftDiagram,
   printReportPDF,
 };

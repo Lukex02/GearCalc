@@ -6,7 +6,7 @@ export default class GearController {
     sigma_ch: number,
     HB: number,
     distributedTorque: number[],
-    tau_allow: number[],
+    tau_allow: number[]
   ): CalculatedShaft {
     return new CalculatedShaft(sigma_b, sigma_ch, HB, distributedTorque, tau_allow);
   }

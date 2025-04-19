@@ -1,6 +1,7 @@
 import Utils from "../services/Utils";
 import Efficiency, { IEfficiency } from "./Efficiency";
 import TransRatio from "./GearRatio";
+import CalculatedKey from "./Key";
 
 export class DistributedShaftStats {
   private _n: number[]; // Tốc độ quay trên các trục, [n_dc, n1, n2, n3,..., n_ct]
@@ -50,13 +51,17 @@ export default class CalculatedShaft {
   private _sigma_b: number; // Giới hạn bền
   private _sigma_ch: number; // Giới hạn chảy
   private _HB: number; // Độ rắn
-  private _d: number[]; // Sơ bộ đường kính trục, với nhiều trục thì sẽ có d_<thứ tự> tương ứng
-  private _bO: number[]; // Chiều rộng ổ lăn
+  private _distributedTorque: number[];
+  private _d_sb: number[]; // Sơ bộ đường kính trục, với nhiều trục thì sẽ có d_<thứ tự> tương ứng
+  private _d!: number[]; // Đường kính trục (đã xác định), với nhiều trục thì sẽ có d_<thứ tự> tương ứng
+  private _bO!: number[]; // Chiều rộng ổ lăn
   private _hub_length!: any[]; // Độ dài của điều trục
   private _k1!: number; // Khoảng cách từ mặt mút của chi tiết quay đến thành trong của hộp hoặc khoảng cách giữa các chi tiết quay
   private _k2!: number; // Khoảng cách từ mặt mút ổ đến thành trong của hộp (lấy giá trị nhỏ khi bôi trơn ổ bằng dầu trong hộp giảm tốc)
   private _k3!: number; // Khoảng cách từ mặt mút của chi tiết quay đến nắp ổ
   private _h_n!: number; // Chiều cao nắp ổ và đầu bulông
+
+  private _indiShaft: IndividualShaft[] = [];
 
   constructor(
     sigma_b: number,
@@ -68,11 +73,19 @@ export default class CalculatedShaft {
     this._sigma_b = sigma_b;
     this._sigma_ch = sigma_ch;
     this._HB = HB;
-    this._d = distributedTorque.map((torque, idx) => {
-      return Math.ceil(Math.pow(torque / (0.2 * tau_allow[idx]), 1 / 3) / 5) * 5;
-    });
-    this._bO = this._d.map((d) => Utils.getBO(d));
+    // this._d = distributedTorque.map((torque, idx) => {
+    //   return Math.ceil(Math.pow(torque / (0.2 * tau_allow[idx]), 1 / 3) / 5) * 5;
+    // });
+    // this._bO = this._d.map((d) => Utils.getBO(d));
+    this._d_sb = distributedTorque.map((torque, idx) => Math.pow(torque / (0.2 * tau_allow[idx]), 1 / 3));
+    this._distributedTorque = distributedTorque;
   }
+  choose_d(d_choose: number[]) {
+    // Về lý thuyết sẽ không thể xảy ra vì đã số lượng d cho chọn đã được xác định từ trang view
+    if (d_choose.length != this._d_sb.length) throw new Error("Số lượng d vượt quá số lượng d sơ bộ");
+    this._d = d_choose;
+  }
+
   add_distance(k1: number, k2: number, k3: number, h_n: number) {
     this._k1 = k1;
     this._k2 = k2;
@@ -86,8 +99,8 @@ export default class CalculatedShaft {
     hub_d_x_brt: number = 1.5, // Hệ số tính chiều dài mayơ bánh đai, dĩa xích, bánh răng trụ
     hub_kn_tvdh: number = 1.6, // Hệ số tính chiếu dài mayơ nửa khớp nối đối với trục vòng đàn hồi
     hub_kn_tr?: number, // Hệ số tính chiều dài mayơ nửa khớp nối đối với trục răng, có thể sẽ define sau nếu có làm thiết kế liên quan
-    hub_bv?: number, // Hệ só tính chiều dài mayơ bánh vít
-    hub_brc?: number // Hệ só tính chiều dài mayơ bánh răng côn
+    hub_bv?: number, // Hệ só tính chiều dài mayơ bánh vít, có thể sẽ define sau nếu có làm thiết kế liên quan
+    hub_brc?: number // Hệ só tính chiều dài mayơ bánh răng côn, có thể sẽ define sau nếu có làm thiết kế liên quan
   ) {
     // Tính độ rắn
     order.forEach((comp) => {
@@ -120,6 +133,11 @@ export default class CalculatedShaft {
       }
     });
   }
+  addIndiviDia(MParam: { point: string; Mx: number; My: number }[], shaftNo: 1 | 2 | 3) {
+    const sigma_allow = Utils.getSigmaAllowInShaft(this._d[shaftNo - 1]);
+    const T = this._distributedTorque[shaftNo - 1];
+    this._indiShaft.push(new IndividualShaft(MParam, T, sigma_allow));
+  }
   getHubLength(name: string) {
     return this._hub_length.find((h) => h.name === name)!.value;
   }
@@ -128,6 +146,18 @@ export default class CalculatedShaft {
   }
   getD(idx: number) {
     return this._d[idx - 1];
+  }
+  getIndividualShaft(shaftNo: 1 | 2 | 3) {
+    return this._indiShaft[shaftNo - 1];
+  }
+  getAllIndividualShaft() {
+    return this._indiShaft;
+  }
+  get HB() {
+    return this._HB;
+  }
+  get d_sb() {
+    return this._d_sb;
   }
   get k1() {
     return this._k1;
@@ -140,5 +170,70 @@ export default class CalculatedShaft {
   }
   get h_n() {
     return this._h_n;
+  }
+  get sigma_b() {
+    return this._sigma_b;
+  }
+  get sigma_ch() {
+    return this._sigma_ch;
+  }
+}
+
+class IndividualShaft {
+  private _T: number; // Lực tác dụng lên trục này
+  private _maxStats: {
+    d: number;
+    M: number;
+  };
+  private _statAtPoint: {
+    point: string; // Tên điểm được ký hiệu (A, B, C, D)
+    d_sb: number; // Đường kính sơ bộ tại các mặt cắt trên trục này
+    d: number | undefined; // Đường kính (chọn) tại các mặt cắt trên trục này
+    M_td: number; // Momen tương đương
+    M_x: number; // Momen theo trục x
+    M_y: number; // Momentheo trục y
+    key: CalculatedKey | undefined; // Then
+  }[];
+
+  constructor(MParam: { point: string; Mx: number; My: number }[], T: number, sigma_allow: number) {
+    this._T = T;
+    this._maxStats = { d: 0, M: 0 };
+    this._statAtPoint = MParam.map((curr) => {
+      const M_td = Math.sqrt(curr.Mx ** 2 + curr.My ** 2 + 0.75 * T ** 2);
+      this._maxStats.M = Math.max(this._maxStats.M, M_td);
+      return {
+        point: curr.point,
+        M_td: M_td,
+        M_x: curr.Mx,
+        M_y: curr.My,
+        d_sb: M_td / (0.1 * sigma_allow) ** 1 / 3,
+        d: undefined,
+        key: undefined,
+      };
+    });
+  }
+  choose_d(
+    d_choose: {
+      point: string;
+      value: number;
+    }[]
+  ) {
+    d_choose.forEach((d) => {
+      this._statAtPoint.forEach((stat, idx) => {
+        if (stat.point === d.point) {
+          this._maxStats.d = Math.max(this._maxStats.d, d.value);
+          stat.d = d.value;
+        }
+      });
+    });
+  }
+  getStatAtPoint(point: string) {
+    return this._statAtPoint.find((stat) => stat.point === point)!;
+  }
+  get T() {
+    return this._T;
+  }
+  get maxStats() {
+    return this._maxStats;
   }
 }

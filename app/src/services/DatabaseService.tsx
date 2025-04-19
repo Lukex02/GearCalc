@@ -91,4 +91,15 @@ export default class DatabaseService {
     }
     return res;
   }
+
+  static async getKey(d: number): Promise<any> {
+    const { data, error } = await supabase
+      .from("b, h, t1")
+      .select("*")
+      .gt("d_min", d)
+      .lt("d_max", d)
+      .limit(1);
+    if (error) console.error("Lỗi khi lấy dữ liệu ", error);
+    return data ?? [];
+  }
 }

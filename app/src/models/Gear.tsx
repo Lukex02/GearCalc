@@ -153,7 +153,7 @@ export default class GearSet {
   private _dw2!: number;
   private _x: number = 0; // Hệ số dịch chỉnh, cho mặc định là 0
 
-  private _a_tw!: number; // Góc nghiêng của răng trên hình trụ cơ sở (độ)
+  private _alpha_tw_rad!: number; // Góc nghiêng của răng trên hình trụ cơ sở (radian)
 
   constructor(
     sigma_b: [number, number],
@@ -263,9 +263,9 @@ export default class GearSet {
     const alpha_tw_rad = Math.atan(
       Math.tan((20 * Math.PI) / 180) * Math.cos((this._Beta_angle * Math.PI) / 180)
     ); // (radian)
+    this._alpha_tw_rad = alpha_tw_rad;
     const beta_b_rad = Math.tan(Math.cos(alpha_tw_rad) * Math.tan((this._Beta_angle * Math.PI) / 180)); // Góc nghiêng của răng trên hình trụ cơ sở (radian)
     this._Z_H = Math.sqrt((2 * Math.cos(beta_b_rad)) / Math.sin(2 * alpha_tw_rad));
-    this._a_tw = alpha_tw_rad * (180 / Math.PI);
 
     this._b_w = this._psi_ba * this._a_w; // Chiều rộng vành răng
     const epsi_beta = (this._b_w * Math.sin(beta_b_rad)) / (this._m * Math.PI); // Hệ số trùng khớp dọc
@@ -388,7 +388,7 @@ export default class GearSet {
       dw2: this._dw2,
     };
   }
-  get a_tw(): number {
-    return this._a_tw;
+  get a_tw_rad(): number {
+    return this._alpha_tw_rad;
   }
 }
