@@ -10,8 +10,11 @@ export default function GearCalc() {
     <View style={styles.container}>
       {/* <View style={styles.rowContainer}> */}
       <View style={styles.optionCard}>
-        <Image source={require("../src/img/wrench.png")} style={styles.optionCardImg} resizeMode="contain" />
-        <TouchableOpacity style={styles.mainBtn} onPress={() => router.push("/views/DesignSelectionScreen")}>
+        <Image source={require("@img/wrench.png")} style={styles.optionCardImg} resizeMode="contain" />
+        <TouchableOpacity
+          style={styles.mainBtn}
+          onPress={() => router.push("/views/design/selection/DesignSelectionScreen")}
+        >
           <Text style={styles.mainBtnTxt}>Bắt đầu thiết kế</Text>
         </TouchableOpacity>
       </View>
@@ -24,7 +27,7 @@ export default function GearCalc() {
           style={styles.optionCardImg}
           resizeMode="contain"
         />
-        <TouchableOpacity style={styles.mainBtn} onPress={() => router.push("/views/CatalogView")}>
+        <TouchableOpacity style={styles.mainBtn} onPress={() => router.push("/views/catalog/CatalogView")}>
           <Text style={styles.mainBtnTxt}>Tra cứu catalog</Text>
         </TouchableOpacity>
       </View>

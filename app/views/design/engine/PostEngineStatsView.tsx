@@ -88,7 +88,7 @@ export default function SelectEngineScreen() {
         </View>
 
         {/* Truyền địa chỉ trang xích tiếp theo ở đây */}
-        <CalcFooter nextPage="/views/InputChain" />
+        <CalcFooter nextPage="/views/design/chain/InputChain" />
       </View>
     );
   }

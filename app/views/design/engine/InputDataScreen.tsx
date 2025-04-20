@@ -156,7 +156,10 @@ export default function InputDataScreen() {
           </>
         )}
       </ScrollView>
-      <CalcFooter nextPage={"/views/AdjustEngineParametersScreen"} onValidate={handleValidation} />
+      <CalcFooter
+        nextPage={"/views/design/engine/AdjustEngineParametersScreen"}
+        onValidate={handleValidation}
+      />
     </View>
   );
 }

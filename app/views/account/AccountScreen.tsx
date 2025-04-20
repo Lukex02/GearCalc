@@ -35,7 +35,7 @@ export default function SelectEngineScreen() {
           <View style={styles.colContainer}>
             <Image
               style={styles.profileImg}
-              source={require("../src/img/default-avatar.jpg")}
+              source={require("@img/default-avatar.jpg")}
               resizeMode="contain"
             ></Image>
             <View style={styles.tableContainerPad10}>

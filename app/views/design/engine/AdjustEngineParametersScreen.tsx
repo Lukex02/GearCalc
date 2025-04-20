@@ -144,7 +144,7 @@ export default function AdjustEngineParametersScreen() {
         </View>
       </View>
 
-      <CalcFooter nextPage={"/views/SelectEngineScreen"} />
+      <CalcFooter nextPage={"/views/design/engine/SelectEngineScreen"} />
     </View>
   );
 }

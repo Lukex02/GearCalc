@@ -13,8 +13,8 @@ export default function DesignSelectionScreen() {
     { label: "Hộp giảm tốc trục vít - bánh răng", value: "GearBox2" },
   ];
   const gearBoxImage = {
-    GearBox1: require("../../../../src/img/GearBox1Template.png"),
-    GearBox2: require("../../../../src/img/GearBox2Template.png"),
+    GearBox1: require("@img/GearBox1Template.png"),
+    GearBox2: require("@img/GearBox2Template.png"),
   };
   const [items, setItems] = useState(
     gearBoxOptions.map((option) => ({

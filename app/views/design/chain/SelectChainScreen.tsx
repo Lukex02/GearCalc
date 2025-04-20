@@ -69,11 +69,7 @@ export default function SelectChainScreen() {
             keyExtractor={(item) => item.CHAIN_ID}
             renderItem={({ item, index }) => (
               <TouchableOpacity style={styles.selectItem} onPress={() => handleSelectChain(item)}>
-                <Image
-                  source={require("../../../../src/img/wrench.png")}
-                  style={styles.selectImage}
-                  resizeMode="contain"
-                />
+                <Image source={require("@img/wrench.png")} style={styles.selectImage} resizeMode="contain" />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.selectName}>Loại {index + 1}</Text>
                   <Text style={styles.selectDetails}>

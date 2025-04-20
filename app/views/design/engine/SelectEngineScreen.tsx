@@ -76,11 +76,7 @@ export default function SelectEngineScreen() {
             keyExtractor={(item) => item.M_ID}
             renderItem={({ item }) => (
               <TouchableOpacity style={styles.selectItem} onPress={() => handleSelectEngine(item)}>
-                <Image
-                  source={require("../../../../src/img/wrench.png")}
-                  style={styles.selectImage}
-                  resizeMode="contain"
-                />
+                <Image source={require("@img/wrench.png")} style={styles.selectImage} resizeMode="contain" />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.selectName}>{item.name}</Text>
                   <Text style={styles.selectDetails}>

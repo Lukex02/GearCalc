@@ -190,7 +190,7 @@ export default function InputChain() {
         ))}
       </ScrollView>
 
-      <CalcFooter onValidate={handleValidation} nextPage="/views/SelectChainScreen" />
+      <CalcFooter onValidate={handleValidation} nextPage="/views/design/chain/SelectChainScreen" />
     </KeyboardAvoidingView>
   );
 }
