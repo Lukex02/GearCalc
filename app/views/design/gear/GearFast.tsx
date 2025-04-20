@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, Modal } from "react-native";
 import { Button } from "react-native-paper";
-// import { useRouter } from "expo-router";
 import Slider from "@react-native-community/slider"; // Import Slider
 import styles from "@style/MainStyle";
 import CalcController from "@controller/CalcController";

@@ -73,16 +73,16 @@ interface DesignStrategy {
     input: { sigma_b: number; sigma_ch: number; HB: number },
     order: string[],
     distributedTorque: number[],
-    hubParam: {
+    gears: any,
+    mechDrive: {
+      F_r: number;
+    },
+    hubParam?: {
       hub_d_x_brt?: number; // Hệ số tính chiều dài mayơ bánh đai, dĩa xích, bánh răng trụ
       hub_kn_tvdh?: number; // Hệ số tính chiếu dài mayơ nửa khớp nối đối với trục vòng đàn hồi
       hub_kn_tr?: number; // Hệ số tính chiều dài mayơ nửa khớp nối đối với trục răng, có thể sẽ define sau nếu có làm thiết kế liên quan
       hub_bv?: number; // Hệ só tính chiều dài mayơ bánh vít
       hub_brc?: number; // Hệ só tính chiều dài mayơ bánh răng côn
-    },
-    gears: any,
-    mechDrive: {
-      F_r: number;
     }
   ): CalculatedShaft | any;
   get shaftDiagram(): any;
@@ -230,13 +230,6 @@ class DesignGearBox1 implements DesignStrategy {
     input: { sigma_b: number; sigma_ch: number; HB: number; k1: number; k2: number; k3: number; h_n: number },
     order: string[],
     distributedTorque: number[],
-    hubParam: {
-      hub_d_x_brt?: number;
-      hub_kn_tvdh?: number;
-      hub_kn_tr?: number;
-      hub_bv?: number;
-      hub_brc?: number;
-    },
     gears: {
       fastGear: {
         a_tw: number; // rad
@@ -255,6 +248,13 @@ class DesignGearBox1 implements DesignStrategy {
     },
     chain: {
       F_r: number; // Lực tác dụng lên trục của xích (F_rx)
+    },
+    hubParam?: {
+      hub_d_x_brt?: number;
+      hub_kn_tvdh?: number;
+      hub_kn_tr?: number;
+      hub_bv?: number;
+      hub_brc?: number;
     }
   ): CalculatedShaft {
     // Design shaft here
@@ -270,11 +270,11 @@ class DesignGearBox1 implements DesignStrategy {
       order,
       gears.fastGear.b_w,
       gears.slowGear.b_w,
-      hubParam.hub_d_x_brt,
-      hubParam.hub_kn_tvdh,
-      hubParam.hub_kn_tr,
-      hubParam.hub_bv,
-      hubParam.hub_brc
+      hubParam?.hub_d_x_brt,
+      hubParam?.hub_kn_tvdh,
+      hubParam?.hub_kn_tr,
+      hubParam?.hub_bv,
+      hubParam?.hub_brc
     );
 
     // ------ Tính chiều dài trục II
@@ -897,7 +897,7 @@ export default class CalcController {
   // Bước 1 của trục: tính sơ bộ
   calcShaft(
     mats: { sigma_b: number; sigma_ch: number; HB: number },
-    hubParam: {
+    hubParam?: {
       hub_d_x_brt?: number;
       hub_kn_tvdh?: number;
       hub_kn_tr?: number;
@@ -911,7 +911,6 @@ export default class CalcController {
         mats,
         this._order,
         this._calcEnginePostStats.distShaft.T.slice(1, this._calcEnginePostStats.distShaft.T.length - 1),
-        hubParam,
         {
           fastGear: {
             b_w: this._calcGearSet[0].returnPostStats().b_w,
@@ -930,7 +929,8 @@ export default class CalcController {
         }, // Gears
         {
           F_r: this._calcMechDrive.getChainPostStats().F_rx, // Tạm thời bỏ qua trường hợp đai
-        }
+        },
+        hubParam
       );
     } catch (error) {
       console.log(error);
