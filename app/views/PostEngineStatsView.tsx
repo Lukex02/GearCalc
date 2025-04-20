@@ -18,10 +18,10 @@ export default function SelectEngineScreen() {
   useEffect(() => {
     if (postStats) {
       // console.log(postStats);
-      setPostP(postStats.newEngineShaftStats.p);
-      setPostN(postStats.newEngineShaftStats.n);
-      setPostT(postStats.newEngineShaftStats.T);
-      setPostU(postStats.rearrangedRatio);
+      setPostP(postStats.distShaft.p);
+      setPostN(postStats.distShaft.n);
+      setPostT(postStats.distShaft.T);
+      setPostU(postStats.ratio);
       setIsValid(true);
     } else {
       alert("Động cơ không phù hợp, hãy chọn động cơ khác");

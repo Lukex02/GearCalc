@@ -112,9 +112,9 @@ export default function InputChain() {
       // Tính toán với các giá trị đã chọn
       if (enginePostStats) {
         calcController.calcMechDriveBase({
-          P: enginePostStats.newEngineShaftStats.p[3] ?? dummyShaft3Stats.P,
-          u_x: enginePostStats.rearrangedRatio[3].value ?? dummyShaft3Stats.u,
-          n: enginePostStats.newEngineShaftStats.n[3] ?? dummyShaft3Stats.n,
+          P: enginePostStats.distShaft.p[3] ?? dummyShaft3Stats.P,
+          u_x: enginePostStats.ratio[3].value ?? dummyShaft3Stats.u,
+          n: enginePostStats.distShaft.n[3] ?? dummyShaft3Stats.n,
           k_0: selectedValues.k_0,
           k_a: selectedValues.k_a,
           k_dc: selectedValues.k_dc,

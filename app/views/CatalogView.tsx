@@ -57,7 +57,11 @@ const CatalogPage = () => {
               style={styles.gridItem}
               onPress={() => router.push({ pathname: "./ComponentView", params: item })}
             >
-              <Image source={require("../img/wrench.png")} style={styles.gridImage} resizeMode="contain" />
+              <Image
+                source={require("../src/img/wrench.png")}
+                style={styles.gridImage}
+                resizeMode="contain"
+              />
 
               {item.type === "Engine" && (
                 <View style={styles.gridTextContainer}>

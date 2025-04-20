@@ -10,7 +10,7 @@ export default function GearCalc() {
     <View style={styles.container}>
       {/* <View style={styles.rowContainer}> */}
       <View style={styles.optionCard}>
-        <Image source={require("../img/wrench.png")} style={styles.optionCardImg} resizeMode="contain" />
+        <Image source={require("../src/img/wrench.png")} style={styles.optionCardImg} resizeMode="contain" />
         <TouchableOpacity style={styles.mainBtn} onPress={() => router.push("/views/DesignSelectionScreen")}>
           <Text style={styles.mainBtnTxt}>Bắt đầu thiết kế</Text>
         </TouchableOpacity>

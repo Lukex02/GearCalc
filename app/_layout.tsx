@@ -24,26 +24,23 @@ export default function RootLayout() {
           name="index"
           options={{ title: "GEARCALC", headerRight: () => null }} // Ẩn header cho trang này
         />
-        <Stack.Screen name="src/views/Home" options={{ title: "Trang chủ", headerLeft: () => null }} />
-        <Stack.Screen name="src/views/Login" options={{ title: "Đăng nhập", headerRight: () => null }} />
-        <Stack.Screen name="src/views/Register" options={{ title: "Đăng ký", headerRight: () => null }} />
-        <Stack.Screen
-          name="src/views/AccountScreen"
-          options={{ title: "Account", headerRight: () => null }}
-        />
-        <Stack.Screen name="src/views/CatalogView" options={{ title: "Catalog" }} />
-        <Stack.Screen name="src/views/ComponentView" options={{ title: "Chi tiết" }} />
-        <Stack.Screen name="src/views/DesignSelectionScreen" options={{ title: "Thiết kế" }} />
-        <Stack.Screen name="src/views/SelectEngineScreen" options={{ title: "Động cơ" }} />
-        <Stack.Screen name="src/views/InputDataScreen" options={{ title: "Động cơ" }} />
-        <Stack.Screen name="src/views/AdjustEngineParametersScreen" options={{ title: "Động cơ" }} />
-        <Stack.Screen name="src/views/PostEngineStatsView" options={{ title: "Động cơ" }} />
-        <Stack.Screen name="src/views/InputChain" options={{ title: "Xích" }} />
-        <Stack.Screen name="src/views/SelectChainScreen" options={{ title: "Xích" }} />
-        <Stack.Screen name="src/views/PostChainStatsView" options={{ title: "Xích" }} />
-        <Stack.Screen name="src/views/GearFast" options={{ title: "Bánh răng" }} />
-        <Stack.Screen name="src/views/GearSlow" options={{ title: "Bánh răng" }} />
-        <Stack.Screen name="src/views/GearResult" options={{ title: "Bánh răng" }} />
+        <Stack.Screen name="views/Home" options={{ title: "Trang chủ", headerLeft: () => null }} />
+        <Stack.Screen name="views/Login" options={{ title: "Đăng nhập", headerRight: () => null }} />
+        <Stack.Screen name="views/Register" options={{ title: "Đăng ký", headerRight: () => null }} />
+        <Stack.Screen name="views/AccountScreen" options={{ title: "Account", headerRight: () => null }} />
+        <Stack.Screen name="views/CatalogView" options={{ title: "Catalog" }} />
+        <Stack.Screen name="views/ComponentView" options={{ title: "Chi tiết" }} />
+        <Stack.Screen name="views/DesignSelectionScreen" options={{ title: "Thiết kế" }} />
+        <Stack.Screen name="views/SelectEngineScreen" options={{ title: "Động cơ" }} />
+        <Stack.Screen name="views/InputDataScreen" options={{ title: "Động cơ" }} />
+        <Stack.Screen name="views/AdjustEngineParametersScreen" options={{ title: "Động cơ" }} />
+        <Stack.Screen name="views/PostEngineStatsView" options={{ title: "Động cơ" }} />
+        <Stack.Screen name="views/InputChain" options={{ title: "Xích" }} />
+        <Stack.Screen name="views/SelectChainScreen" options={{ title: "Xích" }} />
+        <Stack.Screen name="views/PostChainStatsView" options={{ title: "Xích" }} />
+        <Stack.Screen name="views/GearFast" options={{ title: "Bánh răng" }} />
+        <Stack.Screen name="views/GearSlow" options={{ title: "Bánh răng" }} />
+        <Stack.Screen name="views/GearResult" options={{ title: "Bánh răng" }} />
       </Stack>
     </PaperProvider>
   );

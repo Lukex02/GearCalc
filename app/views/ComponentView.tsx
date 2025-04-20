@@ -20,7 +20,7 @@ const ComponentPage = () => {
     (data.type === "Engine" && (
       <View style={styles.container}>
         <Text style={styles.componentTitle}>Động cơ điện {data.Motor_Type}</Text>
-        <Image source={require("../img/wrench.png")} style={styles.componentImg} resizeMode="contain" />
+        <Image source={require("../src/img/wrench.png")} style={styles.componentImg} resizeMode="contain" />
         <View style={styles.componentInfoContainer}>
           <Text style={styles.componentInfo}>
             <Text style={styles.componentInfoName}>Công suất:</Text> {data.Power} kW
@@ -46,7 +46,7 @@ const ComponentPage = () => {
     (data.type === "chain" && (
       <View style={styles.container}>
         <Text style={styles.componentTitle}>{printChainType(data.chain_type)}</Text>
-        <Image source={require("./src/img/wrench.png")} style={styles.componentImg} resizeMode="contain" />
+        <Image source={require("../src/img/wrench.png")} style={styles.componentImg} resizeMode="contain" />
         <View style={styles.componentInfoContainer}>
           <Text style={styles.componentInfo}>
             <Text style={styles.componentInfoName}>Bước xích:</Text> {data.Step_p} (mm)

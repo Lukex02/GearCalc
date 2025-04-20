@@ -70,7 +70,7 @@ export default function SelectChainScreen() {
             renderItem={({ item, index }) => (
               <TouchableOpacity style={styles.selectItem} onPress={() => handleSelectChain(item)}>
                 <Image
-                  source={require("../img/wrench.png")}
+                  source={require("../src/img/wrench.png")}
                   style={styles.selectImage}
                   resizeMode="contain"
                 />

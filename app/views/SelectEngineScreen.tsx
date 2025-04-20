@@ -77,7 +77,7 @@ export default function SelectEngineScreen() {
             renderItem={({ item }) => (
               <TouchableOpacity style={styles.selectItem} onPress={() => handleSelectEngine(item)}>
                 <Image
-                  source={require("../img/wrench.png")}
+                  source={require("../src/img/wrench.png")}
                   style={styles.selectImage}
                   resizeMode="contain"
                 />

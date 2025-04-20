@@ -747,7 +747,7 @@ export default class CalcController {
   private _calcEngine!: CalculatedEngine;
   private _calcEnginePostStats: any;
   private _calcMechDrive: CalculatedChain | any; // || CalculatedBelt; nếu có belt
-  private _calcGearSet: GearSet[] | any; // any vì mỗi thiết kế lại có kiểu khác nhau
+  private _calcGearSet: GearSet[] = [];
   private _calcShaft!: CalculatedShaft;
   private _gearBoxBuilder: GearBoxBuilder;
 
