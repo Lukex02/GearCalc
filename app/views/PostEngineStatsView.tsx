@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import { useRouter } from "expo-router"; // Khởi tạo router từ expo-router
-import CalcController from "../controller/CalcController";
+import CalcController from "@controller/CalcController";
 import CalcFooter from "./CalcFooter";
-import styles from "../style/MainStyle";
+import styles from "@style/MainStyle";
 
 export default function SelectEngineScreen() {
   const router = useRouter(); // Khởi tạo router để điều hướng

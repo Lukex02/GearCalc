@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image, Alert } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
-import { useRouter } from "expo-router"; // Để sử dụng router
-// import styles from "../style/DesignSelectionStyle"; // Sử dụng style đã tạo
-import styles from "../style/MainStyle"; // Sử dụng style đã tạo
+import styles from "@style/MainStyle"; // Sử dụng style đã tạo
 import CalcFooter from "./CalcFooter";
 
 export default function DesignSelectionScreen() {
-  const router = useRouter(); // Khởi tạo router để điều hướng
   const [gearBoxType, setGearBoxType] = useState<any>("");
   const [image, setImage] = useState(null); // Biến để lưu ảnh của hộp giảm tốc
   const [open, setOpen] = useState(false);

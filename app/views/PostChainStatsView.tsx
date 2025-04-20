@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { View, Text, Alert, FlatList } from "react-native";
 import { useRouter } from "expo-router"; // Khởi tạo router từ expo-router
-import CalcController from "../controller/CalcController";
+import CalcController from "@controller/CalcController";
 import CalcFooter from "./CalcFooter";
-import styles from "../style/MainStyle";
-import CalculatedChain from "../models/Chain";
+import styles from "@style/MainStyle";
+import CalculatedChain from "@models/Chain";
 
 const label = {
   z1: "Số bánh răng dẫn",

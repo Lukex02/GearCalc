@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { View, TouchableOpacity, Image, Text, ScrollView } from "react-native";
 import { FAB, Portal } from "react-native-paper";
 import { useRouter } from "expo-router";
-import styles from "../style/MainStyle";
+import styles from "@style/MainStyle";
 import LoadingScreen from "./LoadingScreen";
-import DatabaseService from "../services/DatabaseService";
+import DatabaseService from "@services/DatabaseService";
 const CatalogPage = () => {
   const [loading, setLoading] = useState(true);
   const [catalog, setCatalog] = useState<any[]>([]); // full catalog

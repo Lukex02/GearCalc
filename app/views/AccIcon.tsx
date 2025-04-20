@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { router } from "expo-router";
-import { View, Alert } from "react-native";
+import { View } from "react-native";
 import { Menu, IconButton } from "react-native-paper";
-import styles from "../style/MainStyle";
-import DatabaseService from "../services/DatabaseService";
+import styles from "@style/MainStyle";
+import DatabaseService from "@services/DatabaseService";
 
 export default function AccIcon() {
   const [login, setLogin] = useState(false);

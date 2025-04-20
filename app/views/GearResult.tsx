@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import CalcFooter from "./CalcFooter";
-import styles from "../style/MainStyle";
-import CalcController from "../controller/CalcController";
+import styles from "@style/MainStyle";
+import CalcController from "@controller/CalcController";
 import { scale, verticalScale } from "react-native-size-matters";
 import LoadingScreen from "./LoadingScreen";
 

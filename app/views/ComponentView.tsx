@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Image, Text, StyleSheet } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import styles from "../style/MainStyle";
+import styles from "@style/MainStyle";
 
 const ComponentPage = () => {
   const data = useLocalSearchParams();

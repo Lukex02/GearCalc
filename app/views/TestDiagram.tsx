@@ -1,4 +1,4 @@
-import Utils, { ForceOnShaftDataPoint } from "../services/Utils";
+import Utils, { ForceOnShaftDataPoint } from "@services/Utils";
 
 export default function TestDiagram() {
   const data: ForceOnShaftDataPoint[] = [

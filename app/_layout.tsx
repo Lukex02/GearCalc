@@ -1,8 +1,7 @@
 import { Stack, useRouter } from "expo-router";
-import React, { useState, useEffect } from "react";
-import { IconButton, Menu, PaperProvider } from "react-native-paper";
-import styles from "./src/style/MainStyle";
-import AccIcon from "./src/views/AccIcon";
+import { PaperProvider } from "react-native-paper";
+import styles from "@style/MainStyle";
+import AccIcon from "@views/AccIcon";
 
 export default function RootLayout() {
   const router = useRouter();

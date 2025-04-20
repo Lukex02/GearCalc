@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import styles from "../style/MainStyle";
-import CalcController from "../controller/CalcController";
+import { useLocalSearchParams } from "expo-router";
+import styles from "@style/MainStyle";
+import CalcController from "@controller/CalcController";
 import CalcFooter from "./CalcFooter";
 
 export default function InputDataScreen() {
   const { gearBoxType } = useLocalSearchParams();
-  const router = useRouter();
   const calcController = new CalcController(Array.isArray(gearBoxType) ? gearBoxType[0] : gearBoxType);
 
   // Các state cho giá trị nhập liệu

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList, Image, Alert } from "react-native";
-import { useRouter } from "expo-router"; // Khởi tạo router từ expo-router
-import styles from "../style/MainStyle"; // Sử dụng style đã tạo
-import CalcController from "../controller/CalcController";
+import styles from "@style/MainStyle"; // Sử dụng style đã tạo
+import CalcController from "@controller/CalcController";
 import CalcFooter from "./CalcFooter";
 import LoadingScreen from "./LoadingScreen";
-import CalculatedChain, { SelectedChain } from "../models/Chain";
-import ChainController from "../controller/ChainController";
+import CalculatedChain, { SelectedChain } from "@models/Chain";
+import ChainController from "@controller/ChainController";
 import { Avatar } from "react-native-paper";
 
 export default function SelectChainScreen() {

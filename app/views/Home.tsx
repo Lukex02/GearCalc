@@ -1,7 +1,7 @@
 import React from "react";
-import { ScrollView, View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import { useRouter } from "expo-router";
-import styles from "../style/MainStyle";
+import styles from "@style/MainStyle";
 
 export default function GearCalc() {
   const router = useRouter();

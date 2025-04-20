@@ -1,10 +1,8 @@
-import DropDownPicker from "react-native-dropdown-picker";
 import { useState } from "react";
 import { View, Text, ScrollView, Alert, KeyboardAvoidingView, Platform } from "react-native";
-import styles from "../style/MainStyle";
+import styles from "@style/MainStyle";
 import CalcFooter from "./CalcFooter";
-import CalcController from "../controller/CalcController";
-import ChainController from "../controller/ChainController";
+import CalcController from "@controller/CalcController";
 import { Icon, List } from "react-native-paper";
 
 type KProps = {
