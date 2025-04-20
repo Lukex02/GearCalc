@@ -1,18 +1,11 @@
 import { create, all } from "mathjs";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import Svg, { Line, Path, Text } from "react-native-svg";
-import { View, StyleSheet, ColorValue } from "react-native";
-import Animated, {
-  useSharedValue,
-  useAnimatedProps,
-  withTiming,
-  useAnimatedStyle,
-} from "react-native-reanimated";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { View, ColorValue } from "react-native";
+import Animated, { useSharedValue, withTiming, useAnimatedReaction, runOnJS } from "react-native-reanimated";
 const math = create(all);
-const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 function CalcU_tv(u_h: number, tan_gamma: number, initialGuess = 1): number {
   // Giải u_tv theo thuật toán Newton-Raphson
@@ -184,32 +177,28 @@ const ForceOnShaftDiagram = ({ data, fillColor, lineColor }: ForceOnShaftDataPro
       })
       .join(" ") + ` L ${endX},${originY} L ${startX},${originY} Z`;
 
-  const animatedScaleY = useSharedValue(0);
-
+  const progress = useSharedValue(0);
   useEffect(() => {
-    animatedScaleY.value = withTiming(1, {
-      duration: 1500,
-    });
+    progress.value = withTiming(1, { duration: 1500 });
   }, []);
+  const [animatedD, setAnimatedD] = React.useState(pathFill); // bắt đầu từ path chưa có animation
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: originY,
-        },
-        {
-          scaleY: animatedScaleY.value,
-        },
-        {
-          translateY: -originY,
-        },
-      ],
-    };
-  });
-  const animatedProps = useAnimatedProps(() => ({
-    transform: `translate(0, ${originY}) scale(1, ${animatedScaleY.value}) translate(0, ${-originY})`,
-  }));
+  useAnimatedReaction(
+    () => progress.value,
+    (value) => {
+      const newPath =
+        data
+          .map((point, index) => {
+            const x = padding + point.x * scaleX;
+            const y = originY - point.y * scaleY * value;
+            return `${index === 0 ? "M" : "L"} ${x},${y}`;
+          })
+          .join(" ") + ` L ${endX},${originY} L ${startX},${originY} Z`;
+
+      runOnJS(setAnimatedD)(newPath); // Cập nhật lại d path trong React state
+    },
+    [data]
+  );
 
   return (
     <View
@@ -220,13 +209,7 @@ const ForceOnShaftDiagram = ({ data, fillColor, lineColor }: ForceOnShaftDataPro
     >
       <Svg width={diagramWidth} height={diagramHeight}>
         {/* Vùng tô  */}
-        <AnimatedPath
-          d={pathFill}
-          fill={fillColor}
-          animatedProps={animatedProps}
-          stroke={lineColor}
-          strokeWidth={2}
-        />
+        <Path d={animatedD} fill={fillColor} stroke={lineColor} strokeWidth={2} />
 
         {/* Trục x */}
         <Line
@@ -255,12 +238,9 @@ const ForceOnShaftDiagram = ({ data, fillColor, lineColor }: ForceOnShaftDataPro
 
           return (
             <React.Fragment key={`label-${index}`}>
-              {/* Nhãn giá trị lực (trục y) */}
               <Text x={padding - 40} y={y + 4} fontSize={10} fill="black">
                 {point.y.toFixed(2)}
               </Text>
-
-              {/* Nhãn trục x (tọa độ x) */}
               <Text x={x + 4} y={originY + 15} fontSize={10} fill="black">
                 {Math.round(point.x)}
               </Text>

@@ -19,7 +19,7 @@ export default function LoginScreen() {
         const authStatus = await DatabaseService.checkAuth();
         if (authStatus) {
           alert("User đã đăng nhập");
-          router.push("./Home");
+          router.push("/views/Home");
         }
         setLoading(false);
       }
@@ -36,7 +36,7 @@ export default function LoginScreen() {
         console.log("Error:", res.error);
       } else {
         alert("Đăng nhập thành công");
-        router.push("./Home");
+        router.push("/views/Home");
       }
     });
   };
@@ -58,7 +58,7 @@ export default function LoginScreen() {
       </View>
 
       <View style={calcFooterStyle.buttonFooter}>
-        <TouchableOpacity style={styles.mainBtnMedium} onPress={() => router.push("/views/Register")}>
+        <TouchableOpacity style={styles.mainBtnMedium} onPress={() => router.push("/views/auth/Register")}>
           <Text style={styles.mainBtnMediumTxt}>ĐĂNG KÍ</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.mainBtnMedium} onPress={handleLogin}>

@@ -23,7 +23,7 @@ export default function AccIcon() {
 
   const handleAccount = () => {
     closeMenu();
-    router.push("/views/AccountScreen"); // Chuyển đến trang AccountScreen
+    router.push("/views/account/AccountScreen"); // Chuyển đến trang AccountScreen
   };
   return (
     <Menu
@@ -53,7 +53,7 @@ export default function AccIcon() {
           <Menu.Item
             onPress={() => {
               closeMenu();
-              router.push("/views/Login");
+              router.push("/views/auth/Login");
             }}
             title="Đăng nhập"
             titleStyle={styles.menuItem}
@@ -61,7 +61,7 @@ export default function AccIcon() {
           <Menu.Item
             onPress={() => {
               closeMenu();
-              router.push("/views/Register");
+              router.push("/views/auth/Register");
             }}
             title="Đăng ký"
             titleStyle={styles.menuItem}

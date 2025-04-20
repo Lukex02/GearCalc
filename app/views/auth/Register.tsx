@@ -19,7 +19,7 @@ export default function RegisterScreen() {
         const authStatus = await DatabaseService.checkAuth();
         if (authStatus) {
           alert("User đã đăng nhập");
-          router.push("./Home");
+          router.push("/views/Home");
         }
         setLoading(false);
       }
@@ -34,7 +34,7 @@ export default function RegisterScreen() {
       if (res.error) {
         console.log("Error:", res.error);
       } else {
-        router.push("./Home");
+        router.push("/views/Home");
       }
     });
   };
