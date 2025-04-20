@@ -522,7 +522,8 @@ class DesignGearBox1 implements DesignStrategy {
   get shaftDiagram() {
     return this._shaftDiagramData;
   }
-  async designKey(shaft: CalculatedShaft): Promise<void> {
+  async designKey(shaft: CalculatedShaft): Promise<(CalculatedKey | undefined)[]> {
+    let keyData: (CalculatedKey | undefined)[] = [];
     await Promise.all(
       shaft.getAllIndividualShaft().map(async (indiShaft, shaftIdx) => {
         if (shaftIdx === 0) {
@@ -536,6 +537,7 @@ class DesignGearBox1 implements DesignStrategy {
             indiShaft.T,
             indiShaft.getStatAtPoint("C").d!
           );
+          keyData.push(indiShaft.getStatAtPoint("A").key, indiShaft.getStatAtPoint("C").key);
         } else if (shaftIdx === 1) {
           indiShaft.getStatAtPoint("B").key = await KeyController.generateKey(
             shaft.getHubLength("lm22"),
@@ -547,6 +549,7 @@ class DesignGearBox1 implements DesignStrategy {
             indiShaft.T,
             indiShaft.getStatAtPoint("C").d!
           );
+          keyData.push(indiShaft.getStatAtPoint("B").key, indiShaft.getStatAtPoint("C").key);
         } else if (shaftIdx === 2) {
           indiShaft.getStatAtPoint("B").key = await KeyController.generateKey(
             shaft.getHubLength("lm32"),
@@ -558,12 +561,16 @@ class DesignGearBox1 implements DesignStrategy {
             indiShaft.T,
             indiShaft.getStatAtPoint("D").d!
           );
+          keyData.push(indiShaft.getStatAtPoint("B").key, indiShaft.getStatAtPoint("D").key);
         }
       })
     );
+    return keyData;
   }
   testDurability(calcShaft: CalculatedShaft) {
     // Kiểm nghiệm độ bền mỏi
+    let fatigueDura: any[] = [],
+      staticDura: any[] = [];
     const sigma_max = 0.436 * calcShaft.sigma_b; // Giới hạn mỏi uốn
     const tau_max = 0.58 * sigma_max; // Giới hạn mỏi xoắn
     const sigma_mj = 0; // Vì trục quay, ứng suất uốn thay đổi theo chu kì đối xứng nên giá trị trung bình của ứng suất pháp tại tiết diện j là 0
@@ -581,15 +588,9 @@ class DesignGearBox1 implements DesignStrategy {
     const K_tau = 1.54;
 
     calcShaft.getAllIndividualShaft().forEach((indiShaft, shaftIdx) => {
-      let indiShaftStat =
-        shaftIdx === 0
-          ? indiShaft.getStatAtPoint("C")
-          : shaftIdx === 1
-          ? indiShaft.getStatAtPoint("C")
-          : shaftIdx === 2
-          ? indiShaft.getStatAtPoint("B")
-          : null;
-      if (indiShaftStat) {
+      let point = shaftIdx === 0 ? "C" : shaftIdx === 1 ? "C" : shaftIdx === 2 ? "B" : null;
+      if (point) {
+        let indiShaftStat = indiShaft.getStatAtPoint(point);
         const { d, M_x, M_y } = indiShaftStat;
         const { epsi_sigma, epsi_tau } = Utils.getEpsilonSigmaAndTau(d!);
         const { b, h, t1 } = indiShaftStat.key!.getDimension();
@@ -605,6 +606,22 @@ class DesignGearBox1 implements DesignStrategy {
         const s_tau = tau_max / (K_taudj * tau_aj + psi_tau * tau_mj);
         const s = (s_sigma * s_tau) / Math.sqrt(s_sigma ** 2 + s_tau ** 2);
         if (s < 3) throw new Error("Trục " + shaftIdx + " không thỏa điều kiện bền mỏi");
+        else
+          fatigueDura.push({
+            shaftIdx: shaftIdx + 1,
+            point,
+            W_j,
+            W_oj,
+            M_j,
+            epsi_sigma,
+            epsi_tau,
+            sigma_aj,
+            tau_aj,
+            tau_mj,
+            s_sigma,
+            s_tau,
+            s,
+          });
       }
     });
 
@@ -617,7 +634,9 @@ class DesignGearBox1 implements DesignStrategy {
       const tau = T_max / (0.2 * d_max ** 3);
       const sigma_td = Math.sqrt(sigma ** 2 + 3 * tau ** 2);
       if (sigma_td > sigma_allow) throw new Error("Trục " + shaftIdx + " không thỏa điều kiện bền tĩnh");
+      else staticDura.push({ shaftIdx: shaftIdx + 1, d_max, M_max, T_max, sigma, tau, sigma_td });
     });
+    return { fatigueDura, staticDura };
   }
 }
 
@@ -950,7 +969,7 @@ export default class CalcController {
     }
   }
   // Bước 3 của trục: Chọn đường kính trục cho từng tiết diện của từng trục
-  chooseIndiShaftDiameter(shaftNo: 1 | 2 | 3, d_choose: { point: string; value: number; key: undefined }[]) {
+  chooseIndiShaftDiameter(shaftNo: 1 | 2 | 3, d_choose: { point: string; value: number }[]) {
     if (this._calcShaft) {
       const thisShaft = this._calcShaft.getIndividualShaft(shaftNo);
       thisShaft.choose_d(d_choose);
@@ -959,7 +978,7 @@ export default class CalcController {
   // Bước 4 của trục: Chọn then
   async calcKey() {
     if (this._calcShaft) {
-      this._designStrategy.designKey(this._calcShaft);
+      return this._designStrategy.designKey(this._calcShaft);
     }
   }
   // Bước 5 (cuối) của trục: Kiểm nghiệm
