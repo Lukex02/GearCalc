@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import CalcFooter from "./CalcFooter";
+import CalcFooter from "../../common/CalcFooter";
 import styles from "@style/MainStyle";
 import CalcController from "@controller/CalcController";
 import { scale, verticalScale } from "react-native-size-matters";
-import LoadingScreen from "./LoadingScreen";
+import LoadingScreen from "@views/common/LoadingScreen";
 
 export default function GearResult() {
   const [gearSetFast, setGearSetFast] = useState<any>(null);
@@ -84,7 +84,7 @@ export default function GearResult() {
         )}
       </View>
 
-      <CalcFooter onValidate={handleValidation} nextPage={"/"} />
+      <CalcFooter onValidate={handleValidation} nextPage="/views/Home" />
     </View>
   ) : (
     <LoadingScreen />

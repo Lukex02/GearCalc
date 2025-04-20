@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Image, Alert } from "react-native";
+import { View, Text, Image } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
-import styles from "@style/MainStyle"; // Sử dụng style đã tạo
-import CalcFooter from "./CalcFooter";
+import styles from "@style/MainStyle";
+import CalcFooter from "@views/common/CalcFooter";
 
 export default function DesignSelectionScreen() {
   const [gearBoxType, setGearBoxType] = useState<any>("");
@@ -13,8 +13,8 @@ export default function DesignSelectionScreen() {
     { label: "Hộp giảm tốc trục vít - bánh răng", value: "GearBox2" },
   ];
   const gearBoxImage = {
-    GearBox1: require("../src/img/GearBox1Template.png"),
-    GearBox2: require("../src/img/GearBox2Template.png"),
+    GearBox1: require("../../../../src/img/GearBox1Template.png"),
+    GearBox2: require("../../../../src/img/GearBox2Template.png"),
   };
   const [items, setItems] = useState(
     gearBoxOptions.map((option) => ({
@@ -64,9 +64,9 @@ export default function DesignSelectionScreen() {
 
       <CalcFooter
         backTxt="Thoát"
-        backPage="./Home"
+        backPage="/views/Home"
         onValidate={handleValidation}
-        nextPage={{ pathname: "/views/InputDataScreen", params: { gearBoxType: gearBoxType } }}
+        nextPage={{ pathname: "/views/design/engine/InputDataScreen", params: { gearBoxType: gearBoxType } }}
       />
     </View>
   );

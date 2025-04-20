@@ -4,7 +4,7 @@ import Slider from "@react-native-community/slider"; // Import Slider
 import styles from "@style/MainStyle";
 import Efficiency from "@models/Efficiency";
 import CalcController from "@controller/CalcController";
-import CalcFooter from "./CalcFooter";
+import CalcFooter from "@views/common/CalcFooter";
 
 export default function AdjustEngineParametersScreen() {
   const calcController = CalcController.getInstance();

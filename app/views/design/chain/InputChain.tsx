@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View, Text, ScrollView, Alert, KeyboardAvoidingView, Platform } from "react-native";
 import styles from "@style/MainStyle";
-import CalcFooter from "./CalcFooter";
+import CalcFooter from "@views/common/CalcFooter";
 import CalcController from "@controller/CalcController";
 import { Icon, List } from "react-native-paper";
 

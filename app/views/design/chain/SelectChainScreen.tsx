@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList, Image, Alert } from "react-native";
 import styles from "@style/MainStyle"; // Sử dụng style đã tạo
 import CalcController from "@controller/CalcController";
-import CalcFooter from "./CalcFooter";
-import LoadingScreen from "./LoadingScreen";
+import CalcFooter from "@views/common/CalcFooter";
+import LoadingScreen from "@views/common/LoadingScreen";
 import CalculatedChain, { SelectedChain } from "@models/Chain";
 import ChainController from "@controller/ChainController";
 import { Avatar } from "react-native-paper";
@@ -70,7 +70,7 @@ export default function SelectChainScreen() {
             renderItem={({ item, index }) => (
               <TouchableOpacity style={styles.selectItem} onPress={() => handleSelectChain(item)}>
                 <Image
-                  source={require("../src/img/wrench.png")}
+                  source={require("../../../../src/img/wrench.png")}
                   style={styles.selectImage}
                   resizeMode="contain"
                 />
@@ -114,7 +114,7 @@ export default function SelectChainScreen() {
           />
         </View>
       )}
-      <CalcFooter onValidate={handleValidation} nextPage="/views/PostChainStatsView" />
+      <CalcFooter onValidate={handleValidation} nextPage="/views/design/chain/PostChainStatsView" />
     </View>
   );
 }

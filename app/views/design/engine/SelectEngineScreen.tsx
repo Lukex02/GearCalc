@@ -4,8 +4,8 @@ import styles from "@style/MainStyle"; // Sử dụng style đã tạo
 import CalcController from "@controller/CalcController";
 import EngineController from "@controller/EngineController";
 import { SelectedEngine } from "@models/EngineModel";
-import CalcFooter from "./CalcFooter";
-import LoadingScreen from "./LoadingScreen";
+import CalcFooter from "@views/common/CalcFooter";
+import LoadingScreen from "@views/common/LoadingScreen";
 import { Avatar, Icon } from "react-native-paper";
 
 export default function SelectEngineScreen() {
@@ -77,7 +77,7 @@ export default function SelectEngineScreen() {
             renderItem={({ item }) => (
               <TouchableOpacity style={styles.selectItem} onPress={() => handleSelectEngine(item)}>
                 <Image
-                  source={require("../src/img/wrench.png")}
+                  source={require("../../../../src/img/wrench.png")}
                   style={styles.selectImage}
                   resizeMode="contain"
                 />
@@ -108,7 +108,7 @@ export default function SelectEngineScreen() {
           />
         </View>
       )}
-      <CalcFooter onValidate={handleValidation} nextPage={"/views/PostEngineStatsView"} />
+      <CalcFooter onValidate={handleValidation} nextPage="/views/design/engine/PostEngineStatsView" />
     </View>
   );
 }

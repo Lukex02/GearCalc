@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { View, Text, TextInput, ScrollView } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import styles from "@style/MainStyle";
 import CalcController from "@controller/CalcController";
-import CalcFooter from "./CalcFooter";
+import CalcFooter from "@views/common/CalcFooter";
 
 export default function InputDataScreen() {
   const { gearBoxType } = useLocalSearchParams();

@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
 import styles from "@style/MainStyle";
 import { useState, useEffect } from "react";
 import DatabaseService from "@services/DatabaseService";
-import LoadingScreen from "./LoadingScreen";
+import LoadingScreen from "@views/common/LoadingScreen";
 
 // Mẫu user data, vì chưa có history để làm
 const history_prop = [

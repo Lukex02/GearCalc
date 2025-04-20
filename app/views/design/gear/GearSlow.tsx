@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, Modal } from "react-native";
 import { Button } from "react-native-paper";
-// import { useRouter } from "expo-router";
 import Slider from "@react-native-community/slider"; // Import Slider
 import styles from "@style/MainStyle";
 import CalcController from "@controller/CalcController";
-import CalcFooter from "./CalcFooter";
+import CalcFooter from "@views/common/CalcFooter";
 import { scale, verticalScale } from "react-native-size-matters";
 import CalcFooterStyle from "@style/CalcFooterStyle";
 
@@ -32,7 +31,7 @@ const label = {
   dw2: "Đường kính lăn bánh lớn (mm)",
 };
 
-export default function GearFastScreen() {
+export default function GearSlowScreen() {
   const calcController = CalcController.getInstance();
   const [gearSetStats, setGearSetStats] = useState({});
   const selectMats: typeof materialStats = materialStats;
@@ -53,7 +52,7 @@ export default function GearFastScreen() {
     if (HB.small.value - HB.big.value >= 10) {
       calcController.calcGearSet(
         { sigma_b: [950, 850], sigma_ch: [700, 550], HB: [HB.small.value, HB.big.value], S_max: [60, 100] },
-        1
+        2
       );
       setGearSetStats(
         calcController
@@ -93,12 +92,12 @@ export default function GearFastScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.pageTitle}>Bộ truyền bánh răng cấp nhanh</Text>
+      <Text style={styles.pageTitle}>Bộ truyền bánh răng cấp chậm</Text>
       <View style={styles.header}>
         <Text style={styles.pageTitle}>Chọn thông số vật liệu</Text>
       </View>
       <View style={styles.colContainer}>
-        {/* Chọn độ rắn cho cặp bánh răng bộ truyền cấp nhanh */}
+        {/* Chọn độ rắn cho cặp bánh răng bộ truyền cấp chậm */}
         <View style={styles.tableContainer}>
           <Text style={styles.tableTitle}>ĐỘ RẮN</Text>
           {selectMats && (
@@ -147,7 +146,7 @@ export default function GearFastScreen() {
         </Text>
       </View>
 
-      <CalcFooter onValidate={handleValidation} nextPage={"/views/GearSlow"} />
+      <CalcFooter onValidate={handleValidation} nextPage="/views/design/gear/GearResult" />
       <Modal
         transparent={true}
         onRequestClose={() => setModalVisible(false)}
@@ -184,7 +183,7 @@ export default function GearFastScreen() {
                 onPress={handleChange}
                 rippleColor={"rgba(0, 0, 0, 0.29)"}
               >
-                Hủy
+                Thay đổi
               </Button>
               <Button
                 mode="contained"
