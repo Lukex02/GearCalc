@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { View, Text, Alert, FlatList } from "react-native";
 import { useRouter } from "expo-router"; // Khởi tạo router từ expo-router
-import CalcController from "../controller/CalcController";
-import CalcFooter from "./CalcFooter";
-import styles from "../style/MainStyle";
-import CalculatedChain from "../models/Chain";
+import CalcController from "@controller/CalcController";
+import CalcFooter from "@views/common/CalcFooter";
+import styles from "@style/MainStyle";
+import CalculatedChain from "@models/Chain";
 
 const label = {
   z1: "Số bánh răng dẫn",
@@ -61,7 +61,7 @@ export default function PostChainStatsView() {
         </View>
 
         {/* Truyền địa chỉ trang xích tiếp theo ở đây */}
-        <CalcFooter nextPage="/src/views/GearFast" />
+        <CalcFooter nextPage="/views/design/gear/GearFast" />
       </View>
     );
   }

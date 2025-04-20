@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import styles from "../style/MainStyle";
-import CalcController from "../controller/CalcController";
-import CalcFooter from "./CalcFooter";
+import { View, Text, TextInput, ScrollView } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import styles from "@style/MainStyle";
+import CalcController from "@controller/CalcController";
+import CalcFooter from "@views/common/CalcFooter";
 
 export default function InputDataScreen() {
   const { gearBoxType } = useLocalSearchParams();
-  const router = useRouter();
   const calcController = new CalcController(Array.isArray(gearBoxType) ? gearBoxType[0] : gearBoxType);
 
   // Các state cho giá trị nhập liệu
@@ -157,7 +156,10 @@ export default function InputDataScreen() {
           </>
         )}
       </ScrollView>
-      <CalcFooter nextPage={"/src/views/AdjustEngineParametersScreen"} onValidate={handleValidation} />
+      <CalcFooter
+        nextPage={"/views/design/engine/AdjustEngineParametersScreen"}
+        onValidate={handleValidation}
+      />
     </View>
   );
 }

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList, Image, Alert } from "react-native";
-import { useRouter } from "expo-router"; // Khởi tạo router từ expo-router
-import styles from "../style/MainStyle"; // Sử dụng style đã tạo
-import CalcController from "../controller/CalcController";
-import CalcFooter from "./CalcFooter";
-import LoadingScreen from "./LoadingScreen";
-import CalculatedChain, { SelectedChain } from "../models/Chain";
-import ChainController from "../controller/ChainController";
+import styles from "@style/MainStyle"; // Sử dụng style đã tạo
+import CalcController from "@controller/CalcController";
+import CalcFooter from "@views/common/CalcFooter";
+import LoadingScreen from "@views/common/LoadingScreen";
+import CalculatedChain, { SelectedChain } from "@models/Chain";
+import ChainController from "@controller/ChainController";
 import { Avatar } from "react-native-paper";
 
 export default function SelectChainScreen() {
@@ -70,11 +69,7 @@ export default function SelectChainScreen() {
             keyExtractor={(item) => item.CHAIN_ID}
             renderItem={({ item, index }) => (
               <TouchableOpacity style={styles.selectItem} onPress={() => handleSelectChain(item)}>
-                <Image
-                  source={require("../img/wrench.png")}
-                  style={styles.selectImage}
-                  resizeMode="contain"
-                />
+                <Image source={require("@img/wrench.png")} style={styles.selectImage} resizeMode="contain" />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.selectName}>Loại {index + 1}</Text>
                   <Text style={styles.selectDetails}>
@@ -115,7 +110,7 @@ export default function SelectChainScreen() {
           />
         </View>
       )}
-      <CalcFooter onValidate={handleValidation} nextPage="/src/views/PostChainStatsView" />
+      <CalcFooter onValidate={handleValidation} nextPage="/views/design/chain/PostChainStatsView" />
     </View>
   );
 }

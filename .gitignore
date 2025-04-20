@@ -78,4 +78,7 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+# VSCode
+.vscode/
+
 # @end expo-cli

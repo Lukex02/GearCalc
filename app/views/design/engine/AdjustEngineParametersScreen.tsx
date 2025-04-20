@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
-import { useRouter } from "expo-router";
 import Slider from "@react-native-community/slider"; // Import Slider
-import styles from "../style/MainStyle";
-import Efficiency from "../models/Efficiency";
-import CalcController from "../controller/CalcController";
-import CalcFooter from "./CalcFooter";
+import styles from "@style/MainStyle";
+import Efficiency from "@models/Efficiency";
+import CalcController from "@controller/CalcController";
+import CalcFooter from "@views/common/CalcFooter";
 
 export default function AdjustEngineParametersScreen() {
-  const router = useRouter(); // Hook để lấy router
   const calcController = CalcController.getInstance();
   const { effi: baseEfficiency, ratio: baseRatio } = calcController.showEngineParam();
   baseEfficiency.n_parts_spec.forEach((effi) => {
@@ -146,7 +144,7 @@ export default function AdjustEngineParametersScreen() {
         </View>
       </View>
 
-      <CalcFooter nextPage={"/src/views/SelectEngineScreen"} />
+      <CalcFooter nextPage={"/views/design/engine/SelectEngineScreen"} />
     </View>
   );
 }

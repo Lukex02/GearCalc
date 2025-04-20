@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, Modal } from "react-native";
 import { Button } from "react-native-paper";
-// import { useRouter } from "expo-router";
 import Slider from "@react-native-community/slider"; // Import Slider
-import styles from "../style/MainStyle";
-import CalcController from "../controller/CalcController";
-import CalcFooter from "./CalcFooter";
+import styles from "@style/MainStyle";
+import CalcController from "@controller/CalcController";
+import CalcFooter from "@views/common/CalcFooter";
 import { scale, verticalScale } from "react-native-size-matters";
-import CalcFooterStyle from "../style/CalcFooterStyle";
+import CalcFooterStyle from "@style/CalcFooterStyle";
 
 // Bảng Data cứng khi chọn luôn vật liệu là Thép 40X - Tôi cải thiện
 const materialStats = {
@@ -32,7 +31,7 @@ const label = {
   dw2: "Đường kính lăn bánh lớn (mm)",
 };
 
-export default function GearSlowScreen() {
+export default function GearFastScreen() {
   const calcController = CalcController.getInstance();
   const [gearSetStats, setGearSetStats] = useState({});
   const selectMats: typeof materialStats = materialStats;
@@ -53,7 +52,7 @@ export default function GearSlowScreen() {
     if (HB.small.value - HB.big.value >= 10) {
       calcController.calcGearSet(
         { sigma_b: [950, 850], sigma_ch: [700, 550], HB: [HB.small.value, HB.big.value], S_max: [60, 100] },
-        2
+        1
       );
       setGearSetStats(
         calcController
@@ -93,12 +92,12 @@ export default function GearSlowScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.pageTitle}>Bộ truyền bánh răng cấp chậm</Text>
+      <Text style={styles.pageTitle}>Bộ truyền bánh răng cấp nhanh</Text>
       <View style={styles.header}>
         <Text style={styles.pageTitle}>Chọn thông số vật liệu</Text>
       </View>
       <View style={styles.colContainer}>
-        {/* Chọn độ rắn cho cặp bánh răng bộ truyền cấp chậm */}
+        {/* Chọn độ rắn cho cặp bánh răng bộ truyền cấp nhanh */}
         <View style={styles.tableContainer}>
           <Text style={styles.tableTitle}>ĐỘ RẮN</Text>
           {selectMats && (
@@ -147,7 +146,7 @@ export default function GearSlowScreen() {
         </Text>
       </View>
 
-      <CalcFooter onValidate={handleValidation} nextPage={"/src/views/GearResult"} />
+      <CalcFooter onValidate={handleValidation} nextPage="/views/design/gear/GearSlow" />
       <Modal
         transparent={true}
         onRequestClose={() => setModalVisible(false)}
@@ -184,7 +183,7 @@ export default function GearSlowScreen() {
                 onPress={handleChange}
                 rippleColor={"rgba(0, 0, 0, 0.29)"}
               >
-                Thay đổi
+                Hủy
               </Button>
               <Button
                 mode="contained"

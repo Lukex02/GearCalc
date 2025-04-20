@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { View, TouchableOpacity, Image, Text, ScrollView } from "react-native";
 import { FAB, Portal } from "react-native-paper";
 import { useRouter } from "expo-router";
-import styles from "../style/MainStyle";
-import LoadingScreen from "./LoadingScreen";
-import DatabaseService from "../services/DatabaseService";
+import styles from "@style/MainStyle";
+import LoadingScreen from "@views/common/LoadingScreen";
+import DatabaseService from "@services/DatabaseService";
 const CatalogPage = () => {
   const [loading, setLoading] = useState(true);
   const [catalog, setCatalog] = useState<any[]>([]); // full catalog
@@ -57,7 +57,7 @@ const CatalogPage = () => {
               style={styles.gridItem}
               onPress={() => router.push({ pathname: "./ComponentView", params: item })}
             >
-              <Image source={require("../img/wrench.png")} style={styles.gridImage} resizeMode="contain" />
+              <Image source={require("@img/wrench.png")} style={styles.gridImage} resizeMode="contain" />
 
               {item.type === "Engine" && (
                 <View style={styles.gridTextContainer}>

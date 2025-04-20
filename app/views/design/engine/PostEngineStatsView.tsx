@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import { useRouter } from "expo-router"; // Khởi tạo router từ expo-router
-import CalcController from "../controller/CalcController";
-import CalcFooter from "./CalcFooter";
-import styles from "../style/MainStyle";
+import CalcController from "@controller/CalcController";
+import CalcFooter from "@/views/common/CalcFooter";
+import styles from "@style/MainStyle";
 
 export default function SelectEngineScreen() {
   const router = useRouter(); // Khởi tạo router để điều hướng
@@ -18,10 +18,10 @@ export default function SelectEngineScreen() {
   useEffect(() => {
     if (postStats) {
       // console.log(postStats);
-      setPostP(postStats.newEngineShaftStats.p);
-      setPostN(postStats.newEngineShaftStats.n);
-      setPostT(postStats.newEngineShaftStats.T);
-      setPostU(postStats.rearrangedRatio);
+      setPostP(postStats.distShaft.p);
+      setPostN(postStats.distShaft.n);
+      setPostT(postStats.distShaft.T);
+      setPostU(postStats.ratio);
       setIsValid(true);
     } else {
       alert("Động cơ không phù hợp, hãy chọn động cơ khác");
@@ -88,7 +88,7 @@ export default function SelectEngineScreen() {
         </View>
 
         {/* Truyền địa chỉ trang xích tiếp theo ở đây */}
-        <CalcFooter nextPage="/src/views/InputChain" />
+        <CalcFooter nextPage="/views/design/chain/InputChain" />
       </View>
     );
   }

@@ -1,8 +1,8 @@
 import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
-import styles from "../style/MainStyle";
+import styles from "@style/MainStyle";
 import { useState, useEffect } from "react";
-import DatabaseService from "../services/DatabaseService";
-import LoadingScreen from "./LoadingScreen";
+import DatabaseService from "@services/DatabaseService";
+import LoadingScreen from "@views/common/LoadingScreen";
 
 // Mẫu user data, vì chưa có history để làm
 const history_prop = [
@@ -35,7 +35,7 @@ export default function AccountScreen() {
           <View style={styles.colContainer}>
             <Image
               style={styles.profileImg}
-              source={require("../img/default-avatar.jpg")}
+              source={require("@img/default-avatar.jpg")}
               resizeMode="contain"
             ></Image>
             <View style={styles.tableContainerPad10}>

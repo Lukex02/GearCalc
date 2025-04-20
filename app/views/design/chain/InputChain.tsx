@@ -1,11 +1,17 @@
-import DropDownPicker from "react-native-dropdown-picker";
 import { useState } from "react";
 import { View, Text, ScrollView, Alert, KeyboardAvoidingView, Platform } from "react-native";
+<<<<<<< HEAD:app/src/views/InputChain.tsx
 import styles from "../style/MainStyle";
 import CalcFooter from "./CalcFooter";
 import CalcController from "../controller/CalcController";
 import ChainController from "../controller/ChainController";
 import { Chip, Icon, List } from "react-native-paper";
+=======
+import styles from "@style/MainStyle";
+import CalcFooter from "@views/common/CalcFooter";
+import CalcController from "@controller/CalcController";
+import { Icon, List } from "react-native-paper";
+>>>>>>> back-dev:app/views/design/chain/InputChain.tsx
 
 type KProps = {
   k_0: any;
@@ -114,9 +120,9 @@ export default function InputChain() {
       // Tính toán với các giá trị đã chọn
       if (enginePostStats) {
         calcController.calcMechDriveBase({
-          P: enginePostStats.newEngineShaftStats.p[3] ?? dummyShaft3Stats.P,
-          u_x: enginePostStats.rearrangedRatio[3].value ?? dummyShaft3Stats.u,
-          n: enginePostStats.newEngineShaftStats.n[3] ?? dummyShaft3Stats.n,
+          P: enginePostStats.distShaft.p[3] ?? dummyShaft3Stats.P,
+          u_x: enginePostStats.ratio[3].value ?? dummyShaft3Stats.u,
+          n: enginePostStats.distShaft.n[3] ?? dummyShaft3Stats.n,
           k_0: selectedValues.k_0,
           k_a: selectedValues.k_a,
           k_dc: selectedValues.k_dc,
@@ -205,7 +211,7 @@ export default function InputChain() {
         ))}
       </ScrollView>
 
-      <CalcFooter onValidate={handleValidation} nextPage="/src/views/SelectChainScreen" />
+      <CalcFooter onValidate={handleValidation} nextPage="/views/design/chain/SelectChainScreen" />
     </KeyboardAvoidingView>
   );
 }

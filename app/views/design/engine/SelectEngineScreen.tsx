@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
-import { useRouter } from "expo-router"; // Khởi tạo router từ expo-router
-import styles from "../style/MainStyle"; // Sử dụng style đã tạo
-// import calcFooter from "../style/calcFooter";
-import CalcController from "../controller/CalcController";
-import EngineController from "../controller/EngineController";
-import { SelectedEngine } from "../models/EngineModel";
-import CalcFooter from "./CalcFooter";
-import LoadingScreen from "./LoadingScreen";
+import styles from "@style/MainStyle"; // Sử dụng style đã tạo
+import CalcController from "@controller/CalcController";
+import EngineController from "@controller/EngineController";
+import { SelectedEngine } from "@models/EngineModel";
+import CalcFooter from "@views/common/CalcFooter";
+import LoadingScreen from "@views/common/LoadingScreen";
 import { Avatar, Icon } from "react-native-paper";
 
 export default function SelectEngineScreen() {
-  const router = useRouter(); // Khởi tạo router để điều hướng
   const calcController = CalcController.getInstance();
   const requiredPower = calcController.getCalcEngine().p_ct;
   const requiredSpeed = calcController.getCalcEngine().n_sb;
@@ -79,11 +76,7 @@ export default function SelectEngineScreen() {
             keyExtractor={(item) => item.M_ID}
             renderItem={({ item }) => (
               <TouchableOpacity style={styles.selectItem} onPress={() => handleSelectEngine(item)}>
-                <Image
-                  source={require("../img/wrench.png")}
-                  style={styles.selectImage}
-                  resizeMode="contain"
-                />
+                <Image source={require("@img/wrench.png")} style={styles.selectImage} resizeMode="contain" />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.selectName}>{item.name}</Text>
                   <Text style={styles.selectDetails}>
@@ -111,7 +104,7 @@ export default function SelectEngineScreen() {
           />
         </View>
       )}
-      <CalcFooter onValidate={handleValidation} nextPage={"/src/views/PostEngineStatsView"} />
+      <CalcFooter onValidate={handleValidation} nextPage="/views/design/engine/PostEngineStatsView" />
     </View>
   );
 }
