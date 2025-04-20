@@ -66,7 +66,7 @@ export default function DesignSelectionScreen() {
         backTxt="Thoát"
         backPage="./Home"
         onValidate={handleValidation}
-        nextPage={{ pathname: "/src/views/InputDataScreen", params: { gearBoxType: gearBoxType } }}
+        nextPage={{ pathname: "/views/InputDataScreen", params: { gearBoxType: gearBoxType } }}
       />
     </View>
   );

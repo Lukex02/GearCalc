@@ -114,7 +114,7 @@ export default function SelectChainScreen() {
           />
         </View>
       )}
-      <CalcFooter onValidate={handleValidation} nextPage="/src/views/PostChainStatsView" />
+      <CalcFooter onValidate={handleValidation} nextPage="/views/PostChainStatsView" />
     </View>
   );
 }

@@ -58,7 +58,7 @@ export default function LoginScreen() {
       </View>
 
       <View style={calcFooterStyle.buttonFooter}>
-        <TouchableOpacity style={styles.mainBtnMedium} onPress={() => router.push("/src/views/Register")}>
+        <TouchableOpacity style={styles.mainBtnMedium} onPress={() => router.push("/views/Register")}>
           <Text style={styles.mainBtnMediumTxt}>ĐĂNG KÍ</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.mainBtnMedium} onPress={handleLogin}>

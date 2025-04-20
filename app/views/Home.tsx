@@ -6,16 +6,12 @@ import styles from "@style/MainStyle";
 export default function GearCalc() {
   const router = useRouter();
 
-  const handleGoToDesign = () => {
-    router.push("/src/views/DesignSelectionScreen");
-  };
-
   return (
     <View style={styles.container}>
       {/* <View style={styles.rowContainer}> */}
       <View style={styles.optionCard}>
         <Image source={require("../img/wrench.png")} style={styles.optionCardImg} resizeMode="contain" />
-        <TouchableOpacity style={styles.mainBtn} onPress={handleGoToDesign}>
+        <TouchableOpacity style={styles.mainBtn} onPress={() => router.push("/views/DesignSelectionScreen")}>
           <Text style={styles.mainBtnTxt}>Bắt đầu thiết kế</Text>
         </TouchableOpacity>
       </View>
@@ -28,7 +24,7 @@ export default function GearCalc() {
           style={styles.optionCardImg}
           resizeMode="contain"
         />
-        <TouchableOpacity style={styles.mainBtn} onPress={() => router.push("/src/views/CatalogView")}>
+        <TouchableOpacity style={styles.mainBtn} onPress={() => router.push("/views/CatalogView")}>
           <Text style={styles.mainBtnTxt}>Tra cứu catalog</Text>
         </TouchableOpacity>
       </View>

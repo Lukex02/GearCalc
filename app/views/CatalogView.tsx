@@ -129,7 +129,6 @@ const CatalogPage = () => {
         />
       </Portal>
     </View>
-    // </View>
   );
 };
 

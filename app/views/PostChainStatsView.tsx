@@ -61,7 +61,7 @@ export default function PostChainStatsView() {
         </View>
 
         {/* Truyền địa chỉ trang xích tiếp theo ở đây */}
-        <CalcFooter nextPage="/src/views/GearFast" />
+        <CalcFooter nextPage="/views/GearFast" />
       </View>
     );
   }

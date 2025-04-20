@@ -108,7 +108,7 @@ export default function SelectEngineScreen() {
           />
         </View>
       )}
-      <CalcFooter onValidate={handleValidation} nextPage={"/src/views/PostEngineStatsView"} />
+      <CalcFooter onValidate={handleValidation} nextPage={"/views/PostEngineStatsView"} />
     </View>
   );
 }

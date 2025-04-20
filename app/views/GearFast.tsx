@@ -147,7 +147,7 @@ export default function GearFastScreen() {
         </Text>
       </View>
 
-      <CalcFooter onValidate={handleValidation} nextPage={"/src/views/GearSlow"} />
+      <CalcFooter onValidate={handleValidation} nextPage={"/views/GearSlow"} />
       <Modal
         transparent={true}
         onRequestClose={() => setModalVisible(false)}
