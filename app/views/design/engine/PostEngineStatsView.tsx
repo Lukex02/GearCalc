@@ -88,11 +88,7 @@ export default function SelectEngineScreen() {
         </View>
 
         {/* Truyền địa chỉ trang xích tiếp theo ở đây */}
-<<<<<<< HEAD:app/src/views/PostEngineStatsView.tsx
-        <CalcFooter nextPage={"/src/views/SelectChainScreen"} />
-=======
         <CalcFooter nextPage="/views/design/chain/InputChain" />
->>>>>>> 9db9c24259e272d52e89672639874b02f36cbaa5:app/views/design/engine/PostEngineStatsView.tsx
       </View>
     );
   }
