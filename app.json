@@ -40,7 +40,13 @@
       "typedRoutes": true
     },
     "extra": {
-      "supabaseAnonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9kcmZ1c2pnYmN0a3lia2F2ZWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI5MTM2MTgsImV4cCI6MjA1ODQ4OTYxOH0.J85wLvZCjandmQM_T2fRBWoWQmEdp7gdCho6QBto0uw"
+      "supabaseAnonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9kcmZ1c2pnYmN0a3lia2F2ZWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI5MTM2MTgsImV4cCI6MjA1ODQ4OTYxOH0.J85wLvZCjandmQM_T2fRBWoWQmEdp7gdCho6QBto0uw",
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "f2045624-d4bd-4a8a-8d56-3385c8482a1f"
+      }
     }
   }
 }

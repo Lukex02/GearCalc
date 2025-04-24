@@ -3,8 +3,15 @@
   "compilerOptions": {
     "jsx": "react-native",
     "strict": true,
+    "baseUrl": "./app",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@style/*": ["src/style/*"],
+      "@views/*": ["views/*"],
+      "@services/*": ["src/services/*"],
+      "@models/*": ["src/models/*"],
+      "@controller/*": ["src/controller/*"],
+      "@img/*": ["src/img/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
