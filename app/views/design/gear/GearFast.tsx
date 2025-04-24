@@ -157,7 +157,7 @@ export default function GearFastScreen() {
       >
         <View style={styles.overlay}>
           <View style={styles.modalView}>
-            <Text style={styles.pageTitle}>Thông số bộ truyền bánh răng cấp nhanh</Text>
+            <Text style={styles.pageTitle1}>Thông số bộ truyền bánh răng cấp nhanh</Text>
             <View style={{ height: Math.floor(verticalScale(400)) }}>
               {/* Header */}
               <View style={styles.specHeaderRow}>

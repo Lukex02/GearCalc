@@ -8,7 +8,7 @@ export default function RootLayout() {
     <PaperProvider>
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: "#9CF2D4" },
+          headerStyle: { backgroundColor: "#0D1B2A" },
           headerTintColor: "Black",
           headerTitleStyle: styles.navTitle,
           headerTitleAlign: "center",

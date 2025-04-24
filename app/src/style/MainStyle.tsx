@@ -1,4 +1,5 @@
 import { StyleSheet, Platform, TextStyle, ViewStyle } from "react-native";
+import { black } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 export const shadows = {
@@ -24,7 +25,7 @@ export const shadows = {
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#9FD8E6",
+    backgroundColor: "#0D1B2A",
     paddingHorizontal: Math.round(scale(30)),
     paddingVertical: verticalScale(20),
     justifyContent: "space-between",
@@ -50,8 +51,10 @@ export default StyleSheet.create({
     fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: 2,
+    color: "#fff",
+    marginBottom: Math.round(scale(20)),
     textShadow: {
-      color: "black",
+      color: "white",
       offset: { width: 1, height: 1 },
       radius: 4,
     },
@@ -60,7 +63,7 @@ export default StyleSheet.create({
 
   // ! Option button
   mainBtn: {
-    backgroundColor: "#9CF2D4",
+    backgroundColor: 'rgba(152, 141, 141, 0.5)',
     borderRadius: 10,
     width: Math.round(scale(170)),
     alignSelf: "center",
@@ -189,7 +192,7 @@ export default StyleSheet.create({
     textAlign: "center",
     fontSize: Math.round(scale(24)),
     fontWeight: "bold",
-    color: "#black",
+    color: "#ccc",
     textTransform: "uppercase",
     letterSpacing: 2,
     fontFamily: "monospace",
@@ -302,9 +305,18 @@ export default StyleSheet.create({
   pageTitle: {
     fontSize: Math.round(scale(20)),
     fontWeight: "bold",
-    color: "#black",
+    color: "white",
     textTransform: "uppercase",
     textAlign: "center",
+    backgroundColor: "#0D1B2A",
+  },
+  pageTitle1: {
+    fontSize: Math.round(scale(20)),
+    fontWeight: "bold",
+    color: "Black",
+    textTransform: "uppercase",
+    textAlign: "center",
+    backgroundColor: "white",
   },
   inputContainer: {
     maxHeight: verticalScale(450),
@@ -467,6 +479,7 @@ export default StyleSheet.create({
     paddingVertical: Math.round(scale(10)),
     alignSelf: "center",
     borderBottomWidth: 2,
+    
   },
   specHeaderRowCell: {
     flexWrap: "wrap",
@@ -474,6 +487,7 @@ export default StyleSheet.create({
     alignContent: "center",
     textAlign: "center",
     fontWeight: "bold",
+    
   },
   specCol: {
     flex: 1,
@@ -521,4 +535,5 @@ export default StyleSheet.create({
     alignItems: "center",
     rowGap: Math.round(scale(20)),
   },
+  
 });

@@ -1,17 +1,10 @@
 import { useState } from "react";
 import { View, Text, ScrollView, Alert, KeyboardAvoidingView, Platform } from "react-native";
-<<<<<<< HEAD:app/src/views/InputChain.tsx
-import styles from "../style/MainStyle";
-import CalcFooter from "./CalcFooter";
-import CalcController from "../controller/CalcController";
-import ChainController from "../controller/ChainController";
-import { Chip, Icon, List } from "react-native-paper";
-=======
 import styles from "@style/MainStyle";
 import CalcFooter from "@views/common/CalcFooter";
 import CalcController from "@controller/CalcController";
 import { Icon, List } from "react-native-paper";
->>>>>>> back-dev:app/views/design/chain/InputChain.tsx
+
 
 type KProps = {
   k_0: any;
