@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
-import Slider from "@react-native-community/slider"; // Import Slider
-import styles from "@style/MainStyle";
+// import Slider from "@react-native-community/slider"; // Import Slider
+import { useSharedValue } from "react-native-reanimated";
+import { Slider } from "react-native-awesome-slider";
+import styles, { sliderTheme } from "@style/MainStyle";
 import Efficiency from "@models/Efficiency";
 import CalcController from "@controller/CalcController";
 import CalcFooter from "@views/common/CalcFooter";
+import { FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function AdjustEngineParametersScreen() {
   const calcController = CalcController.getInstance();
@@ -45,6 +48,15 @@ export default function AdjustEngineParametersScreen() {
   const [changeRatio, setChangeRatio] = useState(baseRatio);
   const [pCT, setPCT] = useState(calcController.getCalcEngine().p_ct);
   const [nSB, setNSB] = useState(calcController.getCalcEngine().n_sb);
+  const effiProgressValues = useRef(
+    baseEfficiency.n_parts_spec.map((item) => useSharedValue(item.value))
+  ).current;
+  const effiMinValues = useRef(baseEfficiency.n_parts_spec.map((item) => useSharedValue(item.min!))).current;
+  const effiMaxValues = useRef(baseEfficiency.n_parts_spec.map((item) => useSharedValue(item.max!))).current;
+
+  const ratioProgressValues = useRef(baseRatio.ratio_spec.map((item) => useSharedValue(item.value))).current;
+  const ratioMinValues = useRef(baseRatio.ratio_spec.map((item) => useSharedValue(item.min!))).current;
+  const ratioMaxValues = useRef(baseRatio.ratio_spec.map((item) => useSharedValue(item.max!))).current;
 
   const handleSliderChangeEffi = (index: number, value: any) => {
     const newChangeEffi = [...changeEffi.n_parts_full];
@@ -72,10 +84,12 @@ export default function AdjustEngineParametersScreen() {
 
       <View style={styles.resultContainer}>
         <Text style={styles.resultText}>
-          Công suất cần thiết: <Text style={{ color: "blue", fontWeight: "bold" }}>{pCT.toFixed(3)} kW</Text>
+          Công suất cần thiết:{" "}
+          <Text style={{ color: "#FF7D00", fontWeight: "bold" }}>{pCT.toFixed(3)} kW</Text>
         </Text>
         <Text style={styles.resultText}>
-          Số vòng quay sơ bộ: <Text style={{ color: "blue", fontWeight: "bold" }}>{nSB.toFixed(0)} rpm</Text>
+          Số vòng quay sơ bộ:{" "}
+          <Text style={{ color: "#FF7D00", fontWeight: "bold" }}>{nSB.toFixed(0)} rpm</Text>
         </Text>
       </View>
 
@@ -94,17 +108,18 @@ export default function AdjustEngineParametersScreen() {
                     n_{item.type}: {item.name}
                   </Text>
                   <Slider
+                    theme={sliderTheme}
+                    bubble={(value) => `${Math.round(value * 1000) / 1000}`}
+                    renderThumb={() => <FontAwesome6 name="diamond" size={20} color="#FF7D00" />}
+                    bubbleOffsetX={5}
+                    heartbeat={true}
                     style={styles.slider}
-                    minimumValue={Math.round(item.min ? item.min * 1000 : 1000) / 1000}
-                    maximumValue={Math.round(item.max ? item.max * 1000 : 1000) / 1000}
-                    step={
-                      Math.round(((item.max ? item.max : 1 - (item.min ? item.min : 1)) / 6) * 1000) / 1000
-                    }
-                    value={item.value}
+                    containerStyle={{ borderRadius: 40 }}
+                    progress={effiProgressValues[index]}
+                    minimumValue={effiMinValues[index]}
+                    maximumValue={effiMaxValues[index]}
                     onSlidingComplete={(value) => handleSliderChangeEffi(index, value)}
-                    disabled={item.type === "kn"}
                   />
-                  <Text>{item.value.toFixed(3)}</Text>
                 </View>
               )}
             />
@@ -124,19 +139,19 @@ export default function AdjustEngineParametersScreen() {
                     u_{item.type}: {item.name}
                   </Text>
                   <Slider
+                    theme={sliderTheme}
+                    bubble={(value) => `${Math.round(value * 10) / 10}`}
+                    renderThumb={() => <FontAwesome6 name="diamond" size={20} color="#FF7D00" />}
+                    bubbleOffsetX={5}
+                    heartbeat={true}
                     style={styles.slider}
-                    minimumValue={Math.round(item.min ? item.min * 10 : 10) / 10}
-                    maximumValue={Math.round(item.max ? item.max * 10 : 10) / 10}
-                    step={
-                      item.type === "h"
-                        ? 2
-                        : Math.round(((item.max ? item.max : 1 - (item.min ? item.min : 1)) / 6) * 10) / 10
-                    }
-                    value={item.value}
+                    containerStyle={{ borderRadius: 40 }}
+                    progress={ratioProgressValues[index]}
+                    minimumValue={ratioMinValues[index]}
+                    maximumValue={ratioMaxValues[index]}
                     onSlidingComplete={(value) => handleSliderChangeRatio(index, value)}
-                    disabled={item.type === "kn"}
                   />
-                  <Text>{item.value.toFixed(1)}</Text>
+                  <Text style={{ color: "white" }}>{item.value.toFixed(1)}</Text>
                 </View>
               )}
             />

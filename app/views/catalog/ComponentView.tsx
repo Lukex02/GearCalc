@@ -2,6 +2,8 @@ import React from "react";
 import { View, Image, Text, StyleSheet } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import styles from "@style/MainStyle";
+import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
+import { scale } from "react-native-size-matters";
 
 const ComponentPage = () => {
   const data = useLocalSearchParams();
@@ -20,7 +22,7 @@ const ComponentPage = () => {
     (data.type === "Engine" && (
       <View style={styles.container}>
         <Text style={styles.componentTitle}>Động cơ điện {data.Motor_Type}</Text>
-        <Image source={require("@img/wrench.png")} style={styles.componentImg} resizeMode="contain" />
+        <MaterialCommunityIcons name="engine" size={scale(120)} style={styles.gridImage} color="#FF7D00" />
         <View style={styles.componentInfoContainer}>
           <Text style={styles.componentInfo}>
             <Text style={styles.componentInfoName}>Công suất:</Text> {data.Power} kW
@@ -46,7 +48,7 @@ const ComponentPage = () => {
     (data.type === "chain" && (
       <View style={styles.container}>
         <Text style={styles.componentTitle}>{printChainType(data.chain_type)}</Text>
-        <Image source={require("@img/wrench.png")} style={styles.componentImg} resizeMode="contain" />
+        <FontAwesome name="chain" size={scale(120)} style={styles.gridImage} color="#FF7D00" />
         <View style={styles.componentInfoContainer}>
           <Text style={styles.componentInfo}>
             <Text style={styles.componentInfoName}>Bước xích:</Text> {data.Step_p} (mm)

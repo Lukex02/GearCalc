@@ -1,17 +1,10 @@
 import { useState } from "react";
 import { View, Text, ScrollView, Alert, KeyboardAvoidingView, Platform } from "react-native";
-<<<<<<< HEAD:app/src/views/InputChain.tsx
-import styles from "../style/MainStyle";
-import CalcFooter from "./CalcFooter";
-import CalcController from "../controller/CalcController";
-import ChainController from "../controller/ChainController";
-import { Chip, Icon, List } from "react-native-paper";
-=======
 import styles from "@style/MainStyle";
 import CalcFooter from "@views/common/CalcFooter";
 import CalcController from "@controller/CalcController";
 import { Icon, List } from "react-native-paper";
->>>>>>> back-dev:app/views/design/chain/InputChain.tsx
+import { scale } from "react-native-size-matters";
 
 type KProps = {
   k_0: any;
@@ -99,19 +92,19 @@ export default function InputChain() {
     setSelectedValues((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleOpenChange = (key: keyof KProps, isOpen: any) => {
-    setOpen((prev) => {
-      const newState = Object.keys(prev).reduce((acc, k) => {
-        acc[k as keyof KProps] = false;
-        return acc;
-      }, {} as typeof prev);
-      return { ...newState, [key]: isOpen };
-    });
-  };
+  // const handleOpenChange = (key: keyof KProps, isOpen: any) => {
+  //   setOpen((prev) => {
+  //     const newState = Object.keys(prev).reduce((acc, k) => {
+  //       acc[k as keyof KProps] = false;
+  //       return acc;
+  //     }, {} as typeof prev);
+  //     return { ...newState, [key]: isOpen };
+  //   });
+  // };
   const handleValidation = () => {
     if (
       Object.values(selectedValues).some(
-        (value) => value === null || value === undefined || value.value === 0,
+        (value) => value === null || value === undefined || value.value === 0
       )
     ) {
       alert("Vui lòng điền đầy đủ thông tin.");
@@ -158,21 +151,22 @@ export default function InputChain() {
           <View key={key}>
             <Text style={styles.inputFieldLabel}>
               {label} (hệ số {key}:{" "}
-              <Text style={{ color: "blue", fontWeight: "bold" }}>
+              <Text style={{ color: "#FF7D00", fontWeight: "bold" }}>
                 {selectedValues[key as keyof typeof selectedValues]}
               </Text>
               )
             </Text>
-            <View style={{ borderRightWidth: 1 }}>
+            <View style={{ borderRightWidth: 2, borderColor: "#FF7D00", marginVertical: scale(10) }}>
               <List.Accordion
                 title={`Chọn điều kiện...`}
                 expanded={open[key]}
                 onPress={() => handleAccordionToggle(key)}
-                titleStyle={{ fontWeight: "bold", color: "rgba(0, 0, 0, 0.47)" }}
-                style={{ backgroundColor: "rgb(255, 255, 255)" }}
+                titleStyle={{ fontWeight: "bold", color: "rgba(184, 184, 184, 0.47)" }}
+                style={{ backgroundColor: "#151c2b" }}
               >
                 {k_opt[key as keyof typeof k_opt].map((item: any) => (
                   <List.Item
+                    style={{ backgroundColor: "#151c2b" }}
                     key={item.value}
                     title={() => (
                       <Text
@@ -180,8 +174,8 @@ export default function InputChain() {
                           fontWeight: "bold",
                           color:
                             selectedValues[key as keyof typeof selectedValues] === item.value
-                              ? "blue"
-                              : "black",
+                              ? "#FF7D00"
+                              : "rgba(184, 184, 184, 0.47)",
                         }}
                         numberOfLines={0} // Cho phép nhiều dòng
                       >
@@ -192,11 +186,13 @@ export default function InputChain() {
                     titleStyle={{
                       fontWeight: "bold",
                       color:
-                        selectedValues[key as keyof typeof selectedValues] === item.value ? "blue" : "black",
+                        selectedValues[key as keyof typeof selectedValues] === item.value
+                          ? "#FF7D00"
+                          : "rgba(184, 184, 184, 0.47)",
                     }}
                     right={() =>
                       selectedValues[key as keyof typeof selectedValues] === item.value ? (
-                        <Icon source="check" color="blue" size={20} />
+                        <Icon source="check" color="#FF7D00" size={20} />
                       ) : null
                     }
                     onPress={() => {

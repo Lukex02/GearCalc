@@ -1,7 +1,10 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
+import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import { Button } from "react-native-paper";
 import { useRouter } from "expo-router";
 import styles from "@style/MainStyle";
+import { scale } from "react-native-size-matters";
 
 export default function Home() {
   const router = useRouter();
@@ -9,26 +12,27 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <View style={styles.optionCard}>
-        <Image source={require("@img/wrench.png")} style={styles.optionCardImg} resizeMode="contain" />
-        <TouchableOpacity
+        <FontAwesome6 name="screwdriver-wrench" size={scale(100)} color="white" />
+        <Button
           style={styles.mainBtn}
+          mode="contained"
+          compact={true}
           onPress={() => router.push("/views/design/selection/DesignSelectionScreen")}
         >
           <Text style={styles.mainBtnTxt}>Bắt đầu thiết kế</Text>
-        </TouchableOpacity>
+        </Button>
       </View>
 
       <View style={styles.optionCard}>
-        <Image
-          source={{
-            uri: "https://th.bing.com/th/id/OIP.jA5Zk2-jFSqUJan7b9E42gHaHF?rs=1&pid=ImgDetMain",
-          }}
-          style={styles.optionCardImg}
-          resizeMode="contain"
-        />
-        <TouchableOpacity style={styles.mainBtn} onPress={() => router.push("/views/catalog/CatalogView")}>
+        <FontAwesome name="book" size={scale(100)} color="white" />
+        <Button
+          style={styles.mainBtn}
+          mode="contained"
+          compact={true}
+          onPress={() => router.push("/views/catalog/CatalogView")}
+        >
           <Text style={styles.mainBtnTxt}>Tra cứu catalog</Text>
-        </TouchableOpacity>
+        </Button>
       </View>
     </View>
   );

@@ -1,6 +1,7 @@
 import { View, TouchableOpacity, Text, Alert } from "react-native";
 import styles from "@style/CalcFooterStyle";
 import { Href, router } from "expo-router";
+import { Button } from "react-native-paper";
 interface CalcFooterProp {
   backTxt?: string;
   nextTxt?: string;
@@ -22,13 +23,13 @@ export default function CalcFooter({ backTxt, nextTxt, backPage, nextPage, onVal
   };
   return (
     <View style={styles.buttonFooter}>
-      <TouchableOpacity style={styles.cancelBtn} onPress={handleBackPress}>
+      <Button style={styles.cancelBtn} onPress={handleBackPress} mode="contained" compact={true}>
         <Text style={styles.cancelBtnText}>{backTxt ? backTxt : "Quay lại"}</Text>
-      </TouchableOpacity>
+      </Button>
 
-      <TouchableOpacity style={styles.continueBtn} onPress={handleContinuePress}>
+      <Button style={styles.continueBtn} onPress={handleContinuePress} mode="contained" compact={true}>
         <Text style={styles.continueBtnText}>{nextTxt ? nextTxt : "Tiếp tục"}</Text>
-      </TouchableOpacity>
+      </Button>
     </View>
   );
 }

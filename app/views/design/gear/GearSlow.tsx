@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, FlatList, Modal } from "react-native";
 import { Button } from "react-native-paper";
-import Slider from "@react-native-community/slider"; // Import Slider
-import styles from "@style/MainStyle";
+import { Slider } from "react-native-awesome-slider";
+import styles, { sliderTheme } from "@style/MainStyle";
 import CalcController from "@controller/CalcController";
 import CalcFooter from "@views/common/CalcFooter";
 import { scale, verticalScale } from "react-native-size-matters";
 import CalcFooterStyle from "@style/CalcFooterStyle";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { useSharedValue } from "react-native-reanimated";
 
 // Bảng Data cứng khi chọn luôn vật liệu là Thép 40X - Tôi cải thiện
 const materialStats = {
@@ -44,9 +46,23 @@ export default function GearSlowScreen() {
     big: { value: (materialStats.big.HB_max + materialStats.big.HB_min) / 2 },
   });
 
-  const handleSliderChangeEffi = (item: string, value: any) => {
+  const handleSliderChangeHB = (item: string, value: any) => {
     setHB({ ...HB, [item]: { value: value } });
   };
+
+  const HBProgressValues = useRef(
+    Object.keys(selectMats).map((item) => useSharedValue(HB[item as keyof typeof materialStats].value))
+  ).current;
+  const HBMinValues = useRef(
+    Object.keys(selectMats).map((item) =>
+      useSharedValue(selectMats[item as keyof typeof materialStats].HB_min!)
+    )
+  ).current;
+  const HBMaxValues = useRef(
+    Object.keys(selectMats).map((item) =>
+      useSharedValue(selectMats[item as keyof typeof materialStats].HB_max!)
+    )
+  ).current;
 
   const handleValidation = () => {
     if (HB.small.value - HB.big.value >= 10) {
@@ -81,9 +97,9 @@ export default function GearSlowScreen() {
 
   useEffect(() => {
     if (HB.small.value - HB.big.value >= 10 && HB.small.value - HB.big.value < 15) {
-      setHBColor("#ec942c");
+      setHBColor("rgb(255, 217, 0)");
     } else if (HB.small.value - HB.big.value >= 15) {
-      setHBColor("green");
+      setHBColor("rgb(20, 207, 3)");
     } else {
       setHBColor("red");
     }
@@ -108,12 +124,35 @@ export default function GearSlowScreen() {
                 <View key={index} style={styles.parameterRow}>
                   <Text style={styles.paramType}>{selectMats[item as keyof typeof materialStats].label}</Text>
                   <Slider
+                    theme={{ ...sliderTheme, minimumTrackTintColor: HBColor }}
+                    bubble={(value) => `${Math.round(value)}`}
+                    renderThumb={() => <FontAwesome6 name="diamond" size={20} color={HBColor} />}
+                    bubbleOffsetX={5}
+                    heartbeat={true}
                     style={styles.slider}
-                    minimumValue={selectMats[item as keyof typeof materialStats].HB_min}
-                    maximumValue={selectMats[item as keyof typeof materialStats].HB_max}
-                    step={5}
-                    value={HB[item as keyof typeof materialStats].value}
-                    onSlidingComplete={(value) => handleSliderChangeEffi(item, value)}
+                    forceSnapToStep={true}
+                    steps={
+                      (selectMats[item as keyof typeof materialStats].HB_max -
+                        selectMats[item as keyof typeof materialStats].HB_min) /
+                      5
+                    }
+                    renderMark={({ index }) => (
+                      <FontAwesome6
+                        name="diamond"
+                        size={10}
+                        color={
+                          selectMats[item as keyof typeof materialStats].HB_min + index * 5 <
+                          HB[item as keyof typeof materialStats].value
+                            ? HBColor
+                            : "black"
+                        }
+                      />
+                    )}
+                    containerStyle={{ borderRadius: 40 }}
+                    progress={HBProgressValues[index]}
+                    minimumValue={HBMinValues[index]}
+                    maximumValue={HBMaxValues[index]}
+                    onSlidingComplete={(value) => handleSliderChangeHB(item, value)}
                   />
                   <Text style={{ color: HBColor, fontWeight: "bold" }}>
                     HB {HB[item as keyof typeof materialStats].value}
@@ -122,7 +161,7 @@ export default function GearSlowScreen() {
               )}
             />
           )}
-          {HBColor == "#ec942c" && (
+          {HBColor == "rgb(255, 217, 0)" && (
             <Text style={{ ...styles.tableTitle, color: HBColor }}>
               Đề xuất: HB bánh nhỏ - HB bánh lớn ≥ 15
             </Text>
@@ -135,7 +174,7 @@ export default function GearSlowScreen() {
         </View>
       </View>
       <View style={styles.resultContainer}>
-        <Text style={{ fontStyle: "italic", color: "blue", fontWeight: "bold", fontSize: scale(16) }}>
+        <Text style={{ fontStyle: "italic", color: "#FF7D00", fontWeight: "bold", fontSize: scale(16) }}>
           Loại vật liệu được chọn mặc định là Thép 40X - Tôi cải thiện
         </Text>
         <Text style={{ fontStyle: "italic", color: "green", fontSize: scale(12) }}>

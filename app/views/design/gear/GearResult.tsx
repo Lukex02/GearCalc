@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import CalcFooter from "../../common/CalcFooter";
-import styles from "@style/MainStyle";
+import CalcFooter from "@views/common/CalcFooter";
+import styles, { shadows } from "@style/MainStyle";
 import CalcController from "@controller/CalcController";
 import { scale, verticalScale } from "react-native-size-matters";
 import LoadingScreen from "@views/common/LoadingScreen";
@@ -50,11 +50,9 @@ export default function GearResult() {
 
       {/* Bảng hiển thị thông số */}
       <View style={localStyles.table}>
-        <View
-          style={{ ...localStyles.row, backgroundColor: "rgba(202, 202, 202, 0.38)", borderBottomWidth: 1 }}
-        >
-          <Text style={localStyles.cell}>Thông số</Text>
-          <Text style={localStyles.cell}>Giá trị (mm)</Text>
+        <View style={{ ...localStyles.row, backgroundColor: "rgba(34, 34, 34, 0.38)", borderBottomWidth: 1 }}>
+          <Text style={{ ...localStyles.cell, color: "#FF7D00" }}>Thông số</Text>
+          <Text style={{ ...localStyles.cell, color: "#FF7D00" }}>Giá trị (mm)</Text>
         </View>
         <View style={localStyles.row}>
           <Text style={localStyles.cell}>Chiều cao răng của bánh răng lớn cấp nhanh</Text>
@@ -95,13 +93,14 @@ const localStyles = StyleSheet.create({
   table: {
     maxHeight: verticalScale(380),
     width: "100%",
-    borderWidth: 2,
-    borderColor: "white",
+    borderWidth: 1,
+    borderColor: "#FF7D00",
     borderRadius: 8,
     overflow: "hidden",
     flexDirection: "column",
     justifyContent: "space-between",
-    backgroundColor: "white",
+    backgroundColor: "#1B263B",
+    ...shadows.default,
   },
   row: {
     flexDirection: "row",
@@ -114,12 +113,13 @@ const localStyles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     fontSize: Math.round(scale(16)),
+    color: "white",
   },
   lubricationContainer: {
     alignItems: "center",
   },
   lubricationSatisfied: {
-    color: "green",
+    color: "rgb(20, 207, 3)",
     fontWeight: "bold",
     textAlign: "center",
     fontSize: Math.round(scale(20)),

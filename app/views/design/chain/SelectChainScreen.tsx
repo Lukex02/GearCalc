@@ -7,6 +7,8 @@ import LoadingScreen from "@views/common/LoadingScreen";
 import CalculatedChain, { SelectedChain } from "@models/Chain";
 import ChainController from "@controller/ChainController";
 import { Avatar } from "react-native-paper";
+import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import { scale } from "react-native-size-matters";
 
 export default function SelectChainScreen() {
   const calcController = CalcController.getInstance();
@@ -51,7 +53,7 @@ export default function SelectChainScreen() {
       <View style={styles.resultContainer}>
         <Text style={styles.resultText}>
           Công suất tính toán:{" "}
-          <Text style={{ color: "green", fontWeight: "bold" }}>{calcPower.toFixed(3)}</Text> kW
+          <Text style={{ color: "rgb(20, 207, 3)", fontWeight: "bold" }}>{calcPower.toFixed(3)}</Text> kW
         </Text>
       </View>
       {/* Danh sách thiết kế xích */}
@@ -64,46 +66,42 @@ export default function SelectChainScreen() {
             <Text style={styles.noDataWarn}>Không có thiết kế xích thỏa mãn điều kiện!</Text>
           )}
           <FlatList
-            // contentContainerStyle={{ flex: 1 }}
             data={chainList}
             keyExtractor={(item) => item.CHAIN_ID}
             renderItem={({ item, index }) => (
               <TouchableOpacity style={styles.selectItem} onPress={() => handleSelectChain(item)}>
-                <Image source={require("@img/wrench.png")} style={styles.selectImage} resizeMode="contain" />
+                <FontAwesome name="chain" size={scale(50)} color="#FF7D00" />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.selectName}>Loại {index + 1}</Text>
                   <Text style={styles.selectDetails}>
-                    Bước xích: <Text style={{ color: "blue", fontWeight: "bold" }}>{item.Step_p} mm</Text>
+                    Bước xích: <Text style={{ color: "#FF7D00", fontWeight: "bold" }}>{item.Step_p} mm</Text>
                   </Text>
                   <Text style={styles.selectDetails}>
                     Công suất cho phép [P]:{" "}
-                    <Text style={{ color: "green", fontWeight: "bold" }}>{item.P_max} kW</Text>
+                    <Text style={{ color: "rgb(20, 207, 3)", fontWeight: "bold" }}>{item.P_max} kW</Text>
                   </Text>
                   <Text style={styles.selectDetails}>
-                    Đường kính chốt: <Text style={{ color: "blue", fontWeight: "bold" }}>{item.d_c} mm</Text>
+                    Đường kính chốt:{" "}
+                    <Text style={{ color: "#FF7D00", fontWeight: "bold" }}>{item.d_c} mm</Text>
                   </Text>
                   <Text style={styles.selectDetails}>
-                    Chiều dài ống: <Text style={{ color: "blue", fontWeight: "bold" }}>{item.B} mm</Text>
+                    Chiều dài ống: <Text style={{ color: "#FF7D00", fontWeight: "bold" }}>{item.B} mm</Text>
                   </Text>
                   <Text style={styles.selectDetails}>
-                    Tải trọng phá hỏng: <Text style={{ color: "blue", fontWeight: "bold" }}>{item.Q} kN</Text>
+                    Tải trọng phá hỏng:{" "}
+                    <Text style={{ color: "#FF7D00", fontWeight: "bold" }}>{item.Q} kN</Text>
                   </Text>
                   <Text style={styles.selectDetails}>
                     Khối lượng 1 mét xích q:{" "}
-                    <Text style={{ color: "blue", fontWeight: "bold" }}>{item.q_p} kg</Text>
+                    <Text style={{ color: "#FF7D00", fontWeight: "bold" }}>{item.q_p} kg</Text>
                   </Text>
                   <Text style={styles.selectDetails}>
                     Diện tích chiếu bản lề:{" "}
-                    <Text style={{ color: "blue", fontWeight: "bold" }}>{item.A} mm2</Text>
+                    <Text style={{ color: "#FF7D00", fontWeight: "bold" }}>{item.A} mm2</Text>
                   </Text>
                 </View>
                 {selectedChain?.CHAIN_ID === item.CHAIN_ID && (
-                  <Avatar.Icon
-                    icon="check-decagram"
-                    size={60}
-                    color="green"
-                    style={{ backgroundColor: "white" }}
-                  />
+                  <FontAwesome5 name="check" size={24} color="rgb(20, 207, 3)" />
                 )}
               </TouchableOpacity>
             )}

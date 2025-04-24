@@ -6,7 +6,9 @@ import EngineController from "@controller/EngineController";
 import { SelectedEngine } from "@models/EngineModel";
 import CalcFooter from "@views/common/CalcFooter";
 import LoadingScreen from "@views/common/LoadingScreen";
-import { Avatar, Icon } from "react-native-paper";
+// import { Avatar, Icon } from "react-native-paper";
+import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
+import { scale } from "react-native-size-matters";
 
 export default function SelectEngineScreen() {
   const calcController = CalcController.getInstance();
@@ -54,11 +56,11 @@ export default function SelectEngineScreen() {
       <View style={styles.resultContainer}>
         <Text style={styles.resultText}>
           Công suất cần thiết:{" "}
-          <Text style={{ color: "green", fontWeight: "bold" }}>{requiredPower.toFixed(3)}</Text> kW
+          <Text style={{ color: "rgb(20, 207, 3)", fontWeight: "bold" }}>{requiredPower.toFixed(3)}</Text> kW
         </Text>
         <Text style={styles.resultText}>
           Tốc độ quay cần thiết:{" "}
-          <Text style={{ color: "green", fontWeight: "bold" }}>{requiredSpeed.toFixed(0)}</Text> rpm
+          <Text style={{ color: "rgb(20, 207, 3)", fontWeight: "bold" }}>{requiredSpeed.toFixed(0)}</Text> rpm
         </Text>
       </View>
       {/* Danh sách động cơ */}
@@ -76,15 +78,16 @@ export default function SelectEngineScreen() {
             keyExtractor={(item) => item.M_ID}
             renderItem={({ item }) => (
               <TouchableOpacity style={styles.selectItem} onPress={() => handleSelectEngine(item)}>
-                <Image source={require("@img/wrench.png")} style={styles.selectImage} resizeMode="contain" />
+                <MaterialCommunityIcons name="engine" size={scale(50)} color="#FF7D00" />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.selectName}>{item.name}</Text>
                   <Text style={styles.selectDetails}>
-                    Công suất: <Text style={{ color: "green", fontWeight: "bold" }}>{item.power} kW</Text>
+                    Công suất:{" "}
+                    <Text style={{ color: "rgb(20, 207, 3)", fontWeight: "bold" }}>{item.power} kW</Text>
                   </Text>
                   <Text style={styles.selectDetails}>
                     Tốc độ vòng quay:{" "}
-                    <Text style={{ color: "green", fontWeight: "bold" }}>{item.n_t} rpm</Text>{" "}
+                    <Text style={{ color: "rgb(20, 207, 3)", fontWeight: "bold" }}>{item.n_t} rpm</Text>{" "}
                   </Text>
                   <Text style={styles.selectDetails}>Hệ số công suất: {item.eng_effi} %</Text>
                   <Text style={styles.selectDetails}>Hiệu suất động cơ: {item.H}</Text>
@@ -92,12 +95,7 @@ export default function SelectEngineScreen() {
                   <Text style={styles.selectDetails}>Hệ số momen tối đa: {item.T_max_T_dn} / T_dn</Text>
                 </View>
                 {selectedEngine?.M_ID === item.M_ID && (
-                  <Avatar.Icon
-                    icon="check-decagram"
-                    size={60}
-                    color="green"
-                    style={{ backgroundColor: "white" }}
-                  />
+                  <FontAwesome5 name="check" size={24} color="rgb(20, 207, 3)" />
                 )}
               </TouchableOpacity>
             )}

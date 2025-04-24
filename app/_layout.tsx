@@ -8,8 +8,8 @@ export default function RootLayout() {
     <PaperProvider>
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: "#9CF2D4" },
-          headerTintColor: "Black",
+          headerStyle: { backgroundColor: "#415A77" },
+          headerTintColor: "white",
           headerTitleStyle: styles.navTitle,
           headerTitleAlign: "center",
           headerBackTitle: "Quay lại",
@@ -17,7 +17,10 @@ export default function RootLayout() {
         }}
       >
         {/* Auth Flow */}
-        <Stack.Screen name="index" options={{ title: "GEARCALC", headerRight: () => null }} />
+        <Stack.Screen
+          name="index"
+          options={{ title: "GEARCALC", headerRight: () => null, headerLeft: () => null }}
+        />
         <Stack.Screen name="views/auth/Login" options={{ title: "Đăng nhập", headerRight: () => null }} />
         <Stack.Screen name="views/auth/Register" options={{ title: "Đăng ký", headerRight: () => null }} />
 
@@ -27,7 +30,7 @@ export default function RootLayout() {
           name="views/account/AccountScreen"
           options={{ title: "Tài khoản", headerRight: () => null }}
         />
-        <Stack.Screen name="views/catalog/CatalogView" options={{ title: "Danh mục" }} />
+        <Stack.Screen name="views/catalog/CatalogView" options={{ title: "Catalog" }} />
         <Stack.Screen name="views/catalog/ComponentView" options={{ title: "Chi tiết" }} />
 
         {/* Design Flow */}

@@ -4,27 +4,34 @@ import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 export const shadows = {
   default: Platform.select({
     ios: {
-      boxShadowColor: "#000",
+      boxShadowColor: "black",
       boxShadowOffset: { width: 5, height: 5 },
-      boxShadowOpacity: 0.25,
+      boxShadowOpacity: 0.3,
       boxShadowRadius: 10,
     },
     android: {
       elevation: 5,
     },
     web: {
-      shadowColor: "#000",
+      shadowColor: "black",
       shadowOffset: { width: 5, height: 5 },
-      shadowOpacity: 0.25,
+      shadowOpacity: 0.3,
       shadowRadius: 10,
     },
   }),
 };
-
+export const sliderTheme = {
+  disableMinTrackTintColor: "#FF7D00",
+  maximumTrackTintColor: "gray",
+  minimumTrackTintColor: "#FF7D00",
+  bubbleBackgroundColor: "#FF7D00",
+  heartbeatColor: "rgb(54, 35, 122)",
+  bubbleTextColor: "black",
+};
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#9FD8E6",
+    backgroundColor: "#141928",
     paddingHorizontal: Math.round(scale(30)),
     paddingVertical: verticalScale(20),
     justifyContent: "space-between",
@@ -32,7 +39,7 @@ export default StyleSheet.create({
   },
   containerCentered: {
     flex: 1,
-    backgroundColor: "#9FD8E6",
+    backgroundColor: "#141928",
     paddingHorizontal: Math.round(scale(30)),
     paddingVertical: verticalScale(20),
     justifyContent: "center",
@@ -45,13 +52,14 @@ export default StyleSheet.create({
     alignSelf: "center",
   },
   welcomeTitle: {
+    color: "white",
     textAlign: "center",
     fontSize: Math.round(scale(30)),
     fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: 2,
     textShadow: {
-      color: "black",
+      color: "white",
       offset: { width: 1, height: 1 },
       radius: 4,
     },
@@ -60,14 +68,14 @@ export default StyleSheet.create({
 
   // ! Option button
   mainBtn: {
-    backgroundColor: "#9CF2D4",
+    backgroundColor: "#FF7D00",
     borderRadius: 10,
     width: Math.round(scale(170)),
     alignSelf: "center",
     ...shadows.default,
   },
   mainBtnTxt: {
-    color: "#000",
+    color: "black",
     paddingVertical: Math.round(scale(10)),
     paddingHorizontal: Math.round(scale(10)),
     fontWeight: "bold",
@@ -75,28 +83,28 @@ export default StyleSheet.create({
     textAlign: "center",
   },
   mainBtnMedium: {
-    backgroundColor: "#9CF2D4",
+    backgroundColor: "#FF7D00",
     borderRadius: 10,
     width: Math.round(scale(120)),
     alignSelf: "center",
     ...shadows.default,
   },
   mainBtnMediumTxt: {
-    color: "#000",
+    color: "black",
     paddingVertical: Math.round(scale(10)),
     fontWeight: "bold",
     fontSize: Math.round(scale(14)),
     textAlign: "center",
   },
   mainBtnSmall: {
-    backgroundColor: "#9CF2D4",
+    backgroundColor: "#FF7D00",
     borderRadius: 10,
     width: Math.round(scale(100)),
     alignSelf: "center",
     ...shadows.default,
   },
   mainBtnSmallTxt: {
-    color: "#000",
+    color: "black",
     fontWeight: "bold",
     fontSize: Math.round(scale(12)),
     textAlign: "center",
@@ -113,7 +121,7 @@ export default StyleSheet.create({
     height: verticalScale(300),
     width: Math.round(scale(300)),
     justifyContent: "space-around",
-    backgroundColor: "white",
+    backgroundColor: "#1B263B",
     padding: Math.round(scale(10)),
     borderRadius: 10,
     ...shadows.default,
@@ -127,6 +135,7 @@ export default StyleSheet.create({
     flex: 1,
     textAlign: "center",
     fontWeight: "bold",
+    color: "white",
   },
   historyRow: {
     flexDirection: "row",
@@ -138,6 +147,7 @@ export default StyleSheet.create({
     margin: "auto",
     textAlign: "center",
     padding: Math.round(scale(10)),
+    color: "white",
   },
   historySpecBtn: {
     flex: 1,
@@ -145,7 +155,6 @@ export default StyleSheet.create({
     borderRadius: 6,
     margin: "auto",
     marginHorizontal: Math.round(scale(5)),
-    padding: Math.round(scale(5)),
     alignItems: "center",
     width: "100%",
     ...shadows.default,
@@ -155,7 +164,6 @@ export default StyleSheet.create({
     backgroundColor: "rgb(0, 255, 98)",
     borderRadius: 6,
     margin: "auto",
-    padding: Math.round(scale(5)),
     marginHorizontal: Math.round(scale(5)),
     alignItems: "center",
     width: "100%",
@@ -164,23 +172,18 @@ export default StyleSheet.create({
 
   // Option styles
   optionCard: {
-    backgroundColor: "#fff",
+    backgroundColor: "#1B263B",
     padding: Math.round(scale(20)),
-    borderRadius: 10,
+    borderRadius: 20,
     alignItems: "center",
     ...shadows.default,
-    height: Math.round(scale(250)),
-    width: Math.round(scale(250)),
+    height: Math.round(scale(230)),
+    width: Math.round(scale(230)),
     marginTop: "auto",
     marginBottom: "auto",
     justifyContent: "space-around", // Căn đều khoảng cách giữa các phần tử
   },
-  optionCardImg: {
-    width: Math.round(scale(120)),
-    height: verticalScale(120),
-  },
   header: {
-    backgroundColor: "#9FD8E6",
     justifyContent: "center",
     alignItems: "center",
     marginTop: Math.round(scale(10)),
@@ -189,7 +192,7 @@ export default StyleSheet.create({
     textAlign: "center",
     fontSize: Math.round(scale(24)),
     fontWeight: "bold",
-    color: "#black",
+    color: "white",
     textTransform: "uppercase",
     letterSpacing: 2,
     fontFamily: "monospace",
@@ -204,17 +207,17 @@ export default StyleSheet.create({
   gridItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "#1B263B",
     padding: Math.round(scale(20)),
     borderRadius: 8,
     ...shadows.default,
-    width: "90%",
+    width: "100%",
     marginBottom: verticalScale(20),
   },
   gridImage: {
-    width: Math.round(scale(80)),
-    height: Math.round(scale(80)),
-    marginRight: Math.round(scale(30)),
+    // width: Math.round(scale(80)),
+    // height: Math.round(scale(80)),
+    marginRight: Math.round(scale(20)),
   },
   gridTextContainer: {
     flex: 1,
@@ -223,10 +226,11 @@ export default StyleSheet.create({
   title: {
     fontSize: Math.round(scale(14)),
     fontWeight: "bold",
-    color: "#black",
+    color: "#FF7D00",
     textTransform: "uppercase",
   },
   subtitle: {
+    color: "white",
     fontSize: Math.round(scale(12)),
   },
 
@@ -250,7 +254,7 @@ export default StyleSheet.create({
   componentTitle: {
     fontSize: Math.round(scale(32)),
     fontWeight: "bold",
-    color: "#000",
+    color: "white",
     textTransform: "uppercase",
     letterSpacing: 2,
     textAlign: "center",
@@ -266,11 +270,13 @@ export default StyleSheet.create({
   },
   componentInfo: {
     fontSize: Math.round(scale(16)),
-    color: "#000",
+    color: "#FF7D00",
+    fontWeight: "bold",
     marginBottom: Math.round(scale(10)),
   },
   componentInfoName: {
-    fontWeight: "bold",
+    fontWeight: "normal",
+    color: "white",
   },
 
   // ! Dropdown
@@ -280,11 +286,14 @@ export default StyleSheet.create({
     width: "100%",
     alignSelf: "center",
     justifyContent: "flex-start",
-    backgroundColor: "#fff",
+    backgroundColor: "#1B263B",
     borderRadius: 10,
+    borderColor: "transparent",
     ...shadows.default,
   },
   dropdownContainer: {
+    backgroundColor: "#1B263B",
+    borderColor: "transparent",
     width: "100%",
     alignSelf: "center",
   },
@@ -295,22 +304,21 @@ export default StyleSheet.create({
     height: verticalScale(300),
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#000",
+    borderColor: "#FF7D00",
   },
 
   // Design Page Style
   pageTitle: {
     fontSize: Math.round(scale(20)),
     fontWeight: "bold",
-    color: "#black",
+    color: "white",
     textTransform: "uppercase",
     textAlign: "center",
   },
   inputContainer: {
     maxHeight: verticalScale(450),
-    // marginVertical: Math.round(scale(20)),
     width: "100%",
-    backgroundColor: "white",
+    backgroundColor: "#1B263B",
     padding: Math.round(scale(20)),
     borderRadius: 10,
     ...shadows.default,
@@ -318,31 +326,31 @@ export default StyleSheet.create({
   inputFieldLabel: {
     fontSize: Math.round(scale(14)),
     fontStyle: "italic",
-    color: "#000",
+    color: "rgb(173, 181, 201)",
     marginBottom: Math.round(scale(5)),
   },
   inputField: {
     borderWidth: 2,
-    borderColor: "#ccc",
+    borderColor: "#FF7D00",
     borderRadius: 5,
     marginBottom: Math.round(scale(5)),
     paddingHorizontal: Math.round(scale(10)),
     paddingVertical: Math.round(scale(4)),
     fontSize: Math.round(scale(14)),
-    color: "#000",
+    color: "white",
   },
 
   // Adjustment Page Style
   resultContainer: {
     width: "100%",
-    backgroundColor: "white",
+    backgroundColor: "#1B263B",
     padding: Math.round(scale(20)),
     borderRadius: 10,
     ...shadows.default,
   },
   resultText: {
     fontSize: Math.round(scale(16)),
-    color: "#000",
+    color: "white",
   },
   colContainer: {
     maxHeight: verticalScale(300),
@@ -350,7 +358,7 @@ export default StyleSheet.create({
     justifyContent: "space-around",
     width: "100%",
     padding: Math.round(scale(10)),
-    backgroundColor: "white",
+    backgroundColor: "#1B263B",
     borderRadius: 10,
     ...shadows.default,
   },
@@ -363,23 +371,24 @@ export default StyleSheet.create({
     justifyContent: "space-around",
   },
   tableTitle: {
+    color: "white",
     fontSize: Math.round(scale(16)),
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: verticalScale(5),
+    marginBottom: verticalScale(10),
   },
   parameterRow: {
     marginBottom: Math.round(scale(5)),
     marginHorizontal: Math.round(scale(15)),
   },
   paramType: {
+    color: "white",
     fontSize: Math.round(scale(14)),
     fontStyle: "italic",
   },
   slider: {
     width: "80%",
-    height: verticalScale(20),
-    margin: "auto",
+    marginVertical: verticalScale(20),
   },
 
   // Select Stuff Page Style
@@ -389,36 +398,32 @@ export default StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     width: "100%",
-    backgroundColor: "white",
+    backgroundColor: "#1B263B",
     padding: Math.round(scale(10)),
     borderRadius: 10,
     ...shadows.default,
   },
   selectItem: {
     marginBottom: Math.round(scale(10)),
-    padding: Math.round(scale(5)),
-    backgroundColor: "#f4f4f4",
+    padding: Math.round(scale(10)),
+    backgroundColor: "#1f2b42",
     borderRadius: 8,
     flexDirection: "row",
     alignItems: "center",
-  },
-  selectImage: {
-    width: Math.round(scale(60)),
-    height: verticalScale(60),
-    marginRight: Math.round(scale(10)),
-    borderRadius: 8,
+    gap: scale(10),
   },
   selectName: {
     fontSize: Math.round(scale(16)),
     fontWeight: "bold",
-    color: "#000",
+    color: "#FF7D00",
     marginBottom: verticalScale(10),
   },
   selectDetails: {
     fontSize: Math.round(scale(12)),
-    color: "#555",
+    color: "white",
   },
   noDataWarn: {
+    color: "white",
     textAlign: "center",
     fontWeight: "bold",
     fontSize: Math.round(scale(24)),
@@ -428,7 +433,7 @@ export default StyleSheet.create({
     // maxHeight: verticalScale(450),
     width: "100%",
     justifyContent: "space-between",
-    backgroundColor: "white",
+    backgroundColor: "#1B263B",
     padding: Math.round(scale(10)),
     borderRadius: 10,
     flexDirection: "row",
@@ -438,7 +443,7 @@ export default StyleSheet.create({
     maxHeight: verticalScale(450),
     width: "100%",
     justifyContent: "space-between",
-    backgroundColor: "white",
+    backgroundColor: "#1B263B",
     padding: Math.round(scale(10)),
     borderRadius: 10,
     flexDirection: "column",
@@ -451,6 +456,7 @@ export default StyleSheet.create({
     justifyContent: "space-around",
     alignSelf: "center",
     borderRightWidth: 2,
+    borderColor: "white",
   },
   specHeaderCell: {
     flex: 1,
@@ -459,6 +465,7 @@ export default StyleSheet.create({
     alignContent: "center",
     textAlign: "center",
     fontWeight: "bold",
+    color: "#FF7D00",
   },
   specHeaderRow: {
     flexDirection: "row",
@@ -467,6 +474,7 @@ export default StyleSheet.create({
     paddingVertical: Math.round(scale(10)),
     alignSelf: "center",
     borderBottomWidth: 2,
+    borderColor: "white",
   },
   specHeaderRowCell: {
     flexWrap: "wrap",
@@ -474,6 +482,7 @@ export default StyleSheet.create({
     alignContent: "center",
     textAlign: "center",
     fontWeight: "bold",
+    color: "white",
   },
   specCol: {
     flex: 1,
@@ -481,7 +490,8 @@ export default StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-around",
     borderRightWidth: 1,
-    borderBottomColor: "black",
+    borderBottomColor: "white",
+    borderRightColor: "white",
   },
   specRow: {
     flex: 1,
@@ -489,7 +499,7 @@ export default StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     borderBottomWidth: 1,
-    borderBottomColor: "black",
+    borderBottomColor: "white",
   },
   specCell: {
     flex: 1,
@@ -498,6 +508,8 @@ export default StyleSheet.create({
     alignContent: "center",
     textAlign: "center",
     borderTopWidth: 1,
+    borderColor: "white",
+    color: "white",
   },
   specCellRow: {
     flex: 1,
@@ -506,6 +518,7 @@ export default StyleSheet.create({
     paddingVertical: Math.round(scale(15)),
     alignContent: "center",
     textAlign: "center",
+    color: "white",
   },
   overlay: {
     flex: 1,
@@ -514,7 +527,7 @@ export default StyleSheet.create({
     alignItems: "center",
   },
   modalView: {
-    backgroundColor: "white",
+    backgroundColor: "#1B263B",
     padding: Math.round(scale(20)),
     borderRadius: 10,
     width: "90%",

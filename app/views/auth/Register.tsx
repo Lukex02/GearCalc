@@ -29,6 +29,10 @@ export default function RegisterScreen() {
   if (loading) return <LoadingScreen />;
 
   const handleRegister = () => {
+    if (username.length < 3 || email.length < 3 || password.length < 6) {
+      alert("Vui lòng nhập tên người dùng, email và mật khẩu ít nhất 3 ký tự");
+      return;
+    }
     console.log("Đăng ký với:", { username, email, password });
     DatabaseService.signUp(username, email, password).then((res) => {
       if (res.error) {

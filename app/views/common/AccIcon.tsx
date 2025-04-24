@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { router } from "expo-router";
 import { View } from "react-native";
 import { Menu, IconButton } from "react-native-paper";
@@ -23,8 +23,9 @@ export default function AccIcon() {
 
   const handleAccount = () => {
     closeMenu();
-    router.push("/views/account/AccountScreen"); // Chuyển đến trang AccountScreen
+    router.push("/views/account/AccountScreen");
   };
+
   return (
     <Menu
       style={styles.menu}
@@ -32,24 +33,25 @@ export default function AccIcon() {
       visible={menuVisible}
       onDismiss={closeMenu}
       anchorPosition="bottom"
-      anchor={<IconButton icon="account-circle" iconColor="black" onPress={openMenu} size={30} />}
+      anchor={<IconButton icon="account-circle" iconColor="white" onPress={openMenu} size={30} />}
     >
       {login ? (
-        <View>
+        <Fragment>
           <Menu.Item onPress={handleAccount} title="Tài khoản" titleStyle={styles.menuItem} />
           <Menu.Item
             onPress={() => {
               closeMenu();
               DatabaseService.logOut();
               setLogin(false);
+              router.push("../../");
               alert("Đăng xuất thành công");
             }}
             title="Đăng xuất"
             titleStyle={styles.menuItem}
           />
-        </View>
+        </Fragment>
       ) : (
-        <View>
+        <Fragment>
           <Menu.Item
             onPress={() => {
               closeMenu();
@@ -66,7 +68,7 @@ export default function AccIcon() {
             title="Đăng ký"
             titleStyle={styles.menuItem}
           />
-        </View>
+        </Fragment>
       )}
     </Menu>
   );

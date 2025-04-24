@@ -3,6 +3,7 @@ import { View, Text, Image } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import styles from "@style/MainStyle";
 import CalcFooter from "@views/common/CalcFooter";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default function DesignSelectionScreen() {
   const [gearBoxType, setGearBoxType] = useState<any>("");
@@ -58,6 +59,9 @@ export default function DesignSelectionScreen() {
         style={styles.dropdown}
         dropDownContainerStyle={styles.dropdownContainer}
         placeholder="Loại hộp giảm tốc"
+        textStyle={{ color: "white" }}
+        ArrowDownIconComponent={() => <FontAwesome name="chevron-down" size={15} color="gray" />}
+        ArrowUpIconComponent={() => <FontAwesome name="chevron-up" size={15} color="gray" />}
       />
       <Text style={styles.pageTitle}>Bản vẽ thiết kế</Text>
       <Image style={styles.designImgPreview} source={image ? image : undefined} resizeMode="stretch" />

@@ -50,7 +50,7 @@ export default function SelectEngineScreen() {
           <View style={styles.specCol}>
             <Text style={styles.specHeaderCell}>P{"\n"}(kW)</Text>
             {post_p.map((p, index) => (
-              <Text key={index} style={{ ...styles.specHeaderCell, fontWeight: "normal" }}>
+              <Text key={index} style={{ ...styles.specHeaderCell, fontWeight: "normal", color: "white" }}>
                 {p.toFixed(4)}
               </Text>
             ))}
@@ -60,7 +60,7 @@ export default function SelectEngineScreen() {
           <View style={styles.specCol}>
             <Text style={styles.specHeaderCell}>n{"\n"}(rpm)</Text>
             {post_n.map((n, index) => (
-              <Text key={index} style={{ ...styles.specHeaderCell, fontWeight: "normal" }}>
+              <Text key={index} style={{ ...styles.specHeaderCell, fontWeight: "normal", color: "white" }}>
                 {n.toFixed(2)}
               </Text>
             ))}
@@ -70,7 +70,7 @@ export default function SelectEngineScreen() {
           <View style={styles.specCol}>
             <Text style={styles.specHeaderCell}>T{"\n"}(N.mm)</Text>
             {post_T.map((T, index) => (
-              <Text key={index} style={{ ...styles.specHeaderCell, fontWeight: "normal" }}>
+              <Text key={index} style={{ ...styles.specHeaderCell, fontWeight: "normal", color: "white" }}>
                 {T.toFixed(4)}
               </Text>
             ))}

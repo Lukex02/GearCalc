@@ -3,6 +3,7 @@ import styles from "@style/MainStyle";
 import { useState, useEffect } from "react";
 import DatabaseService from "@services/DatabaseService";
 import LoadingScreen from "@views/common/LoadingScreen";
+import { Button } from "react-native-paper";
 
 // Mẫu user data, vì chưa có history để làm
 const history_prop = [
@@ -19,7 +20,7 @@ export default function AccountScreen() {
   useEffect(() => {
     DatabaseService.getUser().then((user) => {
       // Uncomment and check log to see user data
-      console.log(user);
+      // console.log(user);
       setUser(user);
       setLoading(false);
     });
@@ -39,15 +40,15 @@ export default function AccountScreen() {
               resizeMode="contain"
             ></Image>
             <View style={styles.tableContainerPad10}>
-              <Text>
-                <Text style={{ fontWeight: "bold" }}>Tên người dùng: </Text>
-                {user.user_metadata.name}
+              <Text style={{ color: "white" }}>
+                <Text style={{ fontWeight: "bold" }}>Tên: </Text>
+                {user.user_metadata.username}
               </Text>
-              <Text>
+              <Text style={{ color: "white" }}>
                 <Text style={{ fontWeight: "bold" }}>Email: </Text>
                 {user.email}
               </Text>
-              <Text>
+              <Text style={{ color: "white" }}>
                 <Text style={{ fontWeight: "bold" }}>Số điện thoại: </Text>
                 {user.phone}
               </Text>
@@ -72,18 +73,20 @@ export default function AccountScreen() {
                 <View style={styles.historyRow}>
                   <Text style={styles.historyCell}>{item.design}</Text>
                   <Text style={styles.historyCell}>{item.time}</Text>
-                  <TouchableOpacity
+                  <Button
                     style={styles.historySpecBtn}
-                    onPress={() => console.log("TouchableOpacity Pressed")}
+                    mode="contained"
+                    onPress={() => console.log("Button Pressed")}
                   >
                     <Text>Hiện</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
+                  </Button>
+                  <Button
+                    mode="contained"
                     style={styles.historyPrintBtn}
-                    onPress={() => console.log("TouchableOpacity Pressed")}
+                    onPress={() => console.log("Button Pressed")}
                   >
                     <Text>In</Text>
-                  </TouchableOpacity>
+                  </Button>
                 </View>
               )}
             />
