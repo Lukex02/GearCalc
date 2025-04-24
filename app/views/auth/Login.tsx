@@ -1,11 +1,11 @@
 import React, { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { Alert, View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import styles from "../style/MainStyle";
-import calcFooterStyle from "../style/CalcFooterStyle";
-import LoadingScreen from "./LoadingScreen";
-import DatabaseService from "../services/DatabaseService";
+import styles from "@style/MainStyle";
+import calcFooterStyle from "@style/CalcFooterStyle";
+import LoadingScreen from "@views/common/LoadingScreen";
+import DatabaseService from "@services/DatabaseService";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -19,8 +19,7 @@ export default function LoginScreen() {
         const authStatus = await DatabaseService.checkAuth();
         if (authStatus) {
           alert("User đã đăng nhập");
-          Alert.alert("Thông báo", "User đã đăng nhập");
-          router.push("./Home");
+          router.push("/views/Home");
         }
         setLoading(false);
       }
@@ -37,8 +36,7 @@ export default function LoginScreen() {
         console.log("Error:", res.error);
       } else {
         alert("Đăng nhập thành công");
-        Alert.alert("Thông báo", "Đăng nhập thành công");
-        router.push("./Home");
+        router.push("/views/Home");
       }
     });
   };
@@ -60,7 +58,7 @@ export default function LoginScreen() {
       </View>
 
       <View style={calcFooterStyle.buttonFooter}>
-        <TouchableOpacity style={styles.mainBtnMedium} onPress={() => router.push("/src/views/Register")}>
+        <TouchableOpacity style={styles.mainBtnMedium} onPress={() => router.push("/views/auth/Register")}>
           <Text style={styles.mainBtnMediumTxt}>ĐĂNG KÍ</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.mainBtnMedium} onPress={handleLogin}>

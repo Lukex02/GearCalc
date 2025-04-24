@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { View, TouchableOpacity, Image, Text, ScrollView } from "react-native";
-import { IconButton, Menu } from "react-native-paper";
+import { FAB, Portal } from "react-native-paper";
 import { useRouter } from "expo-router";
-import styles from "../style/MainStyle";
-import LoadingScreen from "./LoadingScreen";
-import DatabaseService from "../services/DatabaseService";
+import styles from "@style/MainStyle";
+import LoadingScreen from "@views/common/LoadingScreen";
+import DatabaseService from "@services/DatabaseService";
 const CatalogPage = () => {
   const [loading, setLoading] = useState(true);
-  const [menuVisible, setMenuVisible] = useState(false);
   const [catalog, setCatalog] = useState<any[]>([]); // full catalog
   const [filteredCatalog, setFilteredCatalog] = useState<any[]>([]); // filtered catalog
+  const [state, setState] = useState({ open: false });
+  const onStateChange = ({ open }: { open: boolean }) => setState({ open });
+  const { open } = state;
   const router = useRouter();
-
-  const openMenu = () => setMenuVisible(true);
-  const closeMenu = () => setMenuVisible(false);
 
   const printChainType = (type: string) => {
     switch (type) {
@@ -27,7 +26,7 @@ const CatalogPage = () => {
   };
 
   const filterByType = (type: string) => {
-    closeMenu(); // always close menu on filter select
+    // closeMenu(); // always close menu on filter select
     if (!type || type === "all") {
       setFilteredCatalog(catalog);
     } else {
@@ -58,7 +57,7 @@ const CatalogPage = () => {
               style={styles.gridItem}
               onPress={() => router.push({ pathname: "./ComponentView", params: item })}
             >
-              <Image source={require("../img/wrench.png")} style={styles.gridImage} resizeMode="contain" />
+              <Image source={require("@img/wrench.png")} style={styles.gridImage} resizeMode="contain" />
 
               {item.type === "Engine" && (
                 <View style={styles.gridTextContainer}>
@@ -81,24 +80,52 @@ const CatalogPage = () => {
           ))}
         </ScrollView>
       )}
-      <View style={{ alignSelf: "flex-start" }}>
-        <Menu
-          style={styles.menu}
-          contentStyle={styles.menuContent}
-          visible={menuVisible}
-          onDismiss={closeMenu}
-          anchorPosition="top"
-          anchor={<IconButton icon="menu" iconColor="white" size={30} style={{ backgroundColor: "black" }} onPress={openMenu} />}
-        >
-          <Menu.Item onPress={() => filterByType("all")} title="Tất cả" titleStyle={styles.menuItem} />
-          <Menu.Item onPress={() => filterByType("Engine")} title="Động cơ điện" titleStyle={styles.menuItem} />
-          <Menu.Item onPress={() => {}} title="Bánh răng trụ" titleStyle={styles.menuItem} />
-          <Menu.Item onPress={() => filterByType("chain")} title="Xích" titleStyle={styles.menuItem} />
-          <Menu.Item onPress={() => {}} title="Dây đai" titleStyle={styles.menuItem} />
-          <Menu.Item onPress={() => {}} title="Ổ lăn" titleStyle={styles.menuItem} />
-          <Menu.Item onPress={() => {}} title="Then" titleStyle={styles.menuItem} />
-        </Menu>
-      </View>
+      {/* <View style={{ alignSelf: "flex-start" }}> */}
+      <FAB.Group
+        open={open}
+        visible
+        fabStyle={{ backgroundColor: "black" }}
+        color="#9CF2D4"
+        icon={open ? "backup-restore" : "menu"}
+        actions={[
+          {
+            icon: "cogs",
+            label: "Ổ lăn",
+            color: "black",
+            style: { backgroundColor: "#9CF2D4" },
+            onPress: () => {},
+          },
+          {
+            icon: "cogs",
+            label: "Then",
+            color: "black",
+            style: { backgroundColor: "#9CF2D4" },
+            onPress: () => {},
+          },
+          {
+            icon: "cogs",
+            label: "Xích",
+            color: "black",
+            style: { backgroundColor: "#9CF2D4" },
+            onPress: () => filterByType("chain"),
+          },
+          {
+            icon: "engine",
+            label: "Động cơ điện",
+            color: "black",
+            style: { backgroundColor: "#9CF2D4" },
+            onPress: () => filterByType("Engine"),
+          },
+          {
+            icon: "select-all",
+            label: "Tất cả",
+            color: "black",
+            style: { backgroundColor: "#9CF2D4" },
+            onPress: () => filterByType("all"),
+          },
+        ]}
+        onStateChange={onStateChange}
+      />
     </View>
   );
 };

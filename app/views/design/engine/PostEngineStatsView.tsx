@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { View, Text, Alert } from "react-native";
+import { View, Text } from "react-native";
 import { useRouter } from "expo-router"; // Khởi tạo router từ expo-router
-import CalcController from "../controller/CalcController";
-import CalcFooter from "./CalcFooter";
-import styles from "../style/MainStyle";
+import CalcController from "@controller/CalcController";
+import CalcFooter from "@/views/common/CalcFooter";
+import styles from "@style/MainStyle";
 
 export default function SelectEngineScreen() {
   const router = useRouter(); // Khởi tạo router để điều hướng
@@ -17,14 +17,14 @@ export default function SelectEngineScreen() {
 
   useEffect(() => {
     if (postStats) {
-      setPostP(postStats.newEngineShaftStats.p);
-      setPostN(postStats.newEngineShaftStats.n);
-      setPostT(postStats.newEngineShaftStats.T);
-      setPostU(postStats.rearrangedRatio);
+      // console.log(postStats);
+      setPostP(postStats.distShaft.p);
+      setPostN(postStats.distShaft.n);
+      setPostT(postStats.distShaft.T);
+      setPostU(postStats.ratio);
       setIsValid(true);
     } else {
       alert("Động cơ không phù hợp, hãy chọn động cơ khác");
-      Alert.alert("Thông báo", "Động cơ không phù hợp, hãy chọn động cơ khác");
       router.back();
     }
   }, []);
@@ -49,42 +49,50 @@ export default function SelectEngineScreen() {
           {/* Cột Công suất trên các trục p */}
           <View style={styles.specCol}>
             <Text style={styles.specHeaderCell}>P{"\n"}(kW)</Text>
-            {/* {dummyP.map((p) => ( */}
-            {post_p.map((p) => (
-              <Text style={styles.specCell}>{p.toFixed(4)}</Text>
+            {post_p.map((p, index) => (
+              <Text key={index} style={{ ...styles.specHeaderCell, fontWeight: "normal" }}>
+                {p.toFixed(4)}
+              </Text>
             ))}
           </View>
 
           {/* Cột Tốc độ quay trên các trục n */}
           <View style={styles.specCol}>
             <Text style={styles.specHeaderCell}>n{"\n"}(rpm)</Text>
-            {/* {dummyN.map((n) => ( */}
-            {post_n.map((n) => (
-              <Text style={styles.specCell}>{n.toFixed(2)}</Text>
+            {post_n.map((n, index) => (
+              <Text key={index} style={{ ...styles.specHeaderCell, fontWeight: "normal" }}>
+                {n.toFixed(2)}
+              </Text>
             ))}
           </View>
 
           {/* Cột Momen xoắn trên các trục T */}
           <View style={styles.specCol}>
             <Text style={styles.specHeaderCell}>T{"\n"}(N.mm)</Text>
-            {/* {dummyT.map((T) => ( */}
-            {post_T.map((T) => (
-              <Text style={styles.specCell}>{T.toFixed(4)}</Text>
+            {post_T.map((T, index) => (
+              <Text key={index} style={{ ...styles.specHeaderCell, fontWeight: "normal" }}>
+                {T.toFixed(4)}
+              </Text>
             ))}
           </View>
 
           {/* Cột Tỷ số truyền u */}
           <View style={styles.specCol}>
             <Text style={styles.specHeaderCell}>u{"\n"}</Text>
-            {/* {dummyU.map((u) => ( */}
-            {post_u.map((u) => (
-              <Text style={styles.specCell}>{u.value.toFixed(2)}</Text>
+            {post_u.map((u, index) => (
+              <Text key={index} style={styles.specCell}>
+                {u.value.toFixed(2)}
+              </Text>
             ))}
           </View>
         </View>
 
         {/* Truyền địa chỉ trang xích tiếp theo ở đây */}
+<<<<<<< HEAD:app/src/views/PostEngineStatsView.tsx
         <CalcFooter nextPage={"/src/views/SelectChainScreen"} />
+=======
+        <CalcFooter nextPage="/views/design/chain/InputChain" />
+>>>>>>> 9db9c24259e272d52e89672639874b02f36cbaa5:app/views/design/engine/PostEngineStatsView.tsx
       </View>
     );
   }

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import styles from "../style/MainStyle";
-import CalcController from "../controller/CalcController";
-import CalcFooter from "./CalcFooter";
+import { View, Text, TextInput, ScrollView } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import styles from "@style/MainStyle";
+import CalcController from "@controller/CalcController";
+import CalcFooter from "@views/common/CalcFooter";
 
 export default function InputDataScreen() {
   const { gearBoxType } = useLocalSearchParams();
-  const router = useRouter();
   const calcController = new CalcController(Array.isArray(gearBoxType) ? gearBoxType[0] : gearBoxType);
 
   // Các state cho giá trị nhập liệu
@@ -20,6 +19,7 @@ export default function InputDataScreen() {
   const [p, setP] = useState(0); // Bước xích
   const [z, setZ] = useState(0); // Số răng xích
   const [D, setD] = useState(0); // Đường kính tang
+  const [L, setL] = useState(0); // Thời gian phục vụ
 
   // Dữ liệu mặc định cho GearBox1 và GearBox2
   useEffect(() => {
@@ -31,6 +31,7 @@ export default function InputDataScreen() {
       setT2(0.5);
       setT2Duration(15);
       setD(550);
+      setL(9);
     } else if (gearBoxType === "GearBox2") {
       setF(17000);
       setV(0.5);
@@ -40,17 +41,20 @@ export default function InputDataScreen() {
       setT2Duration(15);
       setP(120);
       setZ(15);
+      setL(9);
     }
   }, [gearBoxType]);
 
   const handleValidation = () => {
-    if (!F || !v || !T1 || !t1 || !T2 || !t2 || (gearBoxType === "GearBox2" && (!p || !z))) {
+    if (!F || !v || !T1 || !t1 || !T2 || !t2 || !L || (gearBoxType === "GearBox2" && (!p || !z))) {
       alert("Vui lòng điền đầy đủ thông tin.");
-      Alert.alert("Thiếu thông tin", "Vui lòng điền đầy đủ thông tin.");
       return false;
     } else {
-      if (gearBoxType === "GearBox1") calcController.calcEngineBase(F, v, T1, t1, T2, t2, { D });
-      if (gearBoxType === "GearBox2") calcController.calcEngineBase(F, v, T1, t1, T2, t2, { z, p });
+      // if (gearBoxType === "GearBox1") calcController.calcEngineBase(F, v, T1, t1, T2, t2, { D });
+      // if (gearBoxType === "GearBox2") calcController.calcEngineBase(F, v, T1, t1, T2, t2, { z, p });
+      if (gearBoxType === "GearBox1") calcController.initDesign(F, v, T1, t1, T2, t2, L, { D });
+      if (gearBoxType === "GearBox2") calcController.initDesign(F, v, T1, t1, T2, t2, L, { z, p });
+      calcController.calcEngineBase();
       return true;
     }
   };
@@ -110,6 +114,14 @@ export default function InputDataScreen() {
           onChangeText={(text) => setT2Duration(Number(text))}
         />
 
+        <Text style={styles.inputFieldLabel}>Thời gian phục vụ L (năm):</Text>
+        <TextInput
+          style={styles.inputField}
+          keyboardType="decimal-pad"
+          value={L.toString()}
+          onChangeText={(text) => setL(Number(text))}
+        />
+
         {/* Hiển thị trường P và Z nếu chọn GearBox2 */}
         {gearBoxType === "GearBox2" && (
           <>
@@ -144,7 +156,10 @@ export default function InputDataScreen() {
           </>
         )}
       </ScrollView>
-      <CalcFooter nextPage={"/src/views/AdjustEngineParametersScreen"} onValidate={handleValidation} />
+      <CalcFooter
+        nextPage={"/views/design/engine/AdjustEngineParametersScreen"}
+        onValidate={handleValidation}
+      />
     </View>
   );
 }

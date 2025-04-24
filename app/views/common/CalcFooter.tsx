@@ -1,5 +1,5 @@
 import { View, TouchableOpacity, Text, Alert } from "react-native";
-import styles from "../style/CalcFooterStyle";
+import styles from "@style/CalcFooterStyle";
 import { Href, router } from "expo-router";
 interface CalcFooterProp {
   backTxt?: string;

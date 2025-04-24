@@ -1,13 +1,14 @@
-import { StyleSheet, Platform } from "react-native";
+import { StyleSheet, Platform, TextStyle, ViewStyle } from "react-native";
+import { black } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 export const shadows = {
   default: Platform.select({
     ios: {
-      shadowColor: "#000",
-      shadowOffset: { width: 5, height: 5 },
-      shadowOpacity: 0.25,
-      shadowRadius: 10,
+      boxShadowColor: "#000",
+      boxShadowOffset: { width: 5, height: 5 },
+      boxShadowOpacity: 0.25,
+      boxShadowRadius: 10,
     },
     android: {
       elevation: 5,
@@ -24,8 +25,8 @@ export const shadows = {
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#9FD8E6",
-    paddingHorizontal: scale(30),
+    backgroundColor: "#0D1B2A",
+    paddingHorizontal: Math.round(scale(30)),
     paddingVertical: verticalScale(20),
     justifyContent: "space-between",
     alignItems: "center",
@@ -33,79 +34,96 @@ export default StyleSheet.create({
   containerCentered: {
     flex: 1,
     backgroundColor: "#9FD8E6",
-    paddingHorizontal: scale(30),
+    paddingHorizontal: Math.round(scale(30)),
     paddingVertical: verticalScale(20),
     justifyContent: "center",
-    gap: scale(40),
+    gap: Math.round(scale(40)),
     alignItems: "center",
   },
   indexBackground: {
-    width: scale(300),
+    width: Math.round(scale(300)),
     height: verticalScale(300),
     alignSelf: "center",
   },
-  overlay: {
+  welcomeTitle: {
     textAlign: "center",
-    fontSize: scale(30),
+    fontSize: Math.round(scale(30)),
     fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: 2,
-    textShadowColor: "rgba(0, 0, 0, 0.75)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 5,
+    color: "#fff",
+    marginBottom: Math.round(scale(20)),
+    textShadow: {
+      color: "white",
+      offset: { width: 1, height: 1 },
+      radius: 4,
+    },
     fontFamily: "monospace",
-  },
+  } as TextStyle,
 
   // ! Option button
   mainBtn: {
-    backgroundColor: "#9CF2D4",
-    paddingVertical: scale(10),
-    paddingHorizontal: scale(10),
+    backgroundColor: 'rgba(152, 141, 141, 0.5)',
     borderRadius: 10,
-    width: scale(170),
+    width: Math.round(scale(170)),
     alignSelf: "center",
     ...shadows.default,
   },
   mainBtnTxt: {
     color: "#000",
+    paddingVertical: Math.round(scale(10)),
+    paddingHorizontal: Math.round(scale(10)),
     fontWeight: "bold",
-    fontSize: scale(16),
+    fontSize: Math.round(scale(16)),
     textAlign: "center",
   },
   mainBtnMedium: {
     backgroundColor: "#9CF2D4",
-    paddingVertical: scale(10),
     borderRadius: 10,
-    width: scale(120),
+    width: Math.round(scale(120)),
     alignSelf: "center",
     ...shadows.default,
   },
   mainBtnMediumTxt: {
     color: "#000",
+    paddingVertical: Math.round(scale(10)),
     fontWeight: "bold",
-    fontSize: scale(14),
+    fontSize: Math.round(scale(14)),
+    textAlign: "center",
+  },
+  mainBtnSmall: {
+    backgroundColor: "#9CF2D4",
+    borderRadius: 10,
+    width: Math.round(scale(100)),
+    alignSelf: "center",
+    ...shadows.default,
+  },
+  mainBtnSmallTxt: {
+    color: "#000",
+    fontWeight: "bold",
+    fontSize: Math.round(scale(12)),
     textAlign: "center",
   },
 
   profileImg: {
-    width: scale(100),
-    height: scale(100),
-    margin: scale(10),
+    width: Math.round(scale(100)),
+    height: Math.round(scale(100)),
+    margin: Math.round(scale(10)),
     borderRadius: 8,
     ...shadows.default,
   },
   historyContainer: {
     height: verticalScale(300),
-    width: scale(300),
+    width: Math.round(scale(300)),
     justifyContent: "space-around",
     backgroundColor: "white",
-    padding: scale(10),
+    padding: Math.round(scale(10)),
     borderRadius: 10,
     ...shadows.default,
   },
   historyHeader: {
     flexDirection: "row",
-    paddingBottom: scale(10),
+    paddingBottom: Math.round(scale(10)),
     borderBottomWidth: 2,
   },
   historyHeaderCell: {
@@ -122,15 +140,15 @@ export default StyleSheet.create({
     flex: 1,
     margin: "auto",
     textAlign: "center",
-    padding: scale(10),
+    padding: Math.round(scale(10)),
   },
   historySpecBtn: {
     flex: 1,
     backgroundColor: "rgb(0, 140, 255)",
     borderRadius: 6,
     margin: "auto",
-    marginHorizontal: scale(5),
-    padding: scale(5),
+    marginHorizontal: Math.round(scale(5)),
+    padding: Math.round(scale(5)),
     alignItems: "center",
     width: "100%",
     ...shadows.default,
@@ -140,8 +158,8 @@ export default StyleSheet.create({
     backgroundColor: "rgb(0, 255, 98)",
     borderRadius: 6,
     margin: "auto",
-    padding: scale(5),
-    marginHorizontal: scale(5),
+    padding: Math.round(scale(5)),
+    marginHorizontal: Math.round(scale(5)),
     alignItems: "center",
     width: "100%",
     ...shadows.default,
@@ -150,36 +168,33 @@ export default StyleSheet.create({
   // Option styles
   optionCard: {
     backgroundColor: "#fff",
-    padding: scale(20),
+    padding: Math.round(scale(20)),
     borderRadius: 10,
     alignItems: "center",
     ...shadows.default,
-    height: scale(250),
-    width: scale(250),
+    height: Math.round(scale(250)),
+    width: Math.round(scale(250)),
     marginTop: "auto",
     marginBottom: "auto",
     justifyContent: "space-around", // Căn đều khoảng cách giữa các phần tử
   },
   optionCardImg: {
-    width: scale(120),
+    width: Math.round(scale(120)),
     height: verticalScale(120),
   },
   header: {
     backgroundColor: "#9FD8E6",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: scale(10),
+    marginTop: Math.round(scale(10)),
   },
   navTitle: {
     textAlign: "center",
-    fontSize: scale(24),
+    fontSize: Math.round(scale(24)),
     fontWeight: "bold",
-    color: "#black",
+    color: "#ccc",
     textTransform: "uppercase",
     letterSpacing: 2,
-    textShadowColor: "rgba(0, 0, 0, 0.75)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 5,
     fontFamily: "monospace",
   },
 
@@ -187,34 +202,35 @@ export default StyleSheet.create({
   gridContainer: {
     flex: 1,
     marginVertical: verticalScale(5),
+    width: "100%",
   },
   gridItem: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "white",
-    padding: scale(20),
+    padding: Math.round(scale(20)),
     borderRadius: 8,
     ...shadows.default,
     width: "90%",
     marginBottom: verticalScale(20),
   },
   gridImage: {
-    width: scale(80),
-    height: scale(80),
-    marginRight: scale(30),
+    width: Math.round(scale(80)),
+    height: Math.round(scale(80)),
+    marginRight: Math.round(scale(30)),
   },
   gridTextContainer: {
     flex: 1,
   },
 
   title: {
-    fontSize: scale(14),
+    fontSize: Math.round(scale(14)),
     fontWeight: "bold",
     color: "#black",
     textTransform: "uppercase",
   },
   subtitle: {
-    fontSize: scale(12),
+    fontSize: Math.round(scale(12)),
   },
 
   // ! Menu
@@ -229,13 +245,13 @@ export default StyleSheet.create({
   menuItem: {
     color: "black",
     fontWeight: "bold",
-    fontSize: scale(14),
+    fontSize: Math.round(scale(14)),
     textAlign: "left",
   },
 
   // ! Component
   componentTitle: {
-    fontSize: scale(32),
+    fontSize: Math.round(scale(32)),
     fontWeight: "bold",
     color: "#000",
     textTransform: "uppercase",
@@ -243,18 +259,18 @@ export default StyleSheet.create({
     textAlign: "center",
   },
   componentImg: {
-    width: scale(200),
-    height: scale(200),
-    marginBottom: scale(10),
+    width: Math.round(scale(200)),
+    height: Math.round(scale(200)),
+    marginBottom: Math.round(scale(10)),
   },
   componentInfoContainer: {
     alignSelf: "flex-start",
-    padding: scale(20),
+    padding: Math.round(scale(20)),
   },
   componentInfo: {
-    fontSize: scale(16),
+    fontSize: Math.round(scale(16)),
     color: "#000",
-    marginBottom: scale(10),
+    marginBottom: Math.round(scale(10)),
   },
   componentInfoName: {
     fontWeight: "bold",
@@ -264,7 +280,7 @@ export default StyleSheet.create({
   dropdown: {
     flex: 1,
     marginVertical: verticalScale(5),
-    width: scale(300),
+    width: "100%",
     alignSelf: "center",
     justifyContent: "flex-start",
     backgroundColor: "#fff",
@@ -272,13 +288,13 @@ export default StyleSheet.create({
     ...shadows.default,
   },
   dropdownContainer: {
-    width: scale(300),
+    width: "100%",
     alignSelf: "center",
   },
 
   // Design image preview
   designImgPreview: {
-    width: scale(300),
+    width: "100%",
     height: verticalScale(300),
     borderRadius: 10,
     borderWidth: 1,
@@ -287,56 +303,65 @@ export default StyleSheet.create({
 
   // Design Page Style
   pageTitle: {
-    fontSize: scale(20),
+    fontSize: Math.round(scale(20)),
     fontWeight: "bold",
-    color: "#black",
+    color: "white",
     textTransform: "uppercase",
     textAlign: "center",
+    backgroundColor: "#0D1B2A",
+  },
+  pageTitle1: {
+    fontSize: Math.round(scale(20)),
+    fontWeight: "bold",
+    color: "Black",
+    textTransform: "uppercase",
+    textAlign: "center",
+    backgroundColor: "white",
   },
   inputContainer: {
     maxHeight: verticalScale(450),
-    // marginVertical: scale(20),
-    width: scale(300),
+    // marginVertical: Math.round(scale(20)),
+    width: "100%",
     backgroundColor: "white",
-    padding: scale(20),
+    padding: Math.round(scale(20)),
     borderRadius: 10,
     ...shadows.default,
   },
   inputFieldLabel: {
-    fontSize: scale(14),
+    fontSize: Math.round(scale(14)),
     fontStyle: "italic",
     color: "#000",
+    marginBottom: Math.round(scale(5)),
   },
   inputField: {
-    marginTop: scale(5),
     borderWidth: 2,
     borderColor: "#ccc",
     borderRadius: 5,
-    marginBottom: scale(5),
-    paddingHorizontal: scale(10),
-    paddingVertical: scale(4),
-    fontSize: scale(14),
+    marginBottom: Math.round(scale(5)),
+    paddingHorizontal: Math.round(scale(10)),
+    paddingVertical: Math.round(scale(4)),
+    fontSize: Math.round(scale(14)),
     color: "#000",
   },
 
   // Adjustment Page Style
   resultContainer: {
-    width: scale(300),
+    width: "100%",
     backgroundColor: "white",
-    padding: scale(20),
+    padding: Math.round(scale(20)),
     borderRadius: 10,
     ...shadows.default,
   },
   resultText: {
-    fontSize: scale(16),
+    fontSize: Math.round(scale(16)),
     color: "#000",
   },
   colContainer: {
     maxHeight: verticalScale(300),
     flexDirection: "row",
     justifyContent: "space-around",
-    width: scale(300),
-    padding: scale(10),
+    width: "100%",
+    padding: Math.round(scale(10)),
     backgroundColor: "white",
     borderRadius: 10,
     ...shadows.default,
@@ -346,21 +371,21 @@ export default StyleSheet.create({
   },
   tableContainerPad10: {
     flex: 1,
-    padding: scale(10),
+    padding: Math.round(scale(10)),
     justifyContent: "space-around",
   },
   tableTitle: {
-    fontSize: scale(16),
+    fontSize: Math.round(scale(16)),
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: verticalScale(5),
   },
   parameterRow: {
-    marginBottom: scale(5),
-    marginHorizontal: scale(15),
+    marginBottom: Math.round(scale(5)),
+    marginHorizontal: Math.round(scale(15)),
   },
   paramType: {
-    fontSize: scale(14),
+    fontSize: Math.round(scale(14)),
     fontStyle: "italic",
   },
   slider: {
@@ -369,55 +394,66 @@ export default StyleSheet.create({
     margin: "auto",
   },
 
-  // Select Engine Page Style
-  engineContainer: {
+  // Select Stuff Page Style
+  selectContainer: {
     flex: 1,
     maxHeight: verticalScale(300),
     flexDirection: "row",
     justifyContent: "space-around",
     width: "100%",
     backgroundColor: "white",
-    padding: scale(10),
+    padding: Math.round(scale(10)),
     borderRadius: 10,
     ...shadows.default,
   },
-  engineItem: {
-    marginBottom: scale(10),
-    padding: scale(5),
+  selectItem: {
+    marginBottom: Math.round(scale(10)),
+    padding: Math.round(scale(5)),
     backgroundColor: "#f4f4f4",
     borderRadius: 8,
     flexDirection: "row",
     alignItems: "center",
   },
-  engineImage: {
-    width: scale(60),
+  selectImage: {
+    width: Math.round(scale(60)),
     height: verticalScale(60),
-    marginRight: scale(10),
+    marginRight: Math.round(scale(10)),
     borderRadius: 8,
   },
-  engineName: {
-    fontSize: scale(16),
+  selectName: {
+    fontSize: Math.round(scale(16)),
     fontWeight: "bold",
     color: "#000",
     marginBottom: verticalScale(10),
   },
-  engineDetails: {
-    fontSize: scale(12),
+  selectDetails: {
+    fontSize: Math.round(scale(12)),
     color: "#555",
   },
   noDataWarn: {
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: scale(24),
+    fontSize: Math.round(scale(24)),
   },
   specContainer: {
-    height: verticalScale(400),
-    width: scale(300),
+    height: verticalScale(450),
+    // maxHeight: verticalScale(450),
+    width: "100%",
     justifyContent: "space-between",
     backgroundColor: "white",
-    padding: scale(10),
+    padding: Math.round(scale(10)),
     borderRadius: 10,
     flexDirection: "row",
+    ...shadows.default,
+  },
+  specContainerRow: {
+    maxHeight: verticalScale(450),
+    width: "100%",
+    justifyContent: "space-between",
+    backgroundColor: "white",
+    padding: Math.round(scale(10)),
+    borderRadius: 10,
+    flexDirection: "column",
     ...shadows.default,
   },
   specHeader: {
@@ -431,25 +467,73 @@ export default StyleSheet.create({
   specHeaderCell: {
     flex: 1,
     flexWrap: "wrap",
-    paddingHorizontal: scale(5),
+    paddingHorizontal: Math.round(scale(5)),
     alignContent: "center",
     textAlign: "center",
     fontWeight: "bold",
   },
+  specHeaderRow: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-around",
+    paddingVertical: Math.round(scale(10)),
+    alignSelf: "center",
+    borderBottomWidth: 2,
+    
+  },
+  specHeaderRowCell: {
+    flexWrap: "wrap",
+    paddingHorizontal: Math.round(scale(5)),
+    alignContent: "center",
+    textAlign: "center",
+    fontWeight: "bold",
+    
+  },
   specCol: {
     flex: 1,
-    height: "100%",
+    // height: "100%",
     flexDirection: "column",
     justifyContent: "space-around",
     borderRightWidth: 1,
     borderBottomColor: "black",
   },
+  specRow: {
+    flex: 1,
+    height: "100%",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    borderBottomWidth: 1,
+    borderBottomColor: "black",
+  },
   specCell: {
     flex: 1,
     flexWrap: "wrap",
-    paddingHorizontal: scale(5),
+    paddingHorizontal: Math.round(scale(5)),
     alignContent: "center",
     textAlign: "center",
     borderTopWidth: 1,
   },
+  specCellRow: {
+    flex: 1,
+    flexWrap: "wrap",
+    paddingHorizontal: Math.round(scale(5)),
+    paddingVertical: Math.round(scale(15)),
+    alignContent: "center",
+    textAlign: "center",
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)", // mờ nền
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    backgroundColor: "white",
+    padding: Math.round(scale(20)),
+    borderRadius: 10,
+    width: "90%",
+    alignItems: "center",
+    rowGap: Math.round(scale(20)),
+  },
+  
 });

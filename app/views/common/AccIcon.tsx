@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { router } from "expo-router";
-import { View, Alert } from "react-native";
+import { View } from "react-native";
 import { Menu, IconButton } from "react-native-paper";
-import styles from "../style/MainStyle";
-import DatabaseService from "../services/DatabaseService";
+import styles from "@style/MainStyle";
+import DatabaseService from "@services/DatabaseService";
 
 export default function AccIcon() {
   const [login, setLogin] = useState(false);
@@ -23,7 +23,7 @@ export default function AccIcon() {
 
   const handleAccount = () => {
     closeMenu();
-    router.push("/src/views/AccountScreen"); // Chuyển đến trang AccountScreen
+    router.push("/views/account/AccountScreen"); // Chuyển đến trang AccountScreen
   };
   return (
     <Menu
@@ -43,7 +43,6 @@ export default function AccIcon() {
               DatabaseService.logOut();
               setLogin(false);
               alert("Đăng xuất thành công");
-              Alert.alert("Thông báo", "Đăng xuất thành công");
             }}
             title="Đăng xuất"
             titleStyle={styles.menuItem}
@@ -54,7 +53,7 @@ export default function AccIcon() {
           <Menu.Item
             onPress={() => {
               closeMenu();
-              router.push("/src/views/Login");
+              router.push("/views/auth/Login");
             }}
             title="Đăng nhập"
             titleStyle={styles.menuItem}
@@ -62,7 +61,7 @@ export default function AccIcon() {
           <Menu.Item
             onPress={() => {
               closeMenu();
-              router.push("/src/views/Register");
+              router.push("/views/auth/Register");
             }}
             title="Đăng ký"
             titleStyle={styles.menuItem}
