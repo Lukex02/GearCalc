@@ -16,6 +16,7 @@ export default function RootLayout() {
             headerTitleAlign: "center",
             headerBackTitle: "Quay lại",
             headerRight: AccIcon,
+            animation: "slide_from_right",
           }}
         >
           {/* Auth Flow */}
@@ -50,26 +51,23 @@ export default function RootLayout() {
           />
 
           {/* Engine Flow */}
-          <Stack.Screen name="views/design/engine/SelectEngineScreen" options={{ title: "Chọn động cơ" }} />
-          <Stack.Screen name="views/design/engine/InputDataScreen" options={{ title: "Nhập thông số" }} />
+          <Stack.Screen name="views/design/engine/SelectEngineScreen" options={{ title: "Động cơ" }} />
+          <Stack.Screen name="views/design/engine/InputDataScreen" options={{ title: "Động cơ" }} />
           <Stack.Screen
             name="views/design/engine/AdjustEngineParametersScreen"
-            options={{ title: "Điều chỉnh" }}
+            options={{ title: "Động cơ" }}
           />
-          <Stack.Screen
-            name="views/design/engine/PostEngineStatsView"
-            options={{ title: "Kết quả động cơ" }}
-          />
+          <Stack.Screen name="views/design/engine/PostEngineStatsView" options={{ title: "Động cơ" }} />
 
           {/* Chain Flow */}
-          <Stack.Screen name="views/design/chain/InputChain" options={{ title: "Nhập thông số xích" }} />
-          <Stack.Screen name="views/design/chain/SelectChainScreen" options={{ title: "Chọn xích" }} />
-          <Stack.Screen name="views/design/chain/PostChainStatsView" options={{ title: "Kết quả xích" }} />
+          <Stack.Screen name="views/design/chain/InputChain" options={{ title: "Xích" }} />
+          <Stack.Screen name="views/design/chain/SelectChainScreen" options={{ title: "Xích" }} />
+          <Stack.Screen name="views/design/chain/PostChainStatsView" options={{ title: "Xích" }} />
 
           {/* Gear Flow */}
-          <Stack.Screen name="views/design/gear/GearFast" options={{ title: "Bánh răng nhanh" }} />
-          <Stack.Screen name="views/design/gear/GearSlow" options={{ title: "Bánh răng chậm" }} />
-          <Stack.Screen name="views/design/gear/GearResult" options={{ title: "Kết quả bánh răng" }} />
+          <Stack.Screen name="views/design/gear/GearFast" options={{ title: "Bánh răng" }} />
+          <Stack.Screen name="views/design/gear/GearSlow" options={{ title: "Bánh răng" }} />
+          <Stack.Screen name="views/design/gear/GearResult" options={{ title: "Bánh răng" }} />
         </Stack>
       </PaperProvider>
     </GestureHandlerRootView>

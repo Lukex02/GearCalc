@@ -4,7 +4,6 @@ import { useRouter } from "expo-router";
 import styles from "@style/MainStyle";
 import { Button } from "react-native-paper";
 import ExitOnBack from "@views/common/ExitOnBack";
-import { scale } from "react-native-size-matters";
 
 const FullscreenImageBackground: React.FC = () => {
   const router = useRouter();

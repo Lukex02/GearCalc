@@ -3,7 +3,7 @@ import styles from "@style/MainStyle";
 import { useState, useEffect } from "react";
 import DatabaseService from "@services/DatabaseService";
 import LoadingScreen from "@views/common/LoadingScreen";
-import { Button } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 
 // Mẫu user data, vì chưa có history để làm
 const history_prop = [
@@ -73,20 +73,25 @@ export default function AccountScreen() {
                 <View style={styles.historyRow}>
                   <Text style={styles.historyCell}>{item.design}</Text>
                   <Text style={styles.historyCell}>{item.time}</Text>
-                  <Button
+                  <IconButton
+                    icon="file-search"
+                    iconColor="rgb(0, 119, 255)"
+                    size={20}
                     style={styles.historySpecBtn}
-                    mode="contained"
-                    onPress={() => console.log("Button Pressed")}
+                    onPress={() => console.log("IconButton Pressed")}
                   >
-                    <Text>Hiện</Text>
-                  </Button>
-                  <Button
-                    mode="contained"
+                    {/* <Text>Hiện</Text> */}
+                  </IconButton>
+
+                  <IconButton
+                    icon="printer"
+                    size={20}
+                    iconColor="rgb(0, 255, 98)"
                     style={styles.historyPrintBtn}
-                    onPress={() => console.log("Button Pressed")}
+                    onPress={() => console.log("IconButton Pressed")}
                   >
-                    <Text>In</Text>
-                  </Button>
+                    {/* <Text>In</Text> */}
+                  </IconButton>
                 </View>
               )}
             />
