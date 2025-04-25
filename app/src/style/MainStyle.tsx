@@ -25,7 +25,6 @@ export const sliderTheme = {
   maximumTrackTintColor: "gray",
   minimumTrackTintColor: "#FF7D00",
   bubbleBackgroundColor: "#FF7D00",
-  heartbeatColor: "rgb(54, 35, 122)",
   bubbleTextColor: "black",
 };
 export default StyleSheet.create({

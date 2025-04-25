@@ -45,7 +45,13 @@ export default function LoginScreen() {
     <View style={styles.containerCentered}>
       <View style={styles.inputContainer}>
         <Text style={styles.inputFieldLabel}>Email</Text>
-        <TextInput style={styles.inputField} value={email} onChangeText={setEmail} placeholder="Nhập Email" />
+        <TextInput
+          style={styles.inputField}
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Nhập Email"
+          placeholderTextColor={"rgb(165, 165, 165)"}
+        />
 
         <Text style={styles.inputFieldLabel}>Mật khẩu</Text>
         <TextInput
@@ -53,6 +59,7 @@ export default function LoginScreen() {
           value={password}
           onChangeText={setPassword}
           placeholder="Nhập mật khẩu"
+          placeholderTextColor={"rgb(165, 165, 165)"}
           secureTextEntry
         />
       </View>

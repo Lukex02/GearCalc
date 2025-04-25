@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, FlatList, Modal } from "react-native";
-import { Button } from "react-native-paper";
+import { View, Text, FlatList, ScrollView } from "react-native";
+import { Button, Modal, Portal } from "react-native-paper";
 import { Slider } from "react-native-awesome-slider";
 import styles, { sliderTheme } from "@style/MainStyle";
 import CalcController from "@controller/CalcController";
@@ -9,6 +9,7 @@ import { scale, verticalScale } from "react-native-size-matters";
 import CalcFooterStyle from "@style/CalcFooterStyle";
 import { useSharedValue } from "react-native-reanimated";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Bảng Data cứng khi chọn luôn vật liệu là Thép 40X - Tôi cải thiện
 const materialStats = {
@@ -112,6 +113,7 @@ export default function GearFastScreen() {
       <View style={styles.header}>
         <Text style={styles.pageTitle}>Chọn thông số vật liệu</Text>
       </View>
+
       <View style={styles.colContainer}>
         {/* Chọn độ rắn cho cặp bánh răng bộ truyền cấp nhanh */}
         <View style={styles.tableContainer}>
@@ -128,7 +130,6 @@ export default function GearFastScreen() {
                     bubble={(value) => `${Math.round(value)}`}
                     renderThumb={() => <FontAwesome6 name="diamond" size={20} color={HBColor} />}
                     bubbleOffsetX={5}
-                    heartbeat={true}
                     style={styles.slider}
                     forceSnapToStep={true}
                     steps={
@@ -154,6 +155,7 @@ export default function GearFastScreen() {
                     maximumValue={HBMaxValues[index]}
                     onSlidingComplete={(value) => handleSliderChangeHB(item, value)}
                   />
+
                   <Text style={{ color: HBColor, fontWeight: "bold" }}>
                     HB {HB[item as keyof typeof materialStats].value}
                   </Text>
@@ -173,6 +175,7 @@ export default function GearFastScreen() {
           )}
         </View>
       </View>
+
       <View style={styles.resultContainer}>
         <Text style={{ fontStyle: "italic", color: "#FF7D00", fontWeight: "bold", fontSize: scale(16) }}>
           Loại vật liệu được chọn mặc định là Thép 40X - Tôi cải thiện
@@ -186,19 +189,11 @@ export default function GearFastScreen() {
       </View>
 
       <CalcFooter onValidate={handleValidation} nextPage="/views/design/gear/GearSlow" />
-      <Modal
-        transparent={true}
-        onRequestClose={() => setModalVisible(false)}
-        animationType="fade"
-        visible={modalVisible}
-        onDismiss={() => setModalVisible(false)}
-        style={styles.overlay}
-      >
-        <View style={styles.overlay}>
+      <Portal>
+        <Modal visible={modalVisible} onDismiss={() => setModalVisible(false)} style={styles.overlay}>
           <View style={styles.modalView}>
             <Text style={styles.pageTitle}>Thông số bộ truyền bánh răng cấp nhanh</Text>
             <View style={{ height: Math.floor(verticalScale(400)) }}>
-              {/* Header */}
               <View style={styles.specHeaderRow}>
                 <Text style={styles.specHeaderCell}>Thông số</Text>
                 <Text style={styles.specHeaderCell}>Giá trị</Text>
@@ -234,8 +229,8 @@ export default function GearFastScreen() {
               </Button>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      </Portal>
     </View>
   );
 }

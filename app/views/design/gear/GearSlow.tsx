@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, FlatList, Modal } from "react-native";
-import { Button } from "react-native-paper";
+import { View, Text, FlatList } from "react-native";
+import { Button, Modal, Portal } from "react-native-paper";
 import { Slider } from "react-native-awesome-slider";
 import styles, { sliderTheme } from "@style/MainStyle";
 import CalcController from "@controller/CalcController";
@@ -9,6 +9,7 @@ import { scale, verticalScale } from "react-native-size-matters";
 import CalcFooterStyle from "@style/CalcFooterStyle";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useSharedValue } from "react-native-reanimated";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Bảng Data cứng khi chọn luôn vật liệu là Thép 40X - Tôi cải thiện
 const materialStats = {
@@ -123,37 +124,38 @@ export default function GearSlowScreen() {
               renderItem={({ item, index }) => (
                 <View key={index} style={styles.parameterRow}>
                   <Text style={styles.paramType}>{selectMats[item as keyof typeof materialStats].label}</Text>
-                  <Slider
-                    theme={{ ...sliderTheme, minimumTrackTintColor: HBColor }}
-                    bubble={(value) => `${Math.round(value)}`}
-                    renderThumb={() => <FontAwesome6 name="diamond" size={20} color={HBColor} />}
-                    bubbleOffsetX={5}
-                    heartbeat={true}
-                    style={styles.slider}
-                    forceSnapToStep={true}
-                    steps={
-                      (selectMats[item as keyof typeof materialStats].HB_max -
-                        selectMats[item as keyof typeof materialStats].HB_min) /
-                      5
-                    }
-                    renderMark={({ index }) => (
-                      <FontAwesome6
-                        name="diamond"
-                        size={10}
-                        color={
-                          selectMats[item as keyof typeof materialStats].HB_min + index * 5 <
-                          HB[item as keyof typeof materialStats].value
-                            ? HBColor
-                            : "black"
-                        }
-                      />
-                    )}
-                    containerStyle={{ borderRadius: 40 }}
-                    progress={HBProgressValues[index]}
-                    minimumValue={HBMinValues[index]}
-                    maximumValue={HBMaxValues[index]}
-                    onSlidingComplete={(value) => handleSliderChangeHB(item, value)}
-                  />
+                  <GestureHandlerRootView>
+                    <Slider
+                      theme={{ ...sliderTheme, minimumTrackTintColor: HBColor }}
+                      bubble={(value) => `${Math.round(value)}`}
+                      renderThumb={() => <FontAwesome6 name="diamond" size={20} color={HBColor} />}
+                      bubbleOffsetX={5}
+                      style={styles.slider}
+                      forceSnapToStep={true}
+                      steps={
+                        (selectMats[item as keyof typeof materialStats].HB_max -
+                          selectMats[item as keyof typeof materialStats].HB_min) /
+                        5
+                      }
+                      renderMark={({ index }) => (
+                        <FontAwesome6
+                          name="diamond"
+                          size={10}
+                          color={
+                            selectMats[item as keyof typeof materialStats].HB_min + index * 5 <
+                            HB[item as keyof typeof materialStats].value
+                              ? HBColor
+                              : "black"
+                          }
+                        />
+                      )}
+                      containerStyle={{ borderRadius: 40 }}
+                      progress={HBProgressValues[index]}
+                      minimumValue={HBMinValues[index]}
+                      maximumValue={HBMaxValues[index]}
+                      onSlidingComplete={(value) => handleSliderChangeHB(item, value)}
+                    />
+                  </GestureHandlerRootView>
                   <Text style={{ color: HBColor, fontWeight: "bold" }}>
                     HB {HB[item as keyof typeof materialStats].value}
                   </Text>
@@ -186,15 +188,8 @@ export default function GearSlowScreen() {
       </View>
 
       <CalcFooter onValidate={handleValidation} nextPage="/views/design/gear/GearResult" />
-      <Modal
-        transparent={true}
-        onRequestClose={() => setModalVisible(false)}
-        animationType="fade"
-        visible={modalVisible}
-        onDismiss={() => setModalVisible(false)}
-        style={styles.overlay}
-      >
-        <View style={styles.overlay}>
+      <Portal>
+        <Modal visible={modalVisible} onDismiss={() => setModalVisible(false)} style={styles.overlay}>
           <View style={styles.modalView}>
             <Text style={styles.pageTitle}>Thông số bộ truyền bánh răng cấp nhanh</Text>
             <View style={{ height: Math.floor(verticalScale(400)) }}>
@@ -234,8 +229,8 @@ export default function GearSlowScreen() {
               </Button>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      </Portal>
     </View>
   );
 }

@@ -52,6 +52,7 @@ export default function RegisterScreen() {
           value={username}
           onChangeText={setUsername}
           placeholder="Nhập tên người dùng"
+          placeholderTextColor={"rgb(165, 165, 165)"}
         />
 
         <Text style={styles.inputFieldLabel}>Email</Text>
@@ -60,6 +61,7 @@ export default function RegisterScreen() {
           value={email}
           onChangeText={setEmail}
           placeholder="Nhập email"
+          placeholderTextColor={"rgb(165, 165, 165)"}
           keyboardType="email-address"
         />
 
@@ -69,6 +71,7 @@ export default function RegisterScreen() {
           value={password}
           onChangeText={setPassword}
           placeholder="Nhập mật khẩu"
+          placeholderTextColor={"rgb(165, 165, 165)"}
           secureTextEntry
         />
       </View>

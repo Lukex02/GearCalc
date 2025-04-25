@@ -5,12 +5,14 @@ import { Button } from "react-native-paper";
 import { useRouter } from "expo-router";
 import styles from "@style/MainStyle";
 import { scale } from "react-native-size-matters";
+import ExitOnBack from "@views/common/ExitOnBack";
 
 export default function Home() {
   const router = useRouter();
 
   return (
     <View style={styles.container}>
+      <ExitOnBack />
       <View style={styles.optionCard}>
         <FontAwesome6 name="screwdriver-wrench" size={scale(100)} color="white" />
         <Button
@@ -36,4 +38,10 @@ export default function Home() {
       </View>
     </View>
   );
+  // return (
+  //   <View>
+  //     <ExitOnBack />
+  //     <BottomNav />
+  //   </View>
+  // );
 }

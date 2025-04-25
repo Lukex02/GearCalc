@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, TouchableOpacity, FlatList } from "react-native";
-// import Slider from "@react-native-community/slider"; // Import Slider
+import { View, Text, FlatList } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSharedValue } from "react-native-reanimated";
 import { Slider } from "react-native-awesome-slider";
 import styles, { sliderTheme } from "@style/MainStyle";
@@ -43,7 +43,7 @@ export default function AdjustEngineParametersScreen() {
       (ratio.min = 1), (ratio.max = 1), (ratio.name = "khớp nối");
     }
   });
-
+  const [isSliding, setIsSliding] = useState(false);
   const [changeEffi, setChangeEffi] = useState(baseEfficiency);
   const [changeRatio, setChangeRatio] = useState(baseRatio);
   const [pCT, setPCT] = useState(calcController.getCalcEngine().p_ct);
@@ -59,12 +59,14 @@ export default function AdjustEngineParametersScreen() {
   const ratioMaxValues = useRef(baseRatio.ratio_spec.map((item) => useSharedValue(item.max!))).current;
 
   const handleSliderChangeEffi = (index: number, value: any) => {
+    setIsSliding(false);
     const newChangeEffi = [...changeEffi.n_parts_full];
     newChangeEffi[index][0].value = value;
     setChangeEffi(new Efficiency(newChangeEffi));
   };
 
   const handleSliderChangeRatio = (index: number, value: any) => {
+    setIsSliding(false);
     const newChangeRatio = [...changeRatio.ratio_spec];
     newChangeRatio[index].value = value;
     setChangeRatio(new (Object.getPrototypeOf(changeRatio).constructor)(newChangeRatio));
@@ -101,6 +103,7 @@ export default function AdjustEngineParametersScreen() {
           {changeEffi && (
             <FlatList
               data={changeEffi.n_parts_spec}
+              scrollEnabled={!isSliding}
               keyExtractor={(_, index) => index.toString()}
               renderItem={({ item, index }) => (
                 <View style={styles.parameterRow}>
@@ -112,12 +115,12 @@ export default function AdjustEngineParametersScreen() {
                     bubble={(value) => `${Math.round(value * 1000) / 1000}`}
                     renderThumb={() => <FontAwesome6 name="diamond" size={20} color="#FF7D00" />}
                     bubbleOffsetX={5}
-                    heartbeat={true}
                     style={styles.slider}
                     containerStyle={{ borderRadius: 40 }}
                     progress={effiProgressValues[index]}
                     minimumValue={effiMinValues[index]}
                     maximumValue={effiMaxValues[index]}
+                    onSlidingStart={() => setIsSliding(true)}
                     onSlidingComplete={(value) => handleSliderChangeEffi(index, value)}
                   />
                 </View>
@@ -132,6 +135,7 @@ export default function AdjustEngineParametersScreen() {
           {changeRatio && (
             <FlatList
               data={changeRatio.ratio_spec}
+              scrollEnabled={!isSliding}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item, index }) => (
                 <View style={styles.parameterRow}>
@@ -143,15 +147,14 @@ export default function AdjustEngineParametersScreen() {
                     bubble={(value) => `${Math.round(value * 10) / 10}`}
                     renderThumb={() => <FontAwesome6 name="diamond" size={20} color="#FF7D00" />}
                     bubbleOffsetX={5}
-                    heartbeat={true}
                     style={styles.slider}
                     containerStyle={{ borderRadius: 40 }}
                     progress={ratioProgressValues[index]}
                     minimumValue={ratioMinValues[index]}
                     maximumValue={ratioMaxValues[index]}
+                    onSlidingStart={() => setIsSliding(true)}
                     onSlidingComplete={(value) => handleSliderChangeRatio(index, value)}
                   />
-                  <Text style={{ color: "white" }}>{item.value.toFixed(1)}</Text>
                 </View>
               )}
             />
