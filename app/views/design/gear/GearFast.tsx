@@ -3,6 +3,7 @@ import { View, Text, FlatList, ScrollView } from "react-native";
 import { Button, Modal, Portal } from "react-native-paper";
 import { Slider } from "react-native-awesome-slider";
 import styles, { sliderTheme } from "@style/MainStyle";
+import { Colors } from "@style/Colors";
 import CalcController from "@controller/CalcController";
 import CalcFooter from "@views/common/CalcFooter";
 import { scale, verticalScale } from "react-native-size-matters";
@@ -10,6 +11,8 @@ import CalcFooterStyle from "@style/CalcFooterStyle";
 import { useSharedValue } from "react-native-reanimated";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Header from "@/views/common/Header";
+import SaveComponent from "@/views/common/SaveComponent";
 
 // Bảng Data cứng khi chọn luôn vật liệu là Thép 40X - Tôi cải thiện
 const materialStats = {
@@ -38,7 +41,7 @@ export default function GearFastScreen() {
   const calcController = CalcController.getInstance();
   const [gearSetStats, setGearSetStats] = useState({});
   const selectMats: typeof materialStats = materialStats;
-  const [HBColor, setHBColor] = useState("black");
+  const [HBColor, setHBColor] = useState(Colors.text.primary);
   const [modalVisible, setModalVisible] = useState(false);
   const [verify, setVerify] = useState(false);
 
@@ -100,7 +103,7 @@ export default function GearFastScreen() {
     if (HB.small.value - HB.big.value >= 10 && HB.small.value - HB.big.value < 15) {
       setHBColor("rgb(255, 217, 0)");
     } else if (HB.small.value - HB.big.value >= 15) {
-      setHBColor("rgb(20, 207, 3)");
+      setHBColor(Colors.text.success);
     } else {
       setHBColor("red");
     }
@@ -109,10 +112,8 @@ export default function GearFastScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.pageTitle}>Bộ truyền bánh răng cấp nhanh</Text>
-      <View style={styles.header}>
-        <Text style={styles.pageTitle}>Chọn thông số vật liệu</Text>
-      </View>
+      <Header title="Bộ truyền bánh răng cấp nhanh" rightIcon={<SaveComponent />} />
+      <Text style={styles.pageTitle}>Chọn thông số vật liệu </Text>
 
       <View style={styles.colContainer}>
         {/* Chọn độ rắn cho cặp bánh răng bộ truyền cấp nhanh */}
@@ -145,7 +146,7 @@ export default function GearFastScreen() {
                           selectMats[item as keyof typeof materialStats].HB_min + index * 5 <
                           HB[item as keyof typeof materialStats].value
                             ? HBColor
-                            : "black"
+                            : Colors.unselected
                         }
                       />
                     )}
@@ -169,7 +170,7 @@ export default function GearFastScreen() {
             </Text>
           )}
           {HBColor == "red" && (
-            <Text style={{ ...styles.tableTitle, color: "red" }}>
+            <Text style={{ ...styles.tableTitle, color: Colors.text.error }}>
               HB bánh nhỏ - HB bánh lớn ≥ (10..15)HB !
             </Text>
           )}
@@ -177,13 +178,13 @@ export default function GearFastScreen() {
       </View>
 
       <View style={styles.resultContainer}>
-        <Text style={{ fontStyle: "italic", color: "#FF7D00", fontWeight: "bold", fontSize: scale(16) }}>
+        <Text style={{ fontStyle: "italic", color: Colors.primary, fontWeight: "bold", fontSize: scale(16) }}>
           Loại vật liệu được chọn mặc định là Thép 40X - Tôi cải thiện
         </Text>
-        <Text style={{ fontStyle: "italic", color: "green", fontSize: scale(12) }}>
+        <Text style={{ fontStyle: "italic", color: Colors.text.success, fontSize: scale(12) }}>
           Bánh nhỏ - σb = 950, σch = 700, S ≤ 60 mm
         </Text>
-        <Text style={{ fontStyle: "italic", color: "green", fontSize: scale(12) }}>
+        <Text style={{ fontStyle: "italic", color: Colors.text.success, fontSize: scale(12) }}>
           Bánh lớn - σb = 850, σch = 550, S ≤ 100 mm
         </Text>
       </View>
@@ -212,8 +213,8 @@ export default function GearFastScreen() {
             <View style={CalcFooterStyle.buttonFooter}>
               <Button
                 mode="contained"
-                style={{ ...styles.mainBtnSmall, backgroundColor: "red" }}
-                labelStyle={{ ...styles.mainBtnSmallTxt, color: "white" }}
+                style={{ ...styles.mainBtnSmall, backgroundColor: Colors.text.error }}
+                labelStyle={{ ...styles.mainBtnSmallTxt, color: Colors.text.primary }}
                 onPress={handleChange}
                 rippleColor={"rgba(0, 0, 0, 0.29)"}
               >
@@ -221,7 +222,7 @@ export default function GearFastScreen() {
               </Button>
               <Button
                 mode="contained"
-                style={styles.mainBtnSmall}
+                style={{ ...styles.mainBtnSmall, backgroundColor: Colors.text.success }}
                 labelStyle={styles.mainBtnSmallTxt}
                 onPress={handleVerification}
               >

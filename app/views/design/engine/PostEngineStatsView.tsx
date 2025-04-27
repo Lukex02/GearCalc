@@ -4,6 +4,9 @@ import { useRouter } from "expo-router"; // Khởi tạo router từ expo-router
 import CalcController from "@controller/CalcController";
 import CalcFooter from "@/views/common/CalcFooter";
 import styles from "@style/MainStyle";
+import { Colors } from "@style/Colors";
+import Header from "@/views/common/Header";
+import SaveComponent from "@/views/common/SaveComponent";
 
 export default function SelectEngineScreen() {
   const router = useRouter(); // Khởi tạo router để điều hướng
@@ -32,9 +35,7 @@ export default function SelectEngineScreen() {
   if (isValid) {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.pageTitle}>Thông số động học</Text>
-        </View>
+        <Header title="Thông số động học" rightIcon={<SaveComponent />} />
         <View style={styles.specContainer}>
           {/* Header */}
           <View style={styles.specHeader}>
@@ -50,7 +51,10 @@ export default function SelectEngineScreen() {
           <View style={styles.specCol}>
             <Text style={styles.specHeaderCell}>P{"\n"}(kW)</Text>
             {post_p.map((p, index) => (
-              <Text key={index} style={{ ...styles.specHeaderCell, fontWeight: "normal", color: "white" }}>
+              <Text
+                key={index}
+                style={{ ...styles.specHeaderCell, fontWeight: "normal", color: Colors.text.primary }}
+              >
                 {p.toFixed(4)}
               </Text>
             ))}
@@ -60,7 +64,10 @@ export default function SelectEngineScreen() {
           <View style={styles.specCol}>
             <Text style={styles.specHeaderCell}>n{"\n"}(rpm)</Text>
             {post_n.map((n, index) => (
-              <Text key={index} style={{ ...styles.specHeaderCell, fontWeight: "normal", color: "white" }}>
+              <Text
+                key={index}
+                style={{ ...styles.specHeaderCell, fontWeight: "normal", color: Colors.text.primary }}
+              >
                 {n.toFixed(2)}
               </Text>
             ))}
@@ -70,7 +77,10 @@ export default function SelectEngineScreen() {
           <View style={styles.specCol}>
             <Text style={styles.specHeaderCell}>T{"\n"}(N.mm)</Text>
             {post_T.map((T, index) => (
-              <Text key={index} style={{ ...styles.specHeaderCell, fontWeight: "normal", color: "white" }}>
+              <Text
+                key={index}
+                style={{ ...styles.specHeaderCell, fontWeight: "normal", color: Colors.text.primary }}
+              >
                 {T.toFixed(4)}
               </Text>
             ))}

@@ -6,6 +6,8 @@ import styles from "@style/MainStyle";
 import CalcController from "@controller/CalcController";
 import CalcFooter from "@views/common/CalcFooter";
 import { parse } from "@babel/core";
+import Header from "@/views/common/Header";
+import SaveComponent from "@/views/common/SaveComponent";
 
 export default function InputDataScreen() {
   const { gearBoxType } = useLocalSearchParams();
@@ -90,18 +92,14 @@ export default function InputDataScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.pageTitle}>Số liệu thiết kế</Text>
-      </View>
+      <Header title="Số liệu thiết kế" rightIcon={<SaveComponent />} />
       <ScrollView style={styles.inputContainer}>
         <Text style={styles.inputFieldLabel}>Lực vòng F (N):</Text>
         <TextInput
           style={styles.inputField}
           keyboardType="numeric"
-          // value={F.toString()}
           value={F}
           onChangeText={(text) => setF(handleInput(text))}
-          // onChangeText={(text) => setFtext(handleInput(text))}
         />
 
         <Text style={styles.inputFieldLabel}>Vận tốc V (m/s):</Text>

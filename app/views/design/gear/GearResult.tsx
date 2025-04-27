@@ -2,9 +2,12 @@ import { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import CalcFooter from "@views/common/CalcFooter";
 import styles, { shadows } from "@style/MainStyle";
+import { Colors } from "@style/Colors";
 import CalcController from "@controller/CalcController";
 import { scale, verticalScale } from "react-native-size-matters";
 import LoadingScreen from "@views/common/LoadingScreen";
+import Header from "@/views/common/Header";
+import SaveComponent from "@/views/common/SaveComponent";
 
 export default function GearResult() {
   const [gearSetFast, setGearSetFast] = useState<any>(null);
@@ -44,15 +47,13 @@ export default function GearResult() {
 
   return isValid ? (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.pageTitle}>Kết quả tính toán</Text>
-      </View>
+      <Header title="Kết quả tính toán" rightIcon={<SaveComponent />} />
 
       {/* Bảng hiển thị thông số */}
       <View style={localStyles.table}>
         <View style={{ ...localStyles.row, backgroundColor: "rgba(34, 34, 34, 0.38)", borderBottomWidth: 1 }}>
-          <Text style={{ ...localStyles.cell, color: "#FF7D00" }}>Thông số</Text>
-          <Text style={{ ...localStyles.cell, color: "#FF7D00" }}>Giá trị (mm)</Text>
+          <Text style={{ ...localStyles.cell, color: Colors.primary }}>Thông số</Text>
+          <Text style={{ ...localStyles.cell, color: Colors.primary }}>Giá trị (mm)</Text>
         </View>
         <View style={localStyles.row}>
           <Text style={localStyles.cell}>Chiều cao răng của bánh răng lớn cấp nhanh</Text>
@@ -82,7 +83,7 @@ export default function GearResult() {
         )}
       </View>
 
-      <CalcFooter onValidate={handleValidation} nextPage="/views/Home" />
+      <CalcFooter onValidate={handleValidation} nextPage="/(tabs)/home" />
     </View>
   ) : (
     <LoadingScreen />
@@ -94,12 +95,12 @@ const localStyles = StyleSheet.create({
     maxHeight: verticalScale(380),
     width: "100%",
     borderWidth: 1,
-    borderColor: "#FF7D00",
+    borderColor: Colors.primary,
     borderRadius: 8,
     overflow: "hidden",
     flexDirection: "column",
     justifyContent: "space-between",
-    backgroundColor: "#1B263B",
+    backgroundColor: Colors.card,
     ...shadows.default,
   },
   row: {
@@ -113,19 +114,19 @@ const localStyles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     fontSize: Math.round(scale(16)),
-    color: "white",
+    color: Colors.text.primary,
   },
   lubricationContainer: {
     alignItems: "center",
   },
   lubricationSatisfied: {
-    color: "rgb(20, 207, 3)",
+    color: Colors.text.success,
     fontWeight: "bold",
     textAlign: "center",
     fontSize: Math.round(scale(20)),
   },
   lubricationNotSatisfied: {
-    color: "red",
+    color: Colors.text.error,
     fontWeight: "bold",
     fontSize: Math.round(scale(20)),
   },

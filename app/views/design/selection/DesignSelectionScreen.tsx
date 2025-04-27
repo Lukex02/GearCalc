@@ -4,13 +4,14 @@ import DropDownPicker from "react-native-dropdown-picker";
 import styles from "@style/MainStyle";
 import CalcFooter from "@views/common/CalcFooter";
 import { FontAwesome } from "@expo/vector-icons";
+import Header from "@/views/common/Header";
 
 export default function DesignSelectionScreen() {
   const [gearBoxType, setGearBoxType] = useState<any>("");
   const [image, setImage] = useState(null); // Biến để lưu ảnh của hộp giảm tốc
   const [open, setOpen] = useState(false);
   const gearBoxOptions = [
-    { label: "Hộp giảm tốc hai cấp khai triển", value: "GearBox1" },
+    { label: "Hộp giảm tốc 2 cấp khai triển", value: "GearBox1" },
     { label: "Hộp giảm tốc trục vít - bánh răng", value: "GearBox2" },
   ];
   const gearBoxImage = {
@@ -45,9 +46,7 @@ export default function DesignSelectionScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.pageTitle}>Thiết kế hộp giảm tốc</Text>
-      </View>
+      <Header title="Thiết kế hộp giảm tốc" />
 
       <DropDownPicker
         open={open}
@@ -67,8 +66,8 @@ export default function DesignSelectionScreen() {
       <Image style={styles.designImgPreview} source={image ? image : undefined} resizeMode="stretch" />
 
       <CalcFooter
-        backTxt="Thoát"
-        backPage="/views/Home"
+        backHome={true}
+        backPage="/(tabs)/home"
         onValidate={handleValidation}
         nextPage={{ pathname: "/views/design/engine/InputDataScreen", params: { gearBoxType: gearBoxType } }}
       />

@@ -3,6 +3,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import styles from "@style/MainStyle";
+import { Colors } from "@style/Colors";
 import calcFooterStyle from "@style/CalcFooterStyle";
 import LoadingScreen from "@views/common/LoadingScreen";
 import DatabaseService from "@services/DatabaseService";
@@ -19,7 +20,7 @@ export default function LoginScreen() {
         const authStatus = await DatabaseService.checkAuth();
         if (authStatus) {
           alert("User đã đăng nhập");
-          router.push("/views/Home");
+          router.push("/(tabs)/home");
         }
         setLoading(false);
       }
@@ -36,7 +37,7 @@ export default function LoginScreen() {
         console.log("Error:", res.error);
       } else {
         alert("Đăng nhập thành công");
-        router.push("/views/Home");
+        router.push("/(tabs)/home");
       }
     });
   };
@@ -50,7 +51,7 @@ export default function LoginScreen() {
           value={email}
           onChangeText={setEmail}
           placeholder="Nhập Email"
-          placeholderTextColor={"rgb(165, 165, 165)"}
+          placeholderTextColor={Colors.text.placeholder}
         />
 
         <Text style={styles.inputFieldLabel}>Mật khẩu</Text>
@@ -59,7 +60,7 @@ export default function LoginScreen() {
           value={password}
           onChangeText={setPassword}
           placeholder="Nhập mật khẩu"
-          placeholderTextColor={"rgb(165, 165, 165)"}
+          placeholderTextColor={Colors.text.placeholder}
           secureTextEntry
         />
       </View>

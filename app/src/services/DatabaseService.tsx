@@ -1,6 +1,6 @@
 import Constants from "expo-constants";
-import * as SecureStore from "expo-secure-store";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, User } from "@supabase/supabase-js";
+import { GearBox } from "@models/GearBox";
 
 const supabaseUrl = "https://odrfusjgbctkybkavelg.supabase.co";
 const supabaseKey = Constants.expoConfig?.extra?.supabaseAnonKey;
@@ -45,6 +45,61 @@ export default class DatabaseService {
       return null;
     }
   }
+
+  static async updateUserHistory(design: GearBox, time: string) {
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError || !userData?.user) {
+      console.error("Không lấy được user:", userError);
+    } else {
+      const currentHistory = userData.user.user_metadata.history || [];
+
+      const updatedHistory = [...currentHistory, { id: currentHistory.length, design: design, time }];
+
+      const { data, error } = await supabase.auth.updateUser({
+        data: {
+          history: updatedHistory,
+        },
+      });
+
+      if (error) {
+        console.error("Lỗi khi cập nhật:", error);
+      } else {
+        // console.log("Cập nhật thành công:", data);
+      }
+    }
+  }
+
+  static async removeHistory(designId: any) {
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError || !userData?.user) {
+      console.error("Không lấy được user:", userError);
+    } else {
+      const { data, error } = await supabase.auth.updateUser({
+        data: {
+          history: userData.user.user_metadata.history.filter((item: any) => item.id !== designId),
+        },
+      });
+      if (error) {
+        console.error("Lỗi khi cập nhật:", error);
+      } else {
+        return data;
+      }
+    }
+  }
+
+  static async removeAllHistory() {
+    const { data, error } = await supabase.auth.updateUser({
+      data: {
+        history: [],
+      },
+    });
+    if (error) {
+      console.error("Lỗi khi cập nhật:", error);
+    } else {
+      return data;
+    }
+  }
+
   // Code database here
   static async getSelectableEngine(reqPower: number, reqRpm: number): Promise<any[]> {
     let { data, error } = await supabase

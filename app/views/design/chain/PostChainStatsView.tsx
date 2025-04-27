@@ -5,6 +5,8 @@ import CalcController from "@controller/CalcController";
 import CalcFooter from "@views/common/CalcFooter";
 import styles from "@style/MainStyle";
 import CalculatedChain from "@models/Chain";
+import Header from "@/views/common/Header";
+import SaveComponent from "@/views/common/SaveComponent";
 
 const label = {
   z1: "Số bánh răng dẫn",
@@ -39,9 +41,7 @@ export default function PostChainStatsView() {
   if (isValid) {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.pageTitle}>Thông số bộ truyền xích</Text>
-        </View>
+        <Header title="Thông số bộ truyền xích" rightIcon={<SaveComponent />} />
         <View style={styles.specContainerRow}>
           {/* Header */}
           <View style={styles.specHeaderRow}>

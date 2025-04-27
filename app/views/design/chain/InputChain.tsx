@@ -5,6 +5,9 @@ import CalcFooter from "@views/common/CalcFooter";
 import CalcController from "@controller/CalcController";
 import { Icon, List } from "react-native-paper";
 import { scale } from "react-native-size-matters";
+import { Colors } from "@/src/style/Colors";
+import Header from "@/views/common/Header";
+import SaveComponent from "@/views/common/SaveComponent";
 
 type KProps = {
   k_0: any;
@@ -92,15 +95,6 @@ export default function InputChain() {
     setSelectedValues((prev) => ({ ...prev, [key]: value }));
   };
 
-  // const handleOpenChange = (key: keyof KProps, isOpen: any) => {
-  //   setOpen((prev) => {
-  //     const newState = Object.keys(prev).reduce((acc, k) => {
-  //       acc[k as keyof KProps] = false;
-  //       return acc;
-  //     }, {} as typeof prev);
-  //     return { ...newState, [key]: isOpen };
-  //   });
-  // };
   const handleValidation = () => {
     if (
       Object.values(selectedValues).some(
@@ -138,9 +132,7 @@ export default function InputChain() {
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.pageTitle}>Chọn điều kiện xích</Text>
-      </View>
+      <Header title="Chọn điều kiện xích" rightIcon={<SaveComponent />} />
 
       <ScrollView
         style={styles.inputContainer}
@@ -151,17 +143,17 @@ export default function InputChain() {
           <View key={key}>
             <Text style={styles.inputFieldLabel}>
               {label} (hệ số {key}:{" "}
-              <Text style={{ color: "#FF7D00", fontWeight: "bold" }}>
+              <Text style={{ color: Colors.text.accent, fontWeight: "bold" }}>
                 {selectedValues[key as keyof typeof selectedValues]}
               </Text>
               )
             </Text>
-            <View style={{ borderRightWidth: 2, borderColor: "#FF7D00", marginVertical: scale(10) }}>
+            <View style={{ borderRightWidth: 2, borderColor: Colors.text.accent, marginVertical: scale(10) }}>
               <List.Accordion
                 title={`Chọn điều kiện...`}
                 expanded={open[key]}
                 onPress={() => handleAccordionToggle(key)}
-                titleStyle={{ fontWeight: "bold", color: "rgba(184, 184, 184, 0.47)" }}
+                titleStyle={{ fontWeight: "bold", color: Colors.text.placeholder }}
                 style={{ backgroundColor: "#151c2b" }}
               >
                 {k_opt[key as keyof typeof k_opt].map((item: any) => (
@@ -174,8 +166,8 @@ export default function InputChain() {
                           fontWeight: "bold",
                           color:
                             selectedValues[key as keyof typeof selectedValues] === item.value
-                              ? "#FF7D00"
-                              : "rgba(184, 184, 184, 0.47)",
+                              ? Colors.text.accent
+                              : Colors.text.placeholder,
                         }}
                         numberOfLines={0} // Cho phép nhiều dòng
                       >
@@ -187,12 +179,12 @@ export default function InputChain() {
                       fontWeight: "bold",
                       color:
                         selectedValues[key as keyof typeof selectedValues] === item.value
-                          ? "#FF7D00"
-                          : "rgba(184, 184, 184, 0.47)",
+                          ? Colors.text.accent
+                          : Colors.text.placeholder,
                     }}
                     right={() =>
                       selectedValues[key as keyof typeof selectedValues] === item.value ? (
-                        <Icon source="check" color="#FF7D00" size={20} />
+                        <Icon source="check" color={Colors.text.accent} size={20} />
                       ) : null
                     }
                     onPress={() => {

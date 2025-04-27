@@ -778,6 +778,10 @@ export default class CalcController {
   }
 
   constructor(gearBoxType: string) {
+    const gearBoxLabel = {
+      GearBox1: "Hộp giảm tốc 2 cấp khai triển",
+      GearBox2: "Hộp giảm tốc trục vít bánh răng",
+    };
     switch (gearBoxType) {
       case "GearBox1":
         this._designStrategy = new DesignGearBox1();
@@ -792,12 +796,15 @@ export default class CalcController {
     }
     CalcController.instance = this;
     this._gearBoxBuilder = new GearBoxBuilder();
+    this._gearBoxBuilder.setType(gearBoxLabel[gearBoxType]);
   }
 
   initDesign(F: number, v: number, T1: number, t1: number, T2: number, t2: number, L: number, output: any) {
     this._designStrategy.storeDesignInput(F, v, T1, t1, T2, t2, L, output);
   }
-
+  getGearBox() {
+    return this._gearBoxBuilder.build();
+  }
   calcEngineBase() {
     let engiDes = this._designStrategy.designEngine();
     this._calcEngine = engiDes.engi;

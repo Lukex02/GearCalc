@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, FlatList } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSharedValue } from "react-native-reanimated";
 import { Slider } from "react-native-awesome-slider";
 import styles, { sliderTheme } from "@style/MainStyle";
+import { Colors } from "@style/Colors";
 import Efficiency from "@models/Efficiency";
 import CalcController from "@controller/CalcController";
 import CalcFooter from "@views/common/CalcFooter";
-import { FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
+import Header from "@/views/common/Header";
+import SaveComponent from "@/views/common/SaveComponent";
 
 export default function AdjustEngineParametersScreen() {
   const calcController = CalcController.getInstance();
@@ -80,18 +82,16 @@ export default function AdjustEngineParametersScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.pageTitle}>Thông số tính toán</Text>
-      </View>
+      <Header title="Thông số tính toán" rightIcon={<SaveComponent />} />
 
       <View style={styles.resultContainer}>
         <Text style={styles.resultText}>
           Công suất cần thiết:{" "}
-          <Text style={{ color: "#FF7D00", fontWeight: "bold" }}>{pCT.toFixed(3)} kW</Text>
+          <Text style={{ color: Colors.primary, fontWeight: "bold" }}>{pCT.toFixed(3)} kW</Text>
         </Text>
         <Text style={styles.resultText}>
           Số vòng quay sơ bộ:{" "}
-          <Text style={{ color: "#FF7D00", fontWeight: "bold" }}>{nSB.toFixed(0)} rpm</Text>
+          <Text style={{ color: Colors.primary, fontWeight: "bold" }}>{nSB.toFixed(0)} rpm</Text>
         </Text>
       </View>
 
@@ -113,7 +113,7 @@ export default function AdjustEngineParametersScreen() {
                   <Slider
                     theme={sliderTheme}
                     bubble={(value) => `${Math.round(value * 1000) / 1000}`}
-                    renderThumb={() => <FontAwesome6 name="diamond" size={20} color="#FF7D00" />}
+                    renderThumb={() => <FontAwesome6 name="diamond" size={20} color={Colors.primary} />}
                     bubbleOffsetX={5}
                     style={styles.slider}
                     containerStyle={{ borderRadius: 40 }}
@@ -145,7 +145,7 @@ export default function AdjustEngineParametersScreen() {
                   <Slider
                     theme={sliderTheme}
                     bubble={(value) => `${Math.round(value * 10) / 10}`}
-                    renderThumb={() => <FontAwesome6 name="diamond" size={20} color="#FF7D00" />}
+                    renderThumb={() => <FontAwesome6 name="diamond" size={20} color={Colors.primary} />}
                     bubbleOffsetX={5}
                     style={styles.slider}
                     containerStyle={{ borderRadius: 40 }}

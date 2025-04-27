@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import DatabaseService from "@services/DatabaseService";
 import styles from "@style/MainStyle";
 import LoadingScreen from "@views/common/LoadingScreen";
+import { Colors } from "@/src/style/Colors";
 
 export default function RegisterScreen() {
   const [username, setUsername] = useState("");
@@ -19,7 +20,7 @@ export default function RegisterScreen() {
         const authStatus = await DatabaseService.checkAuth();
         if (authStatus) {
           alert("User đã đăng nhập");
-          router.push("/views/Home");
+          router.push("/(tabs)/home");
         }
         setLoading(false);
       }
@@ -38,7 +39,7 @@ export default function RegisterScreen() {
       if (res.error) {
         console.log("Error:", res.error);
       } else {
-        router.push("/views/Home");
+        router.push("/(tabs)/home");
       }
     });
   };
@@ -52,7 +53,7 @@ export default function RegisterScreen() {
           value={username}
           onChangeText={setUsername}
           placeholder="Nhập tên người dùng"
-          placeholderTextColor={"rgb(165, 165, 165)"}
+          placeholderTextColor={Colors.text.placeholder}
         />
 
         <Text style={styles.inputFieldLabel}>Email</Text>
@@ -61,7 +62,7 @@ export default function RegisterScreen() {
           value={email}
           onChangeText={setEmail}
           placeholder="Nhập email"
-          placeholderTextColor={"rgb(165, 165, 165)"}
+          placeholderTextColor={Colors.text.placeholder}
           keyboardType="email-address"
         />
 
@@ -71,7 +72,7 @@ export default function RegisterScreen() {
           value={password}
           onChangeText={setPassword}
           placeholder="Nhập mật khẩu"
-          placeholderTextColor={"rgb(165, 165, 165)"}
+          placeholderTextColor={Colors.text.placeholder}
           secureTextEntry
         />
       </View>

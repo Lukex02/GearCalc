@@ -3,13 +3,20 @@ import { CalculatedEngine, SelectedEngine } from "./EngineModel";
 import { CalculatedGear } from "./Gear";
 import CalculatedShaft from "./Shaft";
 
-class GearBox {
+export class GearBox {
+  private _type!: string;
   private _calcEnginePostStats: any;
   private _engine: SelectedEngine | any;
   private _mechDrive: CalculatedChain | any;
   private _gearSet: CalculatedGear[] | any;
   private _shaft: CalculatedShaft | any;
 
+  set type(type: string) {
+    this._type = type;
+  }
+  get type(): string {
+    return this._type;
+  }
   set calcEngine(calcEngine: any) {
     this._calcEnginePostStats = calcEngine;
   }
@@ -47,6 +54,8 @@ class GearBox {
 //
 interface Builder {
   reset(): void;
+  setType(gearBoxType: string): void;
+  setCalcEnginePostStats(calcEngine: any): void;
   setEngine(engine: SelectedEngine): void;
   setMechDrive(mechDrive: CalculatedChain | any): void;
   setGearSet(gears: CalculatedGear[] | any): void;
@@ -63,6 +72,12 @@ export default class GearBoxBuilder implements Builder {
 
   reset(): void {
     this._gearBox = new GearBox();
+  }
+  setType(gearBoxType: string): void {
+    this._gearBox.type = gearBoxType;
+  }
+  getType(): string {
+    return this._gearBox.type;
   }
   setCalcEnginePostStats(calcEngine: any): void {
     this._gearBox.calcEngine = calcEngine;
