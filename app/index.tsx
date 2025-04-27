@@ -8,7 +8,7 @@ import ExitOnBack from "@views/common/ExitOnBack";
 const FullscreenImageBackground: React.FC = () => {
   const router = useRouter();
   return (
-    <View style={{ ...styles.containerCentered, justifyContent: "flex-start" }}>
+    <View style={styles.containerCentered}>
       <ExitOnBack />
       <Image
         source={require("@img/transparent_background_gif.gif")}
@@ -20,7 +20,6 @@ const FullscreenImageBackground: React.FC = () => {
         style={styles.mainBtn}
         mode="contained"
         compact={true}
-        // onPress={() => router.push("/views/Home")}
         onPress={() => router.push("/views/auth/Login")}
       >
         <Text style={styles.mainBtnTxt}>Bắt đầu</Text>

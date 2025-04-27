@@ -1,7 +1,5 @@
 import { Stack, useRouter } from "expo-router";
 import { PaperProvider } from "react-native-paper";
-import styles from "@style/MainStyle";
-import AccIcon from "@views/common/AccIcon";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function RootLayout() {
@@ -11,63 +9,36 @@ export default function RootLayout() {
         <Stack
           screenOptions={{
             headerStyle: { backgroundColor: "#415A77" },
-            headerTintColor: "white",
-            headerTitleStyle: styles.navTitle,
-            headerTitleAlign: "center",
-            headerBackTitle: "Quay lại",
-            headerRight: AccIcon,
             animation: "slide_from_right",
+            headerShown: false,
           }}
         >
           {/* Auth Flow */}
-          <Stack.Screen
-            name="index"
-            options={{
-              title: "GEARCALC",
-              headerRight: () => null,
-              headerBackVisible: false,
-              headerLeft: () => null,
-            }}
-          />
-          <Stack.Screen name="views/auth/Login" options={{ title: "Đăng nhập", headerRight: () => null }} />
-          <Stack.Screen name="views/auth/Register" options={{ title: "Đăng ký", headerRight: () => null }} />
+          <Stack.Screen name="index" />
+          <Stack.Screen name="views/auth/Login" />
+          <Stack.Screen name="views/auth/Register" />
 
           {/* Main Flow */}
-          <Stack.Screen
-            name="views/Home"
-            options={{ title: "Trang chủ", headerBackVisible: false, headerLeft: () => null }}
-          />
-          <Stack.Screen
-            name="views/account/AccountScreen"
-            options={{ title: "Tài khoản", headerRight: () => null }}
-          />
-          <Stack.Screen name="views/catalog/CatalogView" options={{ title: "Catalog" }} />
-          <Stack.Screen name="views/catalog/ComponentView" options={{ title: "Chi tiết" }} />
+          <Stack.Screen name="views/catalog/ComponentView" />
 
           {/* Design Flow */}
-          <Stack.Screen
-            name="views/design/selection/DesignSelectionScreen"
-            options={{ title: "Chọn thiết kế" }}
-          />
+          <Stack.Screen name="views/design/selection/DesignSelectionScreen" />
 
           {/* Engine Flow */}
-          <Stack.Screen name="views/design/engine/SelectEngineScreen" options={{ title: "Động cơ" }} />
-          <Stack.Screen name="views/design/engine/InputDataScreen" options={{ title: "Động cơ" }} />
-          <Stack.Screen
-            name="views/design/engine/AdjustEngineParametersScreen"
-            options={{ title: "Động cơ" }}
-          />
-          <Stack.Screen name="views/design/engine/PostEngineStatsView" options={{ title: "Động cơ" }} />
+          <Stack.Screen name="views/design/engine/SelectEngineScreen" />
+          <Stack.Screen name="views/design/engine/InputDataScreen" />
+          <Stack.Screen name="views/design/engine/AdjustEngineParametersScreen" />
+          <Stack.Screen name="views/design/engine/PostEngineStatsView" />
 
           {/* Chain Flow */}
-          <Stack.Screen name="views/design/chain/InputChain" options={{ title: "Xích" }} />
-          <Stack.Screen name="views/design/chain/SelectChainScreen" options={{ title: "Xích" }} />
-          <Stack.Screen name="views/design/chain/PostChainStatsView" options={{ title: "Xích" }} />
+          <Stack.Screen name="views/design/chain/InputChain" />
+          <Stack.Screen name="views/design/chain/SelectChainScreen" />
+          <Stack.Screen name="views/design/chain/PostChainStatsView" />
 
           {/* Gear Flow */}
-          <Stack.Screen name="views/design/gear/GearFast" options={{ title: "Bánh răng" }} />
-          <Stack.Screen name="views/design/gear/GearSlow" options={{ title: "Bánh răng" }} />
-          <Stack.Screen name="views/design/gear/GearResult" options={{ title: "Bánh răng" }} />
+          <Stack.Screen name="views/design/gear/GearFast" />
+          <Stack.Screen name="views/design/gear/GearSlow" />
+          <Stack.Screen name="views/design/gear/GearResult" />
         </Stack>
       </PaperProvider>
     </GestureHandlerRootView>
