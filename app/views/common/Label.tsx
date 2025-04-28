@@ -1,0 +1,51 @@
+const mainlabel = {
+  _type: "Loại",
+  _calcEnginePostStats: "Số liệu động học và động lực học trên các trục",
+  _engine: "Động cơ điện",
+  _mechDrive: "Xích",
+  _gearSet: "Bộ truyền",
+  _shaft: "Trục",
+};
+
+const engineLabel = {
+  name: "Tên",
+  power: "Công suất (kW)",
+  n_t: "Tốc độ vòng quay (rpm)",
+  Efficiency: "Hệ số công suất (%)",
+  H: "Hiệu suất động cơ",
+  T_max_T_dn: "Hệ số momen tối đa / Momen danh nghĩa",
+  T_k_T_dn: "Hệ số momen khởi động / Momen danh nghĩa",
+};
+
+const chainLabel = {
+  z1: "Số bánh răng dẫn",
+  z2: "Số bánh răng bị dẫn",
+  p: "Bước xích (mm)",
+  B: "Chiều dài ống lót (mm)",
+  d_c: "Đường kính chốt (mm)",
+  x: "Số mắt xích",
+  a: "Khoảng cách trục (mm)",
+  d1: "Đường kính vòng chia đĩa xích dẫn (mm)",
+  d2: "Đường kính vòng chia đĩa bị dẫn (mm)",
+  F_rx: "Lực tác dụng lên đĩa xích (N)",
+};
+
+const gearSetLabel = {
+  a_w: "Khoảng cách trục (mm)",
+  m: "Modul pháp (mm)",
+  b_w: "Chiều rộng vành răng (mm)",
+  u_m: "Tỉ số truyền thực (mm)",
+  beta: "Góc β (°)",
+  z1: "Số răng bánh nhỏ (mm)",
+  z2: "Số răng bánh lớn (mm)",
+  d1: "Đường kính vòng chia đĩa bánh nhỏ (mm)",
+  d2: "Đường kính vòng chia đĩa bánh lớn (mm)",
+  da1: "Đường kính đỉnh bánh nhỏ (mm)",
+  da2: "Đường kính đỉnh bánh lớn (mm)",
+  df1: "Đường kính chân răng bánh nhỏ (mm)",
+  df2: "Đường kính chân răng bánh lớn (mm)",
+  dw1: "Đường kính lăn bánh nhỏ (mm)",
+  dw2: "Đường kính lăn bánh lớn (mm)",
+};
+
+export { mainlabel, engineLabel, chainLabel, gearSetLabel };

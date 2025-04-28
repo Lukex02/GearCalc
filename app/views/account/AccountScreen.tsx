@@ -8,7 +8,7 @@ import LoadingScreen from "@views/common/LoadingScreen";
 import styles from "@style/MainStyle";
 import { Colors } from "@/src/style/Colors";
 import CalcFooterStyle from "@/src/style/CalcFooterStyle";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons";
 import { scale } from "react-native-size-matters";
 import Reanimated, { SharedValue, useAnimatedStyle } from "react-native-reanimated";
 
@@ -17,20 +17,52 @@ export default function AccountScreen() {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalConfirmVisible] = useState(false);
   const [snackBarVisible, setsnackBarVisible] = useState(false);
-  const [removeItemId, setRemoveItemId] = useState<number>(0);
+  const [selectItemId, setSelectItemId] = useState<number>(0);
 
   const RightAction = (prog: SharedValue<number>, drag: SharedValue<number>) => {
     const styleAnimation = useAnimatedStyle(() => {
       return {
-        transform: [{ translateX: drag.value + scale(80) }],
+        transform: [{ translateX: drag.value + scale(60) }],
       };
     });
 
     return (
       <Reanimated.View style={styleAnimation} pointerEvents="box-none">
-        <TouchableRipple style={localStyles.swipeableDelete} onPress={() => handleRemove(removeItemId)}>
-          <Text style={localStyles.swipeableDeleteTxt}>Xóa</Text>
+        <TouchableRipple style={localStyles.swipeableDelete} onPress={() => handleRemove(selectItemId)}>
+          <Text style={localStyles.swipeableTxt}>Xóa</Text>
         </TouchableRipple>
+      </Reanimated.View>
+    );
+  };
+
+  const LeftAction = (prog: SharedValue<number>, drag: SharedValue<number>) => {
+    const styleAnimation = useAnimatedStyle(() => {
+      return {
+        transform: [{ translateX: drag.value - scale(150) }],
+      };
+    });
+
+    return (
+      <Reanimated.View style={styleAnimation} pointerEvents="box-none">
+        <View style={localStyles.swipeableContainer}>
+          <TouchableRipple style={localStyles.swipeableUtils} onPress={() => handlePrint(selectItemId)}>
+            <MaterialCommunityIcons
+              name="printer"
+              color={Colors.text.success}
+              style={localStyles.swipeableIcon}
+            />
+          </TouchableRipple>
+          <TouchableRipple style={localStyles.swipeableUtils} onPress={() => handleView(selectItemId)}>
+            <MaterialCommunityIcons
+              name="file-search"
+              color={Colors.text.secondaryAccent}
+              style={localStyles.swipeableIcon}
+            />
+          </TouchableRipple>
+          <TouchableRipple style={localStyles.swipeableUtils} onPress={() => handleEdit(selectItemId)}>
+            <FontAwesome6 name="edit" color={Colors.text.accent} style={localStyles.swipeableIcon} />
+          </TouchableRipple>
+        </View>
       </Reanimated.View>
     );
   };
@@ -65,7 +97,17 @@ export default function AccountScreen() {
     });
   };
 
-  const handlePrint = (historyId: any) => {};
+  const handlePrint = (historyId: any) => {
+    console.log("Print", historyId);
+  };
+
+  const handleView = (historyId: any) => {
+    console.log("View", historyId);
+  };
+
+  const handleEdit = (historyId: any) => {
+    console.log("Edit", historyId);
+  };
 
   return (
     <View style={styles.containerStart}>
@@ -94,8 +136,8 @@ export default function AccountScreen() {
                 {user.email}
               </Text>
               <Text style={{ color: "white" }}>
-                <Text style={{ fontWeight: "bold" }}>Số điện thoại: </Text>
-                {user.phone}
+                <Text style={{ fontWeight: "bold" }}>Thiết kế đã lưu: </Text>
+                {user.user_metadata.history.length}
               </Text>
             </View>
           </View>
@@ -103,10 +145,9 @@ export default function AccountScreen() {
           <View style={styles.historyContainer}>
             {/* Header */}
             <View style={styles.historyHeader}>
-              <Text style={styles.historyHeaderCell}>Thiết kế</Text>
+              <Text style={styles.historyHeaderCell}>Tên</Text>
               <Text style={styles.historyHeaderCell}>Thời gian</Text>
-              <Text style={styles.historyHeaderCell}>Xem</Text>
-              <Text style={styles.historyHeaderCell}>In</Text>
+              <Text style={styles.historyHeaderCell}>Trạng thái</Text>
             </View>
 
             {/* Body */}
@@ -117,32 +158,25 @@ export default function AccountScreen() {
                 renderItem={({ item }) => (
                   <Swipeable
                     renderRightActions={RightAction}
+                    renderLeftActions={LeftAction}
                     overshootRight={false}
+                    overshootLeft={false}
                     friction={3}
-                    onSwipeableOpen={(direction) => {
-                      if (direction === "right") {
-                        setRemoveItemId(item.id);
-                      }
-                    }}
+                    onSwipeableOpen={() => setSelectItemId(item.id)}
                   >
                     <View style={styles.historyRow}>
                       <Text style={styles.historyCell}>{item.design._type}</Text>
                       <Text style={styles.historyCell}>{item.time}</Text>
-                      <IconButton
-                        icon="file-search"
-                        iconColor={Colors.text.secondaryAccent}
-                        size={20}
-                        style={styles.utilBtnContainer}
-                        onPress={() => console.log("IconButton Pressed")}
-                      ></IconButton>
-
-                      <IconButton
-                        icon="printer"
-                        size={20}
-                        iconColor={Colors.text.success}
-                        style={styles.utilBtnContainer}
-                        onPress={() => console.log("IconButton Pressed")}
-                      ></IconButton>
+                      <View style={styles.historyCell}>
+                        <Text
+                          style={{
+                            ...styles.historyStatusCell,
+                            backgroundColor: item.isFinish ? Colors.text.success : Colors.text.warning,
+                          }}
+                        >
+                          {item.isFinish ? "Đã xong" : "Chưa xong"}
+                        </Text>
+                      </View>
                     </View>
                   </Swipeable>
                 )}
@@ -212,17 +246,33 @@ export default function AccountScreen() {
 const localStyles = StyleSheet.create({
   swipeableDelete: {
     flex: 1,
-    width: scale(80),
+    width: scale(60),
     backgroundColor: Colors.text.error,
     alignSelf: "center",
     justifyContent: "center",
-    // width: "100%",
-    // marginTop: scale(10),
   },
-  swipeableDeleteTxt: {
+  swipeableUtils: {
+    width: scale(50),
+    height: "100%",
+    backgroundColor: Colors.background,
+    alignSelf: "center",
+    justifyContent: "center",
+  },
+  swipeableTxt: {
     color: Colors.text.primary,
     fontWeight: "bold",
     fontSize: Math.round(scale(13)),
     textAlign: "center",
+  },
+  swipeableIcon: {
+    fontSize: Math.round(scale(16)),
+    textAlign: "center",
+  },
+  swipeableContainer: {
+    flex: 1,
+    width: scale(150),
+    alignSelf: "center",
+    justifyContent: "center",
+    flexDirection: "row",
   },
 });

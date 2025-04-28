@@ -26,7 +26,8 @@ export default function GearResult() {
   useEffect(() => {
     // Kiểm tra điều kiện bôi trơn
     const calcController = CalcController.getInstance();
-    calcController.getCalcGearSet().forEach((gearSet, index) => {
+    calcController.getGearSet().forEach((gearSet, index) => {
+      // console.log(gearSet);
       if (index == 0) {
         setGearSetFast(gearSet.returnPostStats());
       } else if (index == 1) {
@@ -83,7 +84,7 @@ export default function GearResult() {
         )}
       </View>
 
-      <CalcFooter onValidate={handleValidation} nextPage="/(tabs)/home" />
+      <CalcFooter onValidate={handleValidation} finish={true} />
     </View>
   ) : (
     <LoadingScreen />

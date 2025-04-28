@@ -55,56 +55,59 @@ const CatalogPage = () => {
 
   return (
     <View style={styles.containerStart}>
-      <Header
-        title="Tra cứu Catalog"
-        rightIcon={
-          <Menu
-            visible={visible}
-            onDismiss={hideDrawer}
-            contentStyle={{ backgroundColor: Colors.background }}
-            anchor={
-              <IconButton
-                icon="filter-variant"
-                size={30}
-                style={{ margin: 0 }}
-                iconColor={Colors.text.primary}
-                onPress={showDrawer}
+      <View style={{ paddingHorizontal: scale(25), width: "100%" }}>
+        <Header
+          title="Tra cứu Catalog"
+          rightIcon={
+            <Menu
+              visible={visible}
+              onDismiss={hideDrawer}
+              contentStyle={{ backgroundColor: Colors.background }}
+              anchor={
+                <IconButton
+                  icon="filter-variant"
+                  size={30}
+                  style={{ margin: 0 }}
+                  iconColor={Colors.text.primary}
+                  onPress={showDrawer}
+                />
+              }
+            >
+              <Menu.Item
+                title="Tất cả"
+                titleStyle={{ color: Colors.text.primary }}
+                onPress={() => filterByType("all")}
+                leadingIcon="select-all"
               />
-            }
-          >
-            <Menu.Item
-              title="Tất cả"
-              titleStyle={{ color: Colors.text.primary }}
-              onPress={() => filterByType("all")}
-              leadingIcon="select-all"
-            />
-            <Menu.Item
-              title="Động cơ điện"
-              titleStyle={{ color: Colors.text.primary }}
-              onPress={() => filterByType("Engine")}
-              leadingIcon="engine"
-            />
-            <Menu.Item
-              title="Xích"
-              titleStyle={{ color: Colors.text.primary }}
-              onPress={() => filterByType("chain")}
-              leadingIcon="link"
-            />
-            <Menu.Item
-              title="Then"
-              titleStyle={{ color: Colors.text.primary }}
-              onPress={() => filterByType("key_flat")}
-              leadingIcon="screwdriver"
-            />
-            <Menu.Item
-              title="Ổ lăn"
-              titleStyle={{ color: Colors.text.primary }}
-              onPress={() => filterByType("roller")}
-              leadingIcon="movie-roll"
-            />
-          </Menu>
-        }
-      />
+              <Menu.Item
+                title="Động cơ điện"
+                titleStyle={{ color: Colors.text.primary }}
+                onPress={() => filterByType("Engine")}
+                leadingIcon="engine"
+              />
+              <Menu.Item
+                title="Xích"
+                titleStyle={{ color: Colors.text.primary }}
+                onPress={() => filterByType("chain")}
+                leadingIcon="link"
+              />
+              <Menu.Item
+                title="Then"
+                titleStyle={{ color: Colors.text.primary }}
+                onPress={() => filterByType("key_flat")}
+                leadingIcon="screwdriver"
+              />
+              <Menu.Item
+                title="Ổ lăn"
+                titleStyle={{ color: Colors.text.primary }}
+                onPress={() => filterByType("roller")}
+                leadingIcon="movie-roll"
+              />
+            </Menu>
+          }
+        />{" "}
+      </View>
+
       {loading && <LoadingScreen />}
 
       {!loading && (

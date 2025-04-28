@@ -764,10 +764,10 @@ export default class CalcController {
   private _effiency!: Efficiency;
   private _ratio!: TransRatio;
   private _calcEngine!: CalculatedEngine;
-  private _calcEnginePostStats: any;
-  private _calcMechDrive: CalculatedChain | any; // || CalculatedBelt; nếu có belt
-  private _calcGearSet: GearSet[] = [];
-  private _calcShaft!: CalculatedShaft;
+  // private _calcEnginePostStats: any;
+  // private _calcMechDrive: CalculatedChain | any; // || CalculatedBelt; nếu có belt
+  // private _calcGearSet: GearSet[] = [];
+  // private _calcShaft!: CalculatedShaft;
   private _gearBoxBuilder: GearBoxBuilder;
 
   // Implement semi-Singleton to store object state
@@ -803,6 +803,7 @@ export default class CalcController {
     this._designStrategy.storeDesignInput(F, v, T1, t1, T2, t2, L, output);
   }
   getGearBox() {
+    this._gearBoxBuilder.setDesign({ designStrategy: this._designStrategy, order: this._order });
     return this._gearBoxBuilder.build();
   }
   calcEngineBase() {
@@ -825,8 +826,8 @@ export default class CalcController {
   }
 
   getEnginePostStats() {
-    if (this._calcEnginePostStats) {
-      return this._calcEnginePostStats;
+    if (this._gearBoxBuilder.getCalcEnginePostStats()) {
+      return this._gearBoxBuilder.getCalcEnginePostStats();
     } else if (this._gearBoxBuilder && this._calcEngine) {
       try {
         const newTransRatio = EngineController.getNewTransRatio(
@@ -845,12 +846,12 @@ export default class CalcController {
           let rearrangedRatio = this._order
             .map((ratio_type) => newTransRatio.ratio_spec.find((ratio) => ratio.type === ratio_type))
             .reverse();
-          this._calcEnginePostStats = {
+          const calcEnginePostStats = {
             ratio: rearrangedRatio,
             distShaft: newEngineShaftStats,
           };
-          this._gearBoxBuilder.setCalcEnginePostStats(this._calcEnginePostStats);
-          return this._calcEnginePostStats;
+          this._gearBoxBuilder.setCalcEnginePostStats(calcEnginePostStats);
+          return calcEnginePostStats;
         } else {
           return null;
         }
@@ -872,17 +873,17 @@ export default class CalcController {
 
   calcMechDriveBase(input: MechDriveInput) {
     let mechDriveDes = this._designStrategy.designMechDrive(input);
-    this._calcMechDrive = mechDriveDes;
+    this._gearBoxBuilder.setMechDrive(mechDriveDes);
   }
 
   chooseMechDrive(selected: SelectedChain | any) {
     // Selected Chain chỉ mang tính chất chọn thiết kế chuẩn để tính tiếp, nên sẽ dùng calcMechDrive để lưu state
-    this._designStrategy.continueCalcMechDrive(this._calcMechDrive, selected);
-    this._gearBoxBuilder.setMechDrive(this._calcMechDrive);
+    this._designStrategy.continueCalcMechDrive(this._gearBoxBuilder.getMechDrive(), selected);
+    // this._gearBoxBuilder.setMechDrive(this._gearBoxBuilder.getMechDrive());
   }
 
   getCalcMechDrive(): CalculatedChain | any {
-    return this._calcMechDrive;
+    return this._gearBoxBuilder.getMechDrive();
   }
 
   calcGearSet(
@@ -895,17 +896,15 @@ export default class CalcController {
     inputShaftNo: number = 1 | 2 | 3
   ) {
     try {
-      this._calcGearSet.push(
-        this._designStrategy.designGear({
-          ...input,
-          distributedShaftStats: {
-            u: this._calcEnginePostStats.ratio[inputShaftNo].value,
-            n: this._calcEnginePostStats.distShaft.n[inputShaftNo],
-            T: this._calcEnginePostStats.distShaft.T[inputShaftNo],
-          },
-          K_qt: this._gearBoxBuilder.getEngine().T_max_T_dn,
-        })
-      );
+      return this._designStrategy.designGear({
+        ...input,
+        distributedShaftStats: {
+          u: this._gearBoxBuilder.getCalcEnginePostStats().ratio[inputShaftNo].value,
+          n: this._gearBoxBuilder.getCalcEnginePostStats().distShaft.n[inputShaftNo],
+          T: this._gearBoxBuilder.getCalcEnginePostStats().distShaft.T[inputShaftNo],
+        },
+        K_qt: this._gearBoxBuilder.getEngine().T_max_T_dn,
+      });
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
@@ -913,13 +912,13 @@ export default class CalcController {
       }
     }
   }
-  getCalcGearSet(): any[] {
-    return this._calcGearSet;
+  setGearSet(gearSet: GearSet | any) {
+    this._gearBoxBuilder.setGearSet(gearSet);
+  }
+  getGearSet() {
+    return this._gearBoxBuilder.getGearSet();
   }
 
-  setGearAll() {
-    this._gearBoxBuilder.setGearSet(this._calcGearSet);
-  }
   // Bước 1 của trục: tính sơ bộ
   calcShaft(
     mats: { sigma_b: number; sigma_ch: number; HB: number },
@@ -933,30 +932,34 @@ export default class CalcController {
   ) {
     // Calculate shaft here
     try {
-      this._calcShaft = this._designStrategy.designShaft(
-        mats,
-        this._order,
-        this._calcEnginePostStats.distShaft.T.slice(1, this._calcEnginePostStats.distShaft.T.length - 1),
-        {
-          fastGear: {
-            b_w: this._calcGearSet[0].returnPostStats().b_w,
-            d1: this._calcGearSet[0].returnPostStats().d1,
-            d2: this._calcGearSet[0].returnPostStats().d2,
-            beta: this._calcGearSet[0].returnPostStats().beta,
-            a_tw: this._calcGearSet[0].a_tw_rad,
+      this._gearBoxBuilder.setShaft(
+        this._designStrategy.designShaft(
+          mats,
+          this._order,
+          this._gearBoxBuilder
+            .getCalcEnginePostStats()
+            .distShaft.T.slice(1, this._gearBoxBuilder.getCalcEnginePostStats().distShaft.T.length - 1),
+          {
+            fastGear: {
+              b_w: this._gearBoxBuilder.getGearSet()[0].returnPostStats().b_w,
+              d1: this._gearBoxBuilder.getGearSet()[0].returnPostStats().d1,
+              d2: this._gearBoxBuilder.getGearSet()[0].returnPostStats().d2,
+              beta: this._gearBoxBuilder.getGearSet()[0].returnPostStats().beta,
+              a_tw: this._gearBoxBuilder.getGearSet()[0].a_tw_rad,
+            },
+            slowGear: {
+              b_w: this._gearBoxBuilder.getGearSet()[1].returnPostStats().b_w,
+              d1: this._gearBoxBuilder.getGearSet()[1].returnPostStats().d1,
+              d2: this._gearBoxBuilder.getGearSet()[1].returnPostStats().d2,
+              beta: this._gearBoxBuilder.getGearSet()[0].returnPostStats().beta,
+              a_tw: this._gearBoxBuilder.getGearSet()[0].a_tw_rad,
+            },
+          }, // Gears
+          {
+            F_r: this._gearBoxBuilder.getMechDrive().getChainPostStats().F_rx, // Tạm thời bỏ qua trường hợp đai
           },
-          slowGear: {
-            b_w: this._calcGearSet[1].returnPostStats().b_w,
-            d1: this._calcGearSet[1].returnPostStats().d1,
-            d2: this._calcGearSet[1].returnPostStats().d2,
-            beta: this._calcGearSet[0].returnPostStats().beta,
-            a_tw: this._calcGearSet[0].a_tw_rad,
-          },
-        }, // Gears
-        {
-          F_r: this._calcMechDrive.getChainPostStats().F_rx, // Tạm thời bỏ qua trường hợp đai
-        },
-        hubParam
+          hubParam
+        )
       );
     } catch (error) {
       console.log(error);
@@ -971,30 +974,30 @@ export default class CalcController {
   }
   // Bước 2 của trục: Chọn đường kính trục chung
   chooseShaftDiameter(d_choose: number[]) {
-    if (this._calcShaft) {
-      this._calcShaft.choose_d(d_choose);
+    if (this._gearBoxBuilder.getShaft()) {
+      this._gearBoxBuilder.getShaft().choose_d(d_choose);
     }
   }
   // Bước 3 của trục: Chọn đường kính trục cho từng tiết diện của từng trục
   chooseIndiShaftDiameter(shaftNo: 1 | 2 | 3, d_choose: { point: string; value: number }[]) {
-    if (this._calcShaft) {
-      const thisShaft = this._calcShaft.getIndividualShaft(shaftNo);
+    if (this._gearBoxBuilder.getShaft()) {
+      const thisShaft = this._gearBoxBuilder.getShaft().getIndividualShaft(shaftNo);
       thisShaft.choose_d(d_choose);
     }
   }
   // Bước 4 của trục: Chọn then
   async calcKey() {
-    if (this._calcShaft) {
-      return this._designStrategy.designKey(this._calcShaft);
+    if (this._gearBoxBuilder.getShaft()) {
+      return this._designStrategy.designKey(this._gearBoxBuilder.getShaft());
     }
   }
   // Bước 5 (cuối) của trục: Kiểm nghiệm
   testShaft() {
-    if (this._calcShaft) {
+    if (this._gearBoxBuilder.getShaft()) {
       try {
         // Kiểm nghiệm trục
-        this._designStrategy.testDurability(this._calcShaft);
-        this._gearBoxBuilder.setShaft(this._calcShaft);
+        this._designStrategy.testDurability(this._gearBoxBuilder.getShaft());
+        this._gearBoxBuilder.setShaft(this._gearBoxBuilder.getShaft());
       } catch (error) {
         console.log(error);
         if (error instanceof Error) {

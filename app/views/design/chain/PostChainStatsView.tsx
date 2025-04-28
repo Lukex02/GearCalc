@@ -7,19 +7,7 @@ import styles from "@style/MainStyle";
 import CalculatedChain from "@models/Chain";
 import Header from "@/views/common/Header";
 import SaveComponent from "@/views/common/SaveComponent";
-
-const label = {
-  z1: "Số bánh răng dẫn",
-  z2: "Số bánh răng bị dẫn",
-  p: "Bước xích (mm)",
-  B: "Chiều dài ống lót (mm)",
-  d_c: "Đường kính chốt (mm)",
-  x: "Số mắt xích",
-  a: "Khoảng cách trục (mm)",
-  d1: "Đường kính vòng chia đĩa xích dẫn (mm)",
-  d2: "Đường kính vòng chia đĩa bị dẫn (mm)",
-  F_rx: "Lực tác dụng lên đĩa xích (N)",
-};
+import { chainLabel as label } from "@/views/common/Label";
 
 export default function PostChainStatsView() {
   const router = useRouter(); // Khởi tạo router để điều hướng

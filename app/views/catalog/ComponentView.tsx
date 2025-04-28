@@ -6,7 +6,7 @@ import { Colors } from "@style/Colors";
 import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 import { scale } from "react-native-size-matters";
 import CalcFooter from "@views/common/CalcFooter";
-import Header from "../common/Header";
+import Header from "@views/common/Header";
 
 const ComponentPage = () => {
   const data = useLocalSearchParams();
@@ -83,7 +83,7 @@ const ComponentPage = () => {
             <Text style={styles.componentInfoName}>b lớn nhất:</Text> {data.b_max} (mm)
           </Text>
           <Text style={styles.componentInfo}>
-            <Text style={styles.componentInfoName}>Tải trọng phá hỏng Q:</Text> {data.b_max} (N)
+            <Text style={styles.componentInfoName}>Tải trọng phá hỏng Q:</Text> {data.Breaking_Load_Q} (N)
           </Text>
           <Text style={styles.componentInfo}>
             <Text style={styles.componentInfoName}>Khối lượng 1 mét xích:</Text> {data.q_p} (kg)

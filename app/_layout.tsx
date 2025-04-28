@@ -1,6 +1,7 @@
 import { Stack, useRouter } from "expo-router";
 import { PaperProvider } from "react-native-paper";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Header from "@views/common/Header";
 
 export default function RootLayout() {
   return (

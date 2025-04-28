@@ -87,23 +87,21 @@ export default StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     width: "100%",
-    paddingHorizontal: scale(25),
-    paddingLeft: scale(35),
+    paddingLeft: scale(10),
   },
   headerLeftIcon: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     width: "100%",
-    paddingHorizontal: scale(25),
-    paddingRight: scale(35),
+    paddingRight: scale(10),
   },
   headerNoIcon: {
+    backgroundColor: Colors.background,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
-    paddingHorizontal: scale(25),
     marginTop: scale(10),
   },
 
@@ -205,6 +203,16 @@ export default StyleSheet.create({
     textAlign: "center",
     padding: Math.round(scale(10)),
     color: Colors.text.primary,
+  },
+  historyStatusCell: {
+    flex: 1,
+    margin: "auto",
+    textAlign: "center",
+    color: Colors.text.secondary,
+    borderRadius: 3,
+    fontSize: Math.round(scale(10)),
+    paddingHorizontal: Math.round(scale(5)),
+    ...shadows.default,
   },
   utilBtnContainer: {
     flex: 1,
@@ -654,5 +662,37 @@ export default StyleSheet.create({
     color: Colors.text.primary,
     fontSize: Math.round(scale(16)),
     textAlign: "center",
+  },
+  bottomSheetContainer: {
+    paddingHorizontal: Math.round(scale(10)),
+  },
+  bottomSheetFlatListContainer: {
+    paddingBottom: Math.round(verticalScale(20)),
+  },
+  bottomSheetContent: {
+    marginHorizontal: Math.round(scale(20)),
+    marginVertical: Math.round(scale(5)),
+  },
+  bottomSheetLargeTxt: {
+    color: Colors.text.primary,
+    fontSize: Math.round(scale(14)),
+    lineHeight: Math.round(verticalScale(30)),
+  },
+  bottomSheetNormalTxt: {
+    color: Colors.text.primary,
+    fontSize: Math.round(scale(12)),
+  },
+  bottomSheetSmallTxt: {
+    color: Colors.text.muted,
+    fontSize: Math.round(scale(11)),
+    fontStyle: "italic",
+    lineHeight: Math.round(verticalScale(25)),
+  },
+  bottomSheetSmallBoldTxt: {
+    color: Colors.text.muted,
+    fontSize: Math.round(scale(11)),
+    fontStyle: "italic",
+    fontWeight: "bold",
+    lineHeight: Math.round(verticalScale(25)),
   },
 });

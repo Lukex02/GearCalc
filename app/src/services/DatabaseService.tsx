@@ -46,14 +46,14 @@ export default class DatabaseService {
     }
   }
 
-  static async updateUserHistory(design: GearBox, time: string) {
+  static async updateUserHistory(design: GearBox, time: string, isFinish: boolean) {
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError || !userData?.user) {
       console.error("Không lấy được user:", userError);
     } else {
       const currentHistory = userData.user.user_metadata.history || [];
 
-      const updatedHistory = [...currentHistory, { id: currentHistory.length, design: design, time }];
+      const updatedHistory = [...currentHistory, { id: currentHistory.length, design, time, isFinish }];
 
       const { data, error } = await supabase.auth.updateUser({
         data: {
@@ -97,6 +97,28 @@ export default class DatabaseService {
       console.error("Lỗi khi cập nhật:", error);
     } else {
       return data;
+    }
+  }
+
+  static async getUserHistoryStats() {
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data?.user) {
+      console.error("Không lấy được user:", error);
+    } else {
+      const recentHistory = data.user.user_metadata.history[0] || null;
+      const recentUnfinishHistory =
+        data.user.user_metadata.history.find((item: any) => !item.isFinish) || null;
+      const designedNum = data.user.user_metadata.history.filter((item: any) => item.isFinish).length;
+      const printedNum = data.user.user_metadata.history.reduce(
+        (prev: any, curr: any) => (prev + curr.printed ? curr.printed : 0),
+        0
+      );
+      return {
+        recentHistory,
+        recentUnfinishHistory,
+        designedNum,
+        printedNum,
+      };
     }
   }
 

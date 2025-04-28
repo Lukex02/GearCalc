@@ -13,33 +13,18 @@ import { useSharedValue } from "react-native-reanimated";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Header from "@/views/common/Header";
 import SaveComponent from "@/views/common/SaveComponent";
+import { gearSetLabel as label } from "@/views/common/Label";
+import GearSet from "@/src/models/Gear";
 
 // Bảng Data cứng khi chọn luôn vật liệu là Thép 40X - Tôi cải thiện
 const materialStats = {
   small: { label: "Bánh nhỏ", sigma_b: 950, sigma_ch: 700, HB_min: 260, HB_max: 280, S_max: 60 },
   big: { label: "Bánh lớn", sigma_b: 850, sigma_ch: 550, HB_min: 230, HB_max: 260, S_max: 100 },
 };
-const label = {
-  a_w: "Khoảng cách trục (mm)",
-  m: "Modul pháp (mm)",
-  b_w: "Chiều rộng vành răng (mm)",
-  u_m: "Tỉ số truyền thực (mm)",
-  beta: "Góc β (°)",
-  z1: "Số răng bánh nhỏ (mm)",
-  z2: "Số răng bánh lớn (mm)",
-  d1: "Đường kính vòng chia đĩa bánh nhỏ (mm)",
-  d2: "Đường kính vòng chia đĩa bánh lớn (mm)",
-  da1: "Đường kính đỉnh bánh nhỏ (mm)",
-  da2: "Đường kính đỉnh bánh lớn (mm)",
-  df1: "Đường kính chân răng bánh nhỏ (mm)",
-  df2: "Đường kính chân răng bánh lớn (mm)",
-  dw1: "Đường kính lăn bánh nhỏ (mm)",
-  dw2: "Đường kính lăn bánh lớn (mm)",
-};
 
 export default function GearSlowScreen() {
   const calcController = CalcController.getInstance();
-  const [gearSetStats, setGearSetStats] = useState({});
+  const [gearSet, setGearSet] = useState<GearSet>();
   const selectMats: typeof materialStats = materialStats;
   const [HBColor, setHBColor] = useState(Colors.text.primary);
   const [modalVisible, setModalVisible] = useState(false);
@@ -70,17 +55,16 @@ export default function GearSlowScreen() {
 
   const handleValidation = () => {
     if (HB.small.value - HB.big.value >= 10) {
-      calcController.calcGearSet(
-        { sigma_b: [950, 850], sigma_ch: [700, 550], HB: [HB.small.value, HB.big.value], S_max: [60, 100] },
-        2
-      );
-      setGearSetStats(
-        calcController
-          .getCalcGearSet()
-          .findLast((gear) => gear)
-          .returnPostStats()
-      );
-      if (!verify) setModalVisible(true);
+      if (!verify) {
+        const gearSet = calcController.calcGearSet(
+          { sigma_b: [950, 850], sigma_ch: [700, 550], HB: [HB.small.value, HB.big.value], S_max: [60, 100] },
+          2
+        );
+        setGearSet(gearSet);
+        setModalVisible(true);
+      } else {
+        calcController.setGearSet(gearSet);
+      }
       return verify;
     } else {
       alert("Bánh nhỏ và bánh lớn độ bền không phù hợp");
@@ -199,16 +183,20 @@ export default function GearSlowScreen() {
                 <Text style={styles.specHeaderCell}>Thông số</Text>
                 <Text style={styles.specHeaderCell}>Giá trị</Text>
               </View>
-              <FlatList
-                data={Object.keys(gearSetStats)}
-                keyExtractor={(item) => item}
-                renderItem={({ item }) => (
-                  <View key={item} style={styles.specRow}>
-                    <Text style={styles.specCellRow}>{label[item as keyof typeof label]}</Text>
-                    <Text style={styles.specCellRow}>{gearSetStats[item as keyof typeof gearSetStats]}</Text>
-                  </View>
-                )}
-              />
+              {gearSet && (
+                <FlatList
+                  data={Object.keys(gearSet.returnPostStats())}
+                  keyExtractor={(item) => item}
+                  renderItem={({ item }) => (
+                    <View key={item} style={styles.specRow}>
+                      <Text style={styles.specCellRow}>{label[item as keyof typeof label]}</Text>
+                      <Text style={styles.specCellRow}>
+                        {gearSet.returnPostStats()[item as keyof typeof label]}
+                      </Text>
+                    </View>
+                  )}
+                />
+              )}
             </View>
             <View style={CalcFooterStyle.buttonFooter}>
               <Button

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, Dimensions, StyleSheet } from "react-native";
 import {
   FontAwesome,
@@ -17,6 +17,8 @@ import ExitOnBack from "@views/common/ExitOnBack";
 import { useSharedValue } from "react-native-reanimated";
 import LogOutComponent from "@/views/common/LogOutComponent";
 import Header from "@views/common/Header";
+import DatabaseService from "@/src/services/DatabaseService";
+import LoadingScreen from "./common/LoadingScreen";
 
 const carouselData: { id: number; title: string; btnLabel: string; icon: any; navigate: Href }[] = [
   {
@@ -39,11 +41,18 @@ const width = Dimensions.get("window").width;
 export default function Home() {
   const router = useRouter();
   const progress = useSharedValue<number>(0);
+  const [userHistoryStats, setUserHistoryStats] = useState<any>(null);
+
+  useEffect(() => {
+    DatabaseService.getUserHistoryStats().then((history) => setUserHistoryStats(history));
+  }, []);
 
   return (
     <View style={styles.containerStart}>
       <ExitOnBack />
-      <Header title="Trang chủ" rightIcon={<LogOutComponent />} />
+      <View style={{ paddingHorizontal: scale(25), width: "100%" }}>
+        <Header title="Trang chủ" rightIcon={<LogOutComponent />} />
+      </View>
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         style={styles.gridContainer}
@@ -92,18 +101,27 @@ export default function Home() {
         <View style={homeStyle.container}>
           <Text style={homeStyle.title}>Thiết kế gần đây</Text>
           <View style={styles.homeCard}>
-            <View style={styles.homeCardCol}>
-              {/* <Text style={styles.homeCardTxt}>{recentDesign}</Text> */}
-              <Text style={styles.homeCardTxt}>Hộp giảm tốc 2 cấp khai triển</Text>
-              <FontAwesome
-                name="gears"
-                size={scale(50)}
-                color={Colors.text.primary}
-                style={{ alignSelf: "center" }}
-              />
-              <Text style={{ ...styles.homeCardTxt, fontStyle: "italic" }}>Thời gian: 10:10 12/7/2025</Text>
-            </View>
-            <View style={styles.homeCardCol}>
+            {userHistoryStats ? (
+              <View style={styles.homeCardCol}>
+                <Text style={styles.homeCardTxt}>
+                  {userHistoryStats.recentHistory
+                    ? userHistoryStats.recentHistory.design._type
+                    : "Bạn chưa có thiết kế nào"}
+                </Text>
+                <FontAwesome
+                  name="gears"
+                  size={scale(50)}
+                  color={Colors.text.primary}
+                  style={{ alignSelf: "center" }}
+                />
+                <Text style={{ ...styles.homeCardTxt, fontStyle: "italic" }}>
+                  Thời gian: {userHistoryStats.recentHistory ? userHistoryStats.recentHistory.time : ""}
+                </Text>
+              </View>
+            ) : (
+              <LoadingScreen />
+            )}
+            <View style={{ ...styles.homeCardCol, marginLeft: scale(5) }}>
               <Button
                 style={styles.utilBtnContainer}
                 onPress={() => console.log("IconButton Pressed")}
@@ -128,24 +146,67 @@ export default function Home() {
               >
                 In
               </Button>
+              <Button
+                style={styles.utilBtnContainer}
+                onPress={() => console.log("IconButton Pressed")}
+                mode="contained"
+                labelStyle={{
+                  color: Colors.text.accent,
+                }}
+                contentStyle={{ flexDirection: "row-reverse" }}
+                icon="file-document-edit"
+              >
+                Sửa
+              </Button>
             </View>
           </View>
         </View>
         <View style={homeStyle.container}>
           <Text style={homeStyle.title}>Thống kê</Text>
           <View style={styles.homeColContainer}>
-            {/* Thiết kế hiện tại */}
+            {/* Thiết kế đang làm */}
             <View style={styles.homeCard1x2}>
-              <View>
-                <MaterialCommunityIcons
-                  name="book-cancel"
-                  size={scale(50)}
-                  color={Colors.text.primary}
-                  style={{ alignSelf: "center", margin: scale(10) }}
-                />
-                {/* <BlinkingIcon /> */}
-                <Text style={styles.homeCardBigTxt}>Hiện tại không có</Text>
-              </View>
+              {userHistoryStats ? (
+                <View style={{ gap: verticalScale(10) }}>
+                  {userHistoryStats.recentUnfinishHistory ? (
+                    <MaterialCommunityIcons
+                      name="cog-pause"
+                      size={scale(50)}
+                      color={Colors.text.warning}
+                      style={{ alignSelf: "center", margin: scale(10) }}
+                    />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="book-cancel"
+                      size={scale(50)}
+                      color={Colors.text.success}
+                      style={{ alignSelf: "center", margin: scale(10) }}
+                    />
+                  )}
+                  <Text style={styles.homeCardBigTxt}>
+                    {userHistoryStats.recentUnfinishHistory
+                      ? userHistoryStats.recentUnfinishHistory.design._type
+                      : "Hiện tại không có"}
+                  </Text>
+                  {userHistoryStats.recentUnfinishHistory && (
+                    <Button
+                      style={{ ...styles.utilBtnContainer, alignSelf: "center", width: "100%" }}
+                      onPress={() => console.log("IconButton Pressed")}
+                      mode="contained"
+                      compact={true}
+                      labelStyle={{
+                        color: Colors.text.accent,
+                      }}
+                      contentStyle={{ flexDirection: "row-reverse" }}
+                      icon="file-document-edit"
+                    >
+                      Tiếp tục
+                    </Button>
+                  )}
+                </View>
+              ) : (
+                <LoadingScreen />
+              )}
               <Text style={styles.homeCardTxt}>Thiết kế đang làm</Text>
             </View>
 
@@ -158,8 +219,7 @@ export default function Home() {
                   color={Colors.text.primary}
                   style={{ alignSelf: "center" }}
                 />
-                {/* <Text style={styles.homeCardBigTxt}>{done}</Text> */}
-                <Text style={styles.homeCardBigTxt}>10</Text>
+                <Text style={styles.homeCardBigTxt}>{userHistoryStats.designedNum}</Text>
                 <Text style={styles.homeCardTxt}>Đã thực hiện</Text>
               </View>
 
@@ -171,8 +231,7 @@ export default function Home() {
                   color={Colors.text.primary}
                   style={{ alignSelf: "center" }}
                 />
-                {/* <Text style={styles.homeCardBigTxt}>{printed}</Text> */}
-                <Text style={styles.homeCardBigTxt}>5</Text>
+                <Text style={styles.homeCardBigTxt}>{userHistoryStats.printedNum}</Text>
                 <Text style={styles.homeCardTxt}>Thiết kế đã in</Text>
               </View>
             </View>
