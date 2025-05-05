@@ -221,7 +221,7 @@ export default function SaveComponent() {
             borderTopLeftRadius: 15,
           }}
         >
-          <View style={{ margin: scale(10) }}>
+          <View style={{ padding: scale(10), backgroundColor: Colors.card }}>
             <Header
               title="Trạng thái"
               rightIcon={

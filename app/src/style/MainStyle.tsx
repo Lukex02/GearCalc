@@ -674,7 +674,7 @@ export default StyleSheet.create({
     marginVertical: Math.round(scale(5)),
   },
   bottomSheetLargeTxt: {
-    color: Colors.text.primary,
+    color: Colors.text.lightAccent,
     fontSize: Math.round(scale(14)),
     lineHeight: Math.round(verticalScale(30)),
   },

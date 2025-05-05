@@ -8,6 +8,7 @@ export const Colors = {
     secondary: "black",
     muted: "rgb(173, 181, 201)",
     accent: "#FF7D00",
+    lightAccent: "rgb(250, 186, 101)",
     warning: "rgb(255, 217, 0)",
     error: "rgba(255, 0, 0, 0.69)",
     success: "rgb(0,255,98)",
