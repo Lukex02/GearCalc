@@ -15,6 +15,7 @@ export default function LogOutComponent() {
   const logOut = () => {
     DatabaseService.logOut();
     router.push("../../");
+    setModalVisible(false);
     alert("Đăng xuất thành công");
   };
 
