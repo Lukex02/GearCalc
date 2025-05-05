@@ -219,7 +219,9 @@ export default function Home() {
                   color={Colors.text.primary}
                   style={{ alignSelf: "center" }}
                 />
-                <Text style={styles.homeCardBigTxt}>{userHistoryStats.designedNum}</Text>
+                <Text style={styles.homeCardBigTxt}>
+                  {userHistoryStats ? userHistoryStats.designedNum : 0}
+                </Text>
                 <Text style={styles.homeCardTxt}>Đã thực hiện</Text>
               </View>
 
@@ -231,7 +233,9 @@ export default function Home() {
                   color={Colors.text.primary}
                   style={{ alignSelf: "center" }}
                 />
-                <Text style={styles.homeCardBigTxt}>{userHistoryStats.printedNum}</Text>
+                <Text style={styles.homeCardBigTxt}>
+                  {userHistoryStats ? userHistoryStats.printedNum : 0}
+                </Text>
                 <Text style={styles.homeCardTxt}>Thiết kế đã in</Text>
               </View>
             </View>
