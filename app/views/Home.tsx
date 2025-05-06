@@ -167,7 +167,7 @@ export default function Home() {
             {/* Thiết kế đang làm */}
             <View style={styles.homeCard1x2}>
               {userHistoryStats ? (
-                <View style={{ gap: verticalScale(10) }}>
+                <View style={{ gap: verticalScale(12) }}>
                   {userHistoryStats.recentUnfinishHistory ? (
                     <MaterialCommunityIcons
                       name="cog-pause"
@@ -183,9 +183,12 @@ export default function Home() {
                       style={{ alignSelf: "center", margin: scale(10) }}
                     />
                   )}
-                  <Text style={styles.homeCardBigTxt}>
+                  <Text style={styles.homeCardMedTxt}>
                     {userHistoryStats.recentUnfinishHistory
-                      ? userHistoryStats.recentUnfinishHistory.design._type
+                      ? userHistoryStats.recentUnfinishHistory.design._type +
+                        " (" +
+                        userHistoryStats.recentUnfinishHistory.time +
+                        ")"
                       : "Hiện tại không có"}
                   </Text>
                   {userHistoryStats.recentUnfinishHistory && (
@@ -205,7 +208,9 @@ export default function Home() {
                   )}
                 </View>
               ) : (
-                <LoadingScreen />
+                <View style={{ margin: "auto" }}>
+                  <LoadingScreen />
+                </View>
               )}
               <Text style={styles.homeCardTxt}>Thiết kế đang làm</Text>
             </View>

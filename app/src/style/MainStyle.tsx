@@ -250,6 +250,12 @@ export default StyleSheet.create({
     color: Colors.text.primary,
     fontSize: scale(12),
   },
+  homeCardMedTxt: {
+    color: Colors.text.primary,
+    fontSize: scale(16),
+    alignSelf: "center",
+    textAlign: "center",
+  },
   homeCardBigTxt: {
     color: Colors.text.primary,
     fontSize: scale(20),
