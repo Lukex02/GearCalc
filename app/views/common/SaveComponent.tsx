@@ -105,7 +105,6 @@ export default function SaveComponent() {
             : ("chainLabel" as keyof typeof Label)
         ];
       const itemKeys = Object.keys(labels);
-      // console.log(item.designStrategy && item.designStrategy instanceof DesignGearBox1);
       // console.log(item.designStrategy);
       return (
         <View>

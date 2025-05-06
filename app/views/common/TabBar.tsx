@@ -62,8 +62,8 @@ export default function TabBar({ state, descriptors, navigation }: any) {
           }
         };
 
-        let iconName: "home" | "book" | "account" = "home";
-        if (route.name === "catalog") iconName = "book";
+        let iconName: "home" | "book-open-page-variant" | "account" = "home";
+        if (route.name === "catalog") iconName = "book-open-page-variant";
         else if (route.name === "account") iconName = "account";
 
         return (

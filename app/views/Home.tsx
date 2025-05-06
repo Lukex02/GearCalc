@@ -100,8 +100,8 @@ export default function Home() {
         </View>
         <View style={homeStyle.container}>
           <Text style={homeStyle.title}>Thiết kế gần đây</Text>
-          <View style={styles.homeCard}>
-            {userHistoryStats ? (
+          {userHistoryStats ? (
+            <View style={styles.homeCard}>
               <View style={styles.homeCardCol}>
                 <Text style={styles.homeCardTxt}>
                   {userHistoryStats.recentHistory
@@ -115,51 +115,41 @@ export default function Home() {
                   style={{ alignSelf: "center" }}
                 />
                 <Text style={{ ...styles.homeCardTxt, fontStyle: "italic" }}>
-                  Thời gian: {userHistoryStats.recentHistory ? userHistoryStats.recentHistory.time : ""}
+                  {userHistoryStats.recentHistory ? "Thời gian: " + userHistoryStats.recentHistory.time : ""}
                 </Text>
               </View>
-            ) : (
-              <LoadingScreen />
-            )}
-            <View style={{ ...styles.homeCardCol, marginLeft: scale(5) }}>
-              <Button
-                style={styles.utilBtnContainer}
-                onPress={() => console.log("IconButton Pressed")}
-                mode="contained"
-                labelStyle={{
-                  color: Colors.text.secondaryAccent,
-                }}
-                contentStyle={{ flexDirection: "row-reverse" }}
-                icon="file-search"
-              >
-                Xem
-              </Button>
-              <Button
-                style={styles.utilBtnContainer}
-                onPress={() => console.log("IconButton Pressed")}
-                mode="contained"
-                labelStyle={{
-                  color: Colors.text.success,
-                }}
-                contentStyle={{ flexDirection: "row-reverse" }}
-                icon="printer"
-              >
-                In
-              </Button>
-              <Button
-                style={styles.utilBtnContainer}
-                onPress={() => console.log("IconButton Pressed")}
-                mode="contained"
-                labelStyle={{
-                  color: Colors.text.accent,
-                }}
-                contentStyle={{ flexDirection: "row-reverse" }}
-                icon="file-document-edit"
-              >
-                Sửa
-              </Button>
+              {userHistoryStats.recentHistory && (
+                <View style={{ ...styles.homeCardCol, marginLeft: scale(5) }}>
+                  <Button
+                    style={styles.utilBtnContainer}
+                    onPress={() => console.log("IconButton Pressed")}
+                    mode="contained"
+                    labelStyle={{
+                      color: Colors.text.secondaryAccent,
+                    }}
+                    contentStyle={{ flexDirection: "row-reverse" }}
+                    icon="file-search"
+                  >
+                    Xem
+                  </Button>
+                  <Button
+                    style={styles.utilBtnContainer}
+                    onPress={() => console.log("IconButton Pressed")}
+                    mode="contained"
+                    labelStyle={{
+                      color: Colors.text.success,
+                    }}
+                    contentStyle={{ flexDirection: "row-reverse" }}
+                    icon="printer"
+                  >
+                    In
+                  </Button>
+                </View>
+              )}
             </View>
-          </View>
+          ) : (
+            <LoadingScreen />
+          )}
         </View>
         <View style={homeStyle.container}>
           <Text style={homeStyle.title}>Thống kê</Text>
@@ -191,21 +181,6 @@ export default function Home() {
                         ")"
                       : "Hiện tại không có"}
                   </Text>
-                  {userHistoryStats.recentUnfinishHistory && (
-                    <Button
-                      style={{ ...styles.utilBtnContainer, alignSelf: "center", width: "100%" }}
-                      onPress={() => console.log("IconButton Pressed")}
-                      mode="contained"
-                      compact={true}
-                      labelStyle={{
-                        color: Colors.text.accent,
-                      }}
-                      contentStyle={{ flexDirection: "row-reverse" }}
-                      icon="file-document-edit"
-                    >
-                      Tiếp tục
-                    </Button>
-                  )}
                 </View>
               ) : (
                 <View style={{ margin: "auto" }}>

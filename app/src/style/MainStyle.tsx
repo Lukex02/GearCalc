@@ -242,6 +242,7 @@ export default StyleSheet.create({
     flexDirection: "row",
   },
   homeCardCol: {
+    margin: "auto",
     alignItems: "flex-start",
     justifyContent: "space-between",
     gap: verticalScale(20),
