@@ -1,4 +1,4 @@
-import Utils from "../services/Utils";
+import Utils from "@services/Utils";
 
 const psi_bdValues = [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6];
 const a_wValues = [40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400];
@@ -73,6 +73,7 @@ export class CalculatedGear {
     L_h: number,
     isSmall: 0 | 1 // Bánh nhỏ thì có chia u, bánh lớn thì không
   ) {
+    console.log(L_h);
     this._N_HE = 60 * 1 * (n / u ** isSmall) * L_h * ((T1 ** 3 * t1) / 60 + (T2 ** 3 * t2) / 60);
     if (this._N_HE > this._N_HO) {
       this._K_HL = 1;

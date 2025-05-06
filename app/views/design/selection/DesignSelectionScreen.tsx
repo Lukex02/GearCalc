@@ -67,7 +67,6 @@ export default function DesignSelectionScreen() {
 
       <CalcFooter
         backHome={true}
-        backPage="/(tabs)/home"
         onValidate={handleValidation}
         nextPage={{ pathname: "/views/design/engine/InputDataScreen", params: { gearBoxType: gearBoxType } }}
       />

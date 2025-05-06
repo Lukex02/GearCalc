@@ -21,7 +21,7 @@ export default function SaveComponent() {
 
   const sheetRef = useRef<BottomSheet>(null);
   const data = useMemo(
-    () => ["_type", "_calcEnginePostStats", "_engine", "_mechDrive", "_gearSet", "_shaft"],
+    () => ["_type", "_calcEnginePostStats", "_engine", "_mechDrive", "_gearSet", "_shaft"], // ! Cần thêm điều kiện thiết kế trong _design.designStrategy._designInputStats
     []
   );
 

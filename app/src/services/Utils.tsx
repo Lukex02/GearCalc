@@ -257,6 +257,52 @@ const ForceOnShaftDiagram = ({ data, fillColor, lineColor }: ForceOnShaftDataPro
   );
 };
 
+function chooseRollerBearingType(F_a: number, maxFr: number) {
+  if (F_a / maxFr < 0.3) return "single_row_ball"; // Ổ bi một dãy
+  else if (F_a / maxFr < 1.5) return "thrust"; // Ổ đỡ - chặn
+  else return "tapered"; // Ổ đũa côn
+}
+
+const rollerCoeffi = {
+  single_row_ball: [
+    { iFa_Co: 0.014, X: 0.56, Y: 2.3, e: 0.19 },
+    { iFa_Co: 0.028, X: 0.56, Y: 1.99, e: 0.22 },
+    { iFa_Co: 0.056, X: 0.56, Y: 1.71, e: 0.26 },
+    { iFa_Co: 0.084, X: 0.56, Y: 1.55, e: 0.28 },
+    { iFa_Co: 0.11, X: 0.56, Y: 1.45, e: 0.3 },
+    { iFa_Co: 0.17, X: 0.56, Y: 1.31, e: 0.34 },
+    { iFa_Co: 0.28, X: 0.56, Y: 1.15, e: 0.38 },
+    { iFa_Co: 0.42, X: 0.56, Y: 1.04, e: 0.42 },
+    { iFa_Co: 0.56, X: 0.56, Y: 1.0, e: 0.44 },
+  ],
+};
+
+function getRollerCoeffi(type: "single_row_ball", iFa_Co_calc: number) {
+  return rollerCoeffi[type as keyof typeof rollerCoeffi].reverse().find(({ iFa_Co, X, Y, e }) => {
+    if (iFa_Co_calc > iFa_Co) {
+      return { X, Y, e };
+    }
+  });
+}
+const shaftBearing = [
+  { D_min: 40, D_max: 42, D2: 54, D3: 68, D4: 32, h: 8, d4: "M6", Z: 4 },
+  { D_min: 44, D_max: 47, D2: 60, D3: 70, D4: 37, h: 8, d4: "M6", Z: 4 },
+  { D_min: 50, D_max: 52, D2: 65, D3: 80, D4: 42, h: 8, d4: "M6", Z: 4 },
+  { D_min: 55, D_max: 58, D2: 70, D3: 85, D4: 48, h: 8, d4: "M6", Z: 4 },
+  { D_min: 60, D_max: 62, D2: 75, D3: 90, D4: 52, h: 8, d4: "M6", Z: 4 },
+  { D_min: 65, D_max: 68, D2: 84, D3: 110, D4: 58, h: 10, d4: "M8", Z: 4 },
+  { D_min: 70, D_max: 75, D2: 90, D3: 115, D4: 65, h: 10, d4: "M8", Z: 4 },
+  { D_min: 80, D_max: 85, D2: 100, D3: 125, D4: 75, h: 10, d4: "M8", Z: 4 },
+  { D_min: 90, D_max: 95, D2: 110, D3: 135, D4: 85, h: 12, d4: "M8", Z: 6 },
+  { D_min: 100, D_max: 110, D2: 120, D3: 150, D4: 90, h: 12, d4: "M10", Z: 6 },
+  { D_min: 105, D_max: 110, D2: 130, D3: 160, D4: 100, h: 12, d4: "M10", Z: 6 },
+  { D_min: 115, D_max: 120, D2: 140, D3: 170, D4: 115, h: 14, d4: "M10", Z: 6 },
+  { D_min: 125, D_max: 130, D2: 150, D3: 180, D4: 115, h: 14, d4: "M10", Z: 6 },
+  { D_min: 135, D_max: 140, D2: 160, D3: 190, D4: 125, h: 14, d4: "M10", Z: 6 },
+];
+function getShaftBearing(D: number) {
+  return shaftBearing.find(({ D_min, D_max }) => D_min <= D && D <= D_max);
+}
 async function printReportPDF() {
   const report = `
 <html>
@@ -285,6 +331,9 @@ export default {
   getBO,
   getSigmaAllowInShaft,
   getEpsilonSigmaAndTau,
+  chooseRollerBearingType,
+  getRollerCoeffi,
+  getShaftBearing,
   ForceOnShaftDiagram,
   printReportPDF,
 };

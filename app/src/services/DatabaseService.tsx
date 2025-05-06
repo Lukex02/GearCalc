@@ -179,4 +179,23 @@ export default class DatabaseService {
     if (error) console.error("Lỗi khi lấy dữ liệu ", error);
     return data ?? [];
   }
+
+  static async getSelectableRollerBearingList(type: string, d: number): Promise<any[]> {
+    const { data, error } = await supabase
+      .from("roller_bearing")
+      .select("*")
+      .eq("type", type)
+      .eq("d", d)
+      .limit(5);
+
+    if (error) console.error("Lỗi khi lấy dữ liệu ", error);
+    return data ?? [];
+  }
+
+  static async getLubricant() {
+    const { data, error } = await supabase.from("lubricant").select("*");
+
+    if (error) console.error("Lỗi khi lấy dữ liệu ", error);
+    return data ?? [];
+  }
 }

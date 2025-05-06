@@ -1,4 +1,4 @@
-import { IRatio } from "./GearRatio";
+import { IRatio } from "@models/GearRatio";
 
 export class CalculatedEngine {
   private _p_lv: number; // Công suất trên trục công tác
