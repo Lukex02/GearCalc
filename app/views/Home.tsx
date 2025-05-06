@@ -8,7 +8,7 @@ import {
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import { Button, IconButton } from "react-native-paper";
-import { useRouter, Href } from "expo-router";
+import { useRouter, Href, router } from "expo-router";
 import Carousel, { Pagination } from "react-native-reanimated-carousel";
 import styles from "@style/MainStyle";
 import { Colors } from "@/src/style/Colors";
@@ -19,6 +19,8 @@ import LogOutComponent from "@/views/common/LogOutComponent";
 import Header from "@views/common/Header";
 import DatabaseService from "@/src/services/DatabaseService";
 import LoadingScreen from "./common/LoadingScreen";
+import CalcController from "@/src/controller/CalcController";
+import GearBox from "@/src/models/GearBox";
 
 const carouselData: { id: number; title: string; btnLabel: string; icon: any; navigate: Href }[] = [
   {
@@ -144,6 +146,18 @@ export default function Home() {
                   >
                     In
                   </Button>
+                  <Button
+                    style={styles.utilBtnContainer}
+                    onPress={() => alert("Chức năng chưa phát triển")}
+                    mode="contained"
+                    labelStyle={{
+                      color: Colors.text.accent,
+                    }}
+                    contentStyle={{ flexDirection: "row-reverse" }}
+                    icon="file-document-edit"
+                  >
+                    Sửa
+                  </Button>
                 </View>
               )}
             </View>
@@ -181,6 +195,21 @@ export default function Home() {
                         ")"
                       : "Hiện tại không có"}
                   </Text>
+                  {userHistoryStats.recentUnfinishHistory && (
+                    <Button
+                      style={{ ...styles.utilBtnContainer, alignSelf: "center", width: "100%" }}
+                      onPress={() => alert("Chức năng chưa phát triển")}
+                      mode="contained"
+                      compact={true}
+                      labelStyle={{
+                        color: Colors.text.accent,
+                      }}
+                      contentStyle={{ flexDirection: "row-reverse" }}
+                      icon="file-document-edit"
+                    >
+                      Tiếp tục
+                    </Button>
+                  )}
                 </View>
               ) : (
                 <View style={{ margin: "auto" }}>
