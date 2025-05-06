@@ -8,7 +8,7 @@ export default class LubricantController {
       return lubData
         .map((lub) => {
           if (lub) {
-            return new Lubricant(lub.name, lub.centistoc_min, lub.centistoc_max, lub.specVolume);
+            return new Lubricant(lub.name, lub.centistoc_min, lub.centistoc_max);
           }
         })
         .filter((item): item is Lubricant => item !== null); // Loại bỏ `null` an toàn;

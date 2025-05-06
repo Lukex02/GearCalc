@@ -22,11 +22,13 @@ export default class RollerBearingController {
               rollerBearing.symbol,
               rollerBearing.d,
               rollerBearing.D,
-              rollerBearing.B,
               rollerBearing.R,
               rollerBearing.C,
               rollerBearing.C_O,
-              rollerBearing.description
+              rollerBearing.description,
+              rollerBearing.B,
+              rollerBearing.b,
+              rollerBearing.r1
             );
           }
         })

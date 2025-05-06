@@ -18,10 +18,12 @@ export class SelectedRollerBearing {
     public symbol: number,
     public d: number,
     public D: number,
-    public B: number,
     public r: number,
     public C: number,
     public C_O: number,
-    public description: string
+    public description: string,
+    public B?: number, // của ổ bi đỡ 1 dãy
+    public b?: number, // của ổ bi đỡ - chặn
+    public r1?: number // của ổ bi đỡ - chặn
   ) {}
 }

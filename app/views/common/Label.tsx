@@ -48,4 +48,13 @@ const gearSetLabel = {
   dw2: "Đường kính lăn bánh lớn (mm)",
 };
 
-export { mainlabel, engineLabel, chainLabel, gearSetLabel };
+const selectRollerBearingLabel = {
+  ELM: "Cỡ siêu nhẹ, vừa", // Extra light, medium
+  ESLN: "Cỡ đặc biệt nhẹ, hẹp", // Extra light, narrow
+  ESLM: "Cỡ đặc biệt nhẹ, vừa", // Extra light, medium
+  L: "Cỡ nhẹ", // Light
+  M: "Cỡ vừa", // Medium
+  H: "Cỡ nặng", // Heavy
+};
+
+export { mainlabel, engineLabel, chainLabel, gearSetLabel, selectRollerBearingLabel };

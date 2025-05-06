@@ -152,7 +152,7 @@ export default class DatabaseService {
 
   static async getCatalogAll(): Promise<any[]> {
     const res = [];
-    const tables = ["Engine", "chain"];
+    const tables = ["Engine", "chain", "key_flat", "roller_bearing", "lubricantAt50C"];
 
     for (const tableName of tables) {
       const { data, error } = await supabase.from(tableName).select("*").limit(2); // Tránh lãng phí data
@@ -193,7 +193,7 @@ export default class DatabaseService {
   }
 
   static async getLubricant() {
-    const { data, error } = await supabase.from("lubricant").select("*");
+    const { data, error } = await supabase.from("lubricantAt50C").select("*");
 
     if (error) console.error("Lỗi khi lấy dữ liệu ", error);
     return data ?? [];
