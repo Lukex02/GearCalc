@@ -111,7 +111,7 @@ export default function GearFastScreen() {
                 <View key={index} style={styles.parameterRow}>
                   <Text style={styles.paramType}>{selectMats[item as keyof typeof materialStats].label}</Text>
                   <Slider
-                    theme={{ ...sliderTheme, minimumTrackTintColor: HBColor }}
+                    theme={{ ...sliderTheme, minimumTrackTintColor: HBColor, bubbleBackgroundColor: HBColor }}
                     bubble={(value) => `${Math.round(value)}`}
                     renderThumb={() => <FontAwesome6 name="diamond" size={20} color={HBColor} />}
                     bubbleOffsetX={5}

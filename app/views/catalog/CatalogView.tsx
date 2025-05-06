@@ -9,6 +9,7 @@ import DatabaseService from "@services/DatabaseService";
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { scale, verticalScale } from "react-native-size-matters";
 import Header from "@views/common/Header";
+import { rollerBearingLabel } from "@views/common/Label";
 
 const CatalogPage = () => {
   const [loading, setLoading] = useState(true);
@@ -100,12 +101,18 @@ const CatalogPage = () => {
               <Menu.Item
                 title="Ổ lăn"
                 titleStyle={{ color: Colors.text.primary }}
-                onPress={() => filterByType("roller")}
+                onPress={() => filterByType("roller_bearing")}
                 leadingIcon="movie-roll"
+              />
+              <Menu.Item
+                title="Dầu bôi trơn"
+                titleStyle={{ color: Colors.text.primary }}
+                onPress={() => filterByType("lubricantAt50C")}
+                leadingIcon="oil"
               />
             </Menu>
           }
-        />{" "}
+        />
       </View>
 
       {loading && <LoadingScreen />}
@@ -148,6 +155,71 @@ const CatalogPage = () => {
                     <Text style={styles.subtitle}>B min: {item.B_min} (mm)</Text>
                     <Text style={styles.subtitle}>Tải trọng phá hỏng Q: {item.Breaking_Load_Q} (kN)</Text>
                     <Text style={styles.subtitle}>Khối lượng 1 mét xích Q: {item.q_p} (kg)</Text>
+                  </View>
+                </View>
+              )}
+
+              {item.type === "key_flat" && (
+                <View style={styles.gridItem}>
+                  <MaterialCommunityIcons
+                    name="screwdriver"
+                    size={scale(50)}
+                    style={styles.gridImage}
+                    color={Colors.primary}
+                  />
+                  <View style={styles.gridTextContainer}>
+                    <Text style={styles.title}>
+                      Then bằng Đường kính trục d: {item.d_min}...{item.d_max} (mm)
+                    </Text>
+                    <Text style={styles.subtitle}>
+                      Kích thước tiết diện then (b x h): {item.b} x {item.h} (mm)
+                    </Text>
+                    <Text style={styles.subtitle}>Chiều sâu rãnh then trên trục t1: {item.t1} (mm)</Text>
+                    <Text style={styles.subtitle}>Chiều sâu rãnh then trên lỗ t2: {item.t2} (mm)</Text>
+                    <Text style={styles.subtitle}>
+                      Bán kính góc lượn của rãnh r: {item.r_min}...{item.r_max} (mm)
+                    </Text>
+                  </View>
+                </View>
+              )}
+
+              {item.type === "roller_bearing" && (
+                <View style={styles.gridItem}>
+                  <MaterialCommunityIcons
+                    name="movie-roll"
+                    size={scale(50)}
+                    style={styles.gridImage}
+                    color={Colors.primary}
+                  />
+                  <View style={styles.gridTextContainer}>
+                    <Text style={styles.title}>
+                      {rollerBearingLabel[item.rb_type as keyof typeof rollerBearingLabel]}
+                    </Text>
+                    <Text style={styles.subtitle}>d: {item.d} (mm)</Text>
+                    <Text style={styles.subtitle}>D: {item.D} (mm)</Text>
+                    {item.b && <Text style={styles.subtitle}>b = T: {item.b} (mm)</Text>}
+                    {item.B && <Text style={styles.subtitle}>B: {item.B} (mm)</Text>}
+                    <Text style={styles.subtitle}>r: {item.r} (mm)</Text>
+                    {item.r1 && <Text style={styles.subtitle}>r1: {item.r1} (mm)</Text>}
+                    <Text style={styles.subtitle}>C: {item.C} (kN)</Text>
+                    <Text style={styles.subtitle}>Co: {item.Co} (kN)</Text>
+                  </View>
+                </View>
+              )}
+              {item.type === "lubricantAt50C" && (
+                <View style={styles.gridItem}>
+                  <MaterialCommunityIcons
+                    name="oil"
+                    size={scale(50)}
+                    style={styles.gridImage}
+                    color={Colors.primary}
+                  />
+                  <View style={styles.gridTextContainer}>
+                    <Text style={styles.title}>{item.name}</Text>
+                    <Text style={styles.subtitle}>
+                      Độ nhớt centistoc ở 50°C: {!item.centistoc_max && "≥"}
+                      {item.centistoc_min} - {item.centistoc_max}
+                    </Text>
                   </View>
                 </View>
               )}

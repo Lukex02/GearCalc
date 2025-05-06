@@ -73,4 +73,19 @@ const selectRollerBearingLabel = {
   H: "Cỡ nặng", // Heavy
 };
 
-export { mainlabel, inputLabel, engineLabel, chainLabel, gearSetLabel, shaftLabel, selectRollerBearingLabel };
+const rollerBearingLabel = {
+  single_row_ball: "Ổ bi đỡ một dãy",
+  thrust: "Ổ đỡ - chặn",
+  tapered: "Ổ đũa côn",
+};
+
+export {
+  mainlabel,
+  inputLabel,
+  engineLabel,
+  chainLabel,
+  gearSetLabel,
+  shaftLabel,
+  selectRollerBearingLabel,
+  rollerBearingLabel,
+};
