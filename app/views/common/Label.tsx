@@ -1,10 +1,22 @@
 const mainlabel = {
   _type: "Loại",
+  _design: "Điều kiện thiết kế",
   _calcEnginePostStats: "Số liệu động học và động lực học trên các trục",
   _engine: "Động cơ điện",
   _mechDrive: "Xích",
   _gearSet: "Bộ truyền",
   _shaft: "Trục",
+};
+
+const inputLabel = {
+  F: "Lực vòng F (N)",
+  v: "Vận tốc V (m/s)",
+  T1: "Momen xoắn T1 (N.m)",
+  t1: "Thời gian tải t1 (giờ)",
+  T2: "Momen xoắn T2 (N.m)",
+  t2: "Thời gian tải t2 (giờ)",
+  L: "Thời gian làm việc L (năm)",
+  // output: "Đối tượng đầu ra",
 };
 
 const engineLabel = {
@@ -48,6 +60,10 @@ const gearSetLabel = {
   dw2: "Đường kính lăn bánh lớn (mm)",
 };
 
+const shaftLabel = {
+  sigma_b: "Giới hạn bền",
+};
+
 const selectRollerBearingLabel = {
   ELM: "Cỡ siêu nhẹ, vừa", // Extra light, medium
   ESLN: "Cỡ đặc biệt nhẹ, hẹp", // Extra light, narrow
@@ -57,4 +73,4 @@ const selectRollerBearingLabel = {
   H: "Cỡ nặng", // Heavy
 };
 
-export { mainlabel, engineLabel, chainLabel, gearSetLabel, selectRollerBearingLabel };
+export { mainlabel, inputLabel, engineLabel, chainLabel, gearSetLabel, shaftLabel, selectRollerBearingLabel };

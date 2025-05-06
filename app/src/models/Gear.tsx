@@ -73,7 +73,6 @@ export class CalculatedGear {
     L_h: number,
     isSmall: 0 | 1 // Bánh nhỏ thì có chia u, bánh lớn thì không
   ) {
-    console.log(L_h);
     this._N_HE = 60 * 1 * (n / u ** isSmall) * L_h * ((T1 ** 3 * t1) / 60 + (T2 ** 3 * t2) / 60);
     if (this._N_HE > this._N_HO) {
       this._K_HL = 1;

@@ -107,7 +107,7 @@ interface DesignStrategy {
 // -------------- Hộp giảm tốc 2 cấp khai triển (2 cặp bánh răng)
 // Quay một chiều, làm việc 2 ca, tải va đập nhẹ: 1 năm làm việc 300 ngày, 1 ca làm việc 8 giờ.
 //
-class DesignGearBox1 implements DesignStrategy {
+export class DesignGearBox1 implements DesignStrategy {
   _designInputStats: any;
   _designEngineStats: any;
   _shaftDiagramData: any;
@@ -234,7 +234,7 @@ class DesignGearBox1 implements DesignStrategy {
         t1: this._designInputStats.t1,
         T2: this._designInputStats.T2,
         t2: this._designInputStats.t2,
-        L_h: this._designInputStats.L,
+        L_h: this._designInputStats.L * 300 * 2 * 8,
       },
       input.K_qt
     );
@@ -775,7 +775,7 @@ class DesignGearBox1 implements DesignStrategy {
         ((this._designInputStats.t1 / 60) * this._designInputStats.T1 ** (1 / 3) +
           (this._designInputStats.t2 / 60) * this._designInputStats.T2 ** (1 / 3)) **
           (1 / 3);
-      const L = (60 * this._designInputStats.L * spinSpd) / 10 ** 6;
+      const L = (60 * (this._designInputStats.L * 300 * 2 * 8 * 3) * spinSpd) / 10 ** 6;
       const C_d = Q_td * L ** (1 / 3);
       if (C_d < selectedRB.C) {
         return true;
@@ -940,7 +940,7 @@ export default class CalcController {
 
   constructor(gearBoxType: string) {
     const gearBoxLabel = {
-      GearBox1: "Hộp giảm tốc 2 cấp //khai triển",
+      GearBox1: "Hộp giảm tốc 2 cấp khai triển",
       GearBox2: "Hộp giảm tốc trục vít bánh răng",
     };
     switch (gearBoxType) {
@@ -961,10 +961,10 @@ export default class CalcController {
   }
 
   initDesign(F: number, v: number, T1: number, t1: number, T2: number, t2: number, L: number, output: any) {
-    this._designStrategy.storeDesignInput(F, v, T1, t1, T2, t2, L * 300 * 2 * 8, output); // Thêm sẵn làm việc trong 300 ngày, 2 ca, 8h
+    this._designStrategy.storeDesignInput(F, v, T1, t1, T2, t2, L, output); // Thêm sẵn làm việc trong 300 ngày, 2 ca, 8h
+    this._gearBoxBuilder.setDesign({ designStrategy: this._designStrategy, order: this._order });
   }
   getGearBox() {
-    this._gearBoxBuilder.setDesign({ designStrategy: this._designStrategy, order: this._order });
     return this._gearBoxBuilder.build();
   }
   calcEngineBase() {
