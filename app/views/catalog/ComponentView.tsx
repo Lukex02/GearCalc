@@ -193,7 +193,7 @@ const ComponentPage = () => {
             {data.centistoc_min} - {data.centistoc_max}
           </Text>
         </View>
-        <CalcFooter />
+        <CalcFooter isComponentPage={true} />
       </View>
     ))
   );

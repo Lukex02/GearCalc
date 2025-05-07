@@ -15,10 +15,18 @@ interface CalcFooterProp {
   nextIcon?: string;
   finish?: boolean;
   nextPage?: Href;
+  isComponentPage?: boolean;
   onValidate?: () => boolean;
 }
 
-export default function CalcFooter({ backHome, nextIcon, finish, nextPage, onValidate }: CalcFooterProp) {
+export default function CalcFooter({
+  backHome,
+  nextIcon,
+  finish,
+  nextPage,
+  isComponentPage,
+  onValidate,
+}: CalcFooterProp) {
   const [modalHomeVisible, setModalHomeVisible] = useState(false);
   const [modalFinishVisible, setModalFinishVisible] = useState(false);
   const [snackBarSaveVisible, setSnackBarSaveVisible] = useState(false);
@@ -65,13 +73,15 @@ export default function CalcFooter({ backHome, nextIcon, finish, nextPage, onVal
           onPress={handleBackPress}
         />
       )}
-      <IconButton
-        icon={"home"}
-        size={30}
-        iconColor={Colors.text.error}
-        style={{ backgroundColor: "transparent" }}
-        onPress={handleBackHome}
-      />
+      {!isComponentPage && (
+        <IconButton
+          icon={"home"}
+          size={30}
+          iconColor={Colors.text.error}
+          style={{ backgroundColor: "transparent" }}
+          onPress={handleBackHome}
+        />
+      )}
       <Portal>
         <Modal
           visible={modalHomeVisible}

@@ -11,6 +11,7 @@ import CalcFooterStyle from "@/src/style/CalcFooterStyle";
 import { FontAwesome5, FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons";
 import { scale } from "react-native-size-matters";
 import Reanimated, { SharedValue, useAnimatedStyle } from "react-native-reanimated";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function AccountScreen() {
   const [user, setUser] = useState<any>();
@@ -20,30 +21,18 @@ export default function AccountScreen() {
   const [selectItemId, setSelectItemId] = useState<number>(0);
 
   const RightAction = (prog: SharedValue<number>, drag: SharedValue<number>) => {
-    const styleAnimation = useAnimatedStyle(() => {
-      return {
-        transform: [{ translateX: drag.value + scale(60) }],
-      };
-    });
-
     return (
-      <Reanimated.View style={styleAnimation} pointerEvents="box-none">
+      <View>
         <TouchableRipple style={localStyles.swipeableDelete} onPress={() => handleRemove(selectItemId)}>
           <Text style={localStyles.swipeableTxt}>Xóa</Text>
         </TouchableRipple>
-      </Reanimated.View>
+      </View>
     );
   };
 
   const LeftAction = (prog: SharedValue<number>, drag: SharedValue<number>) => {
-    const styleAnimation = useAnimatedStyle(() => {
-      return {
-        transform: [{ translateX: drag.value - scale(150) }],
-      };
-    });
-
     return (
-      <Reanimated.View style={styleAnimation} pointerEvents="box-none">
+      <View>
         <View style={localStyles.swipeableContainer}>
           <TouchableRipple style={localStyles.swipeableUtils} onPress={() => handlePrint(selectItemId)}>
             <MaterialCommunityIcons
@@ -63,7 +52,7 @@ export default function AccountScreen() {
             <FontAwesome6 name="edit" color={Colors.text.accent} style={localStyles.swipeableIcon} />
           </TouchableRipple>
         </View>
-      </Reanimated.View>
+      </View>
     );
   };
 
@@ -127,18 +116,18 @@ export default function AccountScreen() {
               resizeMode="contain"
             ></Image>
             <View style={styles.tableContainerPad10}>
-              <Text style={{ color: "white" }}>
-                <Text style={{ fontWeight: "bold" }}>Tên: </Text>
-                {user.user_metadata.username}
-              </Text>
-              <Text style={{ color: "white" }}>
-                <Text style={{ fontWeight: "bold" }}>Email: </Text>
-                {user.email}
-              </Text>
-              <Text style={{ color: "white" }}>
-                <Text style={{ fontWeight: "bold" }}>Thiết kế đã lưu: </Text>
-                {user.user_metadata.history.length}
-              </Text>
+              <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
+                <Text style={{ color: "white", fontWeight: "bold" }}>Tên: </Text>
+                <Text style={{ color: "white" }}>{user.user_metadata.username}</Text>
+              </View>
+              <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
+                <Text style={{ color: "white", fontWeight: "bold" }}>Email: </Text>
+                <Text style={{ color: "white" }}>{user.email}</Text>
+              </View>
+              <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
+                <Text style={{ color: "white", fontWeight: "bold" }}>Thiết kế đã lưu: </Text>
+                <Text style={{ color: "white" }}>{user.user_metadata.history.length}</Text>
+              </View>
             </View>
           </View>
           <Text style={styles.pageTitle}>Lịch sử tính toán</Text>
@@ -161,7 +150,7 @@ export default function AccountScreen() {
                     renderLeftActions={LeftAction}
                     overshootRight={false}
                     overshootLeft={false}
-                    friction={3}
+                    friction={2}
                     onSwipeableOpen={() => setSelectItemId(item.id)}
                   >
                     <View style={styles.historyRow}>

@@ -21,6 +21,7 @@ import DatabaseService from "@/src/services/DatabaseService";
 import LoadingScreen from "./common/LoadingScreen";
 import CalcController from "@/src/controller/CalcController";
 import GearBox from "@/src/models/GearBox";
+import Utils from "@/src/services/Utils";
 
 const carouselData: { id: number; title: string; btnLabel: string; icon: any; navigate: Href }[] = [
   {
@@ -48,6 +49,15 @@ export default function Home() {
   useEffect(() => {
     DatabaseService.getUserHistoryStats().then((history) => setUserHistoryStats(history));
   }, []);
+
+  const handlePrint = (history: any) => {
+    console.log("Print", history);
+    Utils.printReportPDF();
+  };
+
+  const handlePreview = (history: any) => {
+    console.log("Preview", history);
+  };
 
   return (
     <View style={styles.containerStart}>
@@ -124,7 +134,7 @@ export default function Home() {
                 <View style={{ ...styles.homeCardCol, marginLeft: scale(5) }}>
                   <Button
                     style={styles.utilBtnContainer}
-                    onPress={() => console.log("IconButton Pressed")}
+                    onPress={() => handlePreview(userHistoryStats.recentHistory)}
                     mode="contained"
                     labelStyle={{
                       color: Colors.text.secondaryAccent,
@@ -136,7 +146,7 @@ export default function Home() {
                   </Button>
                   <Button
                     style={styles.utilBtnContainer}
-                    onPress={() => console.log("IconButton Pressed")}
+                    onPress={() => handlePrint(userHistoryStats.recentHistory)}
                     mode="contained"
                     labelStyle={{
                       color: Colors.text.success,
