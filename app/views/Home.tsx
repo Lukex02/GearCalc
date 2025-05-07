@@ -91,6 +91,7 @@ export default function Home() {
                 <View style={styles.optionCard} pointerEvents="box-none">
                   {item.icon}
                   <Button
+                    dark={true}
                     style={styles.mainBtn}
                     mode="contained"
                     compact={true}
@@ -133,37 +134,49 @@ export default function Home() {
               {userHistoryStats.recentHistory && (
                 <View style={{ ...styles.homeCardCol, marginLeft: scale(5) }}>
                   <Button
-                    style={styles.utilBtnContainer}
+                    dark={true}
+                    buttonColor={Colors.utilBtn}
                     onPress={() => handlePreview(userHistoryStats.recentHistory)}
                     mode="contained"
                     labelStyle={{
                       color: Colors.text.secondaryAccent,
                     }}
-                    contentStyle={{ flexDirection: "row-reverse" }}
+                    contentStyle={{
+                      width: scale(90),
+                      flexDirection: "row-reverse",
+                    }}
                     icon="file-search"
                   >
                     Xem
                   </Button>
                   <Button
-                    style={styles.utilBtnContainer}
+                    dark={true}
+                    buttonColor={Colors.utilBtn}
                     onPress={() => handlePrint(userHistoryStats.recentHistory)}
                     mode="contained"
                     labelStyle={{
                       color: Colors.text.success,
                     }}
-                    contentStyle={{ flexDirection: "row-reverse" }}
+                    contentStyle={{
+                      width: scale(90),
+                      flexDirection: "row-reverse",
+                    }}
                     icon="printer"
                   >
                     In
                   </Button>
                   <Button
-                    style={styles.utilBtnContainer}
+                    dark={true}
+                    buttonColor={Colors.utilBtn}
                     onPress={() => alert("Chức năng chưa phát triển")}
                     mode="contained"
                     labelStyle={{
                       color: Colors.text.accent,
                     }}
-                    contentStyle={{ flexDirection: "row-reverse" }}
+                    contentStyle={{
+                      width: scale(90),
+                      flexDirection: "row-reverse",
+                    }}
                     icon="file-document-edit"
                   >
                     Sửa
@@ -181,7 +194,7 @@ export default function Home() {
             {/* Thiết kế đang làm */}
             <View style={styles.homeCard1x2}>
               {userHistoryStats ? (
-                <View style={{ gap: verticalScale(12) }}>
+                <View style={{ gap: verticalScale(20), alignItems: "center" }}>
                   {userHistoryStats.recentUnfinishHistory ? (
                     <MaterialCommunityIcons
                       name="cog-pause"
@@ -207,14 +220,18 @@ export default function Home() {
                   </Text>
                   {userHistoryStats.recentUnfinishHistory && (
                     <Button
-                      style={{ ...styles.utilBtnContainer, alignSelf: "center", width: "100%" }}
+                      dark={true}
+                      buttonColor={Colors.utilBtn}
                       onPress={() => alert("Chức năng chưa phát triển")}
-                      mode="contained"
+                      mode="elevated"
                       compact={true}
                       labelStyle={{
                         color: Colors.text.accent,
                       }}
-                      contentStyle={{ flexDirection: "row-reverse" }}
+                      contentStyle={{
+                        paddingHorizontal: scale(10),
+                        flexDirection: "row-reverse",
+                      }}
                       icon="file-document-edit"
                     >
                       Tiếp tục

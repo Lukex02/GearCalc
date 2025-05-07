@@ -19,7 +19,6 @@ export default function LoginScreen() {
       async function restoreSession() {
         const authStatus = await DatabaseService.checkAuth();
         if (authStatus) {
-          alert("User đã đăng nhập");
           router.push("/(tabs)/home");
         }
         setLoading(false);
