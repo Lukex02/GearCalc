@@ -334,7 +334,7 @@ async function imageToBase64(name: string): Promise<string> {
   return base64Img;
 }
 
-async function printReportPDF() {
+async function printReportPDF(history: any) {
   const base64Img = await imageToBase64("engine_dk");
   const report = `
 <html>

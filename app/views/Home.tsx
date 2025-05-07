@@ -54,8 +54,8 @@ export default function Home() {
   );
 
   const handlePrint = (history: any) => {
-    console.log("Print", history);
-    Utils.printReportPDF();
+    // console.log("Print", history);
+    Utils.printReportPDF(history);
   };
 
   const handlePreview = (history: any) => {
