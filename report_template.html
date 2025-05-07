@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+    />
+    <style>
+      @page {
+        size: A4;
+        margin: 20mm;
+      }
+      body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
+        padding: 20mm;
+        font-family: Arial, sans-serif;
+        line-height: 1;
+        box-sizing: border-box;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        /* align-items: center; */
+        justify-content: center;
+      }
+      h1.title {
+        text-align: center;
+        font-size: 30pt;
+        font-weight: bold;
+      }
+      img.design {
+        margin: auto;
+        width: 160mm;
+      }
+      h2.componentTitle {
+        text-align: start;
+        font-size: 20pt;
+        font-weight: bold;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+      .medTxt {
+        font-size: 11pt;
+      }
+      header.watermark {
+        font-style: italic;
+        color: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="watermark">GearCalc - 1/2/2025</header>
+    <div class="container">
+      <h1 class="title">Thông số thiết kế</h1>
+      <section>
+        <h2 class="componentTitle">Số liệu thiết kế</h2>
+        <p class="medTxt">Lực vòng trên băng tải F: 7500 N</p>
+        <p class="medTxt">Vận tốc băng tải v: 0.9 m/s</p>
+        <p class="medTxt">Đường kính tang D: 550 mm</p>
+        <p class="medTxt">Thời gian phục vụ L: 9 năm</p>
+        <p class="medTxt">
+          Quay một chiều, làm việc 2 ca, tải va đập nhẹ: 1 năm làm việc 300 ngày, 1 ca làm việc 8 giờ
+        </p>
+        <p class="medTxt">Chế độ tải:</p>
+        <p class="medTxt">- T1 = T, t1 = 36 giây</p>
+        <p class="medTxt">- T2 = 0.5T, t2 = 15 giây</p>
+        <img src="./assets/images/GearBox1Template.png" class="design" />
+      </section>
+      <section></section>
+      <img src="./assets/images/Engine_DK.jpeg" class="design" />
+    </div>
+  </body>
+</html>

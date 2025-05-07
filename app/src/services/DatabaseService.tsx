@@ -198,4 +198,18 @@ export default class DatabaseService {
     if (error) console.error("Lỗi khi lấy dữ liệu ", error);
     return data ?? [];
   }
+
+  static async getEngineDimensions(name: string) {
+    // name ở đây cần được xử lý trước khi truyền, không lấy tên chính xác của động cơ
+    const table = name.includes("4A")
+      ? ["Engine_4A_Dimens"]
+      : name.includes("DK")
+      ? ["Engine_DK_Dimens"]
+      : ["Engine_K_KCB_Dimens", "Engine_K_KNN_Dimens"];
+    for (const tableName of table) {
+      const { data, error } = await supabase.from(tableName).select("*").ilike("Motor_Type", name).limit(1);
+      if (error) console.error("Lỗi khi lấy dữ liệu ", error);
+      return data ?? [];
+    }
+  }
 }
