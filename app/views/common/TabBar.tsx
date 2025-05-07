@@ -26,7 +26,7 @@ export default function TabBar({ state, descriptors, navigation }: any) {
         borderTopLeftRadius: 50,
         borderTopRightRadius: 50,
         height: scale(60),
-        position: "fixed",
+        position: "absolute",
         left: 0,
         right: 0,
         bottom: 0,
