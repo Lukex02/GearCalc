@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { View, Text, ScrollView, Dimensions, StyleSheet } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   FontAwesome,
   FontAwesome5,
@@ -46,9 +47,11 @@ export default function Home() {
   const progress = useSharedValue<number>(0);
   const [userHistoryStats, setUserHistoryStats] = useState<any>(null);
 
-  useEffect(() => {
-    DatabaseService.getUserHistoryStats().then((history) => setUserHistoryStats(history));
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      DatabaseService.getUserHistoryStats().then((history) => setUserHistoryStats(history));
+    }, [])
+  );
 
   const handlePrint = (history: any) => {
     console.log("Print", history);
