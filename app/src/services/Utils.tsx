@@ -307,24 +307,20 @@ function getShaftBearing(D: number) {
   return shaftBearing.find(({ D_min, D_max }) => D_min <= D && D <= D_max);
 }
 
-// async function imageToBase64(uri: string): Promise<string> {
-//   try {
-//     const response = await fetch(uri);
-//     const blob = await response.blob();
-//     return new Promise((resolve, reject) => {
-//       const reader = new FileReader();
-//       reader.onloadend = () => resolve(reader.result as string);
-//       reader.onerror = reject;
-//       reader.readAsDataURL(blob);
-//     });
-//   } catch (error) {
-//     console.error("Lỗi chuyển đổi ảnh sang Base64:", error);
-//     return "";
-//   }
-// }
-
-async function printReportPDF() {
-  const asset = Asset.fromModule(require("../../../assets/images/Engine_DK.jpeg"));
+async function imageToBase64(name: string): Promise<string> {
+  const imageMap = {
+    engine_dk: require("../../../assets/images/Engine_DK.jpeg"),
+    engine_4a: require("../../../assets/images/Engine_4A.jpeg"),
+    engine_k_kcb: require("../../../assets/images/Engine_K_KCB.jpeg"),
+    engine_k_knn: require("../../../assets/images/Engine_K_KNN.jpeg"),
+    gearbox1_template: require("../../../assets/images/GearBox1Template.png"),
+    gearbox2_template: require("../../../assets/images/GearBox2Template.png"),
+    shaft1: require("../../../assets/images/GB1/Shaft1.png"),
+    shaft2: require("../../../assets/images/GB1/Shaft2.png"),
+    shaft3: require("../../../assets/images/GB1/Shaft3.png"),
+    shaft_all: require("../../../assets/images/GB1/ShaftAll.png"),
+  };
+  const asset = Asset.fromModule(imageMap[name as keyof typeof imageMap]);
   await asset.downloadAsync();
   const filename = asset.name || "image.jpeg";
   const newPath = FileSystem.documentDirectory + filename;
@@ -335,6 +331,11 @@ async function printReportPDF() {
   const base64Img = await FileSystem.readAsStringAsync(newPath!, {
     encoding: FileSystem.EncodingType.Base64,
   });
+  return base64Img;
+}
+
+async function printReportPDF() {
+  const base64Img = await imageToBase64("engine_dk");
   const report = `
 <html>
   <head>

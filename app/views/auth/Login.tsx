@@ -7,6 +7,7 @@ import { Colors } from "@style/Colors";
 import calcFooterStyle from "@style/CalcFooterStyle";
 import LoadingScreen from "@views/common/LoadingScreen";
 import DatabaseService from "@services/DatabaseService";
+import Header from "@views/common/Header";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -33,7 +34,11 @@ export default function LoginScreen() {
     // Perform login logic here
     DatabaseService.logIn(email, password).then((res) => {
       if (res.error) {
-        console.log("Error:", res.error);
+        if (res.error.code === "invalid_credentials") {
+          alert("Email hoặc mật khẩu không chính xác");
+        } else {
+          alert("Đăng nhập thất bại");
+        }
       } else {
         alert("Đăng nhập thành công");
         router.push("/(tabs)/home");
@@ -43,6 +48,7 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.containerCentered}>
+      <Header title="Đăng nhập" />
       <View style={styles.inputContainer}>
         <Text style={styles.inputFieldLabel}>Email</Text>
         <TextInput
