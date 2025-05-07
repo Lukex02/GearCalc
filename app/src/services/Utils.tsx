@@ -5,6 +5,9 @@ import React, { useEffect } from "react";
 import Svg, { Line, Path, Text } from "react-native-svg";
 import { View, ColorValue } from "react-native";
 import Animated, { useSharedValue, withTiming, useAnimatedReaction, runOnJS } from "react-native-reanimated";
+import * as FileSystem from "expo-file-system";
+import { Asset } from "expo-asset";
+
 const math = create(all);
 
 function CalcU_tv(u_h: number, tan_gamma: number, initialGuess = 1): number {
@@ -303,7 +306,35 @@ const shaftBearing = [
 function getShaftBearing(D: number) {
   return shaftBearing.find(({ D_min, D_max }) => D_min <= D && D <= D_max);
 }
+
+// async function imageToBase64(uri: string): Promise<string> {
+//   try {
+//     const response = await fetch(uri);
+//     const blob = await response.blob();
+//     return new Promise((resolve, reject) => {
+//       const reader = new FileReader();
+//       reader.onloadend = () => resolve(reader.result as string);
+//       reader.onerror = reject;
+//       reader.readAsDataURL(blob);
+//     });
+//   } catch (error) {
+//     console.error("Lỗi chuyển đổi ảnh sang Base64:", error);
+//     return "";
+//   }
+// }
+
 async function printReportPDF() {
+  const asset = Asset.fromModule(require("../../../assets/images/Engine_DK.jpeg"));
+  await asset.downloadAsync();
+  const filename = asset.name || "image.jpeg";
+  const newPath = FileSystem.documentDirectory + filename;
+  await FileSystem.copyAsync({
+    from: asset.localUri!,
+    to: newPath,
+  });
+  const base64Img = await FileSystem.readAsStringAsync(newPath!, {
+    encoding: FileSystem.EncodingType.Base64,
+  });
   const report = `
 <html>
   <head>
@@ -314,11 +345,10 @@ async function printReportPDF() {
       Test Print!
     </h1>
     <img
-      src="/src/img/Engine_DK.jpeg"
-      style="width: 90vw;" />
-  </body>
-</html>
-`;
+      src="data:image/jpeg;base64,${base64Img}" style="width: 90vw;" />
+    </body>
+    </html>
+    `;
   const { uri } = await Print.printToFileAsync({ html: report });
   console.log("File has been saved to:", uri);
   await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
