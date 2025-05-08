@@ -171,7 +171,7 @@ export default StyleSheet.create({
     ...shadows.default,
   },
   historyContainer: {
-    height: verticalScale(300),
+    height: verticalScale(250),
     width: "90%",
     justifyContent: "space-between",
     backgroundColor: Colors.card,

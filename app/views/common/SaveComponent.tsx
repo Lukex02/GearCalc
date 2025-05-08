@@ -192,7 +192,7 @@ export default function SaveComponent() {
           style={styles.overlay}
         >
           <View style={styles.modalView}>
-            <FontAwesome5 name="exclamation-triangle" size={scale(30)} color={Colors.primary} />
+            <FontAwesome5 name="save" size={scale(50)} color={Colors.text.secondaryAccent} />
             <Text style={styles.modalMediumTxt}>Bạn có chắc chắn muốn lưu thiết kế hiện tại không?</Text>
             <View style={CalcFooterStyle.buttonFooter}>
               <Button
@@ -206,7 +206,7 @@ export default function SaveComponent() {
               </Button>
               <Button
                 mode="contained"
-                style={styles.mainBtnSmall}
+                style={{ ...styles.mainBtnSmall, backgroundColor: Colors.text.secondaryAccent }}
                 labelStyle={styles.mainBtnSmallTxt}
                 onPress={handleSave}
               >

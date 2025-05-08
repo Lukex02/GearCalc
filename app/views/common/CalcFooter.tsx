@@ -119,7 +119,7 @@ export default function CalcFooter({
           style={MainStyle.overlay}
         >
           <View style={MainStyle.modalView}>
-            <MaterialIcons name="cloud-done" size={scale(100)} color={Colors.text.secondaryAccent} />
+            <MaterialIcons name="cloud-done" size={scale(100)} color={Colors.text.success} />
             <Text style={MainStyle.modalMediumTxt}>
               Bạn có chắc chắn muốn hoàn tất thiết kế và lưu không?
             </Text>
@@ -136,7 +136,7 @@ export default function CalcFooter({
               <Button
                 mode="contained"
                 style={{ ...MainStyle.mainBtnSmall, backgroundColor: Colors.text.success }}
-                labelStyle={{ ...MainStyle.mainBtnSmallTxt, color: "black" }}
+                labelStyle={MainStyle.mainBtnSmallTxt}
                 onPress={saveAndGoHome}
               >
                 Đồng ý

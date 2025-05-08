@@ -54,7 +54,6 @@ export default function Home() {
   );
 
   const handlePrint = (history: any) => {
-    // console.log("Print", history);
     Utils.printReportPDF(history);
   };
 
@@ -197,7 +196,7 @@ export default function Home() {
             {/* Thiết kế đang làm */}
             <View style={styles.homeCard1x2}>
               {userHistoryStats ? (
-                <View style={{ gap: verticalScale(20), alignItems: "center" }}>
+                <View style={{ gap: verticalScale(20), alignSelf: "center" }}>
                   {userHistoryStats.recentUnfinishHistory ? (
                     <MaterialCommunityIcons
                       name="cog-pause"
