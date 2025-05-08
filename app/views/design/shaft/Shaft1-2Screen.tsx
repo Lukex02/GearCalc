@@ -177,7 +177,6 @@ export default function Shaft1_2Screen() {
         </View>
       </Modal>
 
-      {}
       <CalcFooter nextPage={"/views/design/shaft/Shaft3-4Screen"} />
     </View>
   );
