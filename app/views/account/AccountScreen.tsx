@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, ScrollView, StyleSheet } from "react-native";
+import { View, Text, FlatList, Image, ScrollView, StyleSheet, Dimensions } from "react-native";
 import Swipeable from "react-native-gesture-handler/ReanimatedSwipeable";
 import { useFocusEffect } from "@react-navigation/native";
 import { useState, useCallback } from "react";
@@ -13,6 +13,8 @@ import { scale } from "react-native-size-matters";
 import Reanimated, { SharedValue, useAnimatedStyle } from "react-native-reanimated";
 import Utils from "@services/Utils";
 
+const { width } = Dimensions.get("window");
+
 export default function AccountScreen() {
   const [user, setUser] = useState<any>();
   const [loading, setLoading] = useState(true);
@@ -21,18 +23,28 @@ export default function AccountScreen() {
   const [selectItemId, setSelectItemId] = useState<number>(0);
 
   const RightAction = (prog: SharedValue<number>, drag: SharedValue<number>) => {
+    const styleAnimation = useAnimatedStyle(() => {
+      return {
+        transform: [{ translateX: drag.value + width / 7 }],
+      };
+    });
     return (
-      <View>
+      <Reanimated.View style={styleAnimation}>
         <TouchableRipple style={localStyles.swipeableDelete} onPress={() => handleRemove(selectItemId)}>
           <Text style={localStyles.swipeableTxt}>Xóa</Text>
         </TouchableRipple>
-      </View>
+      </Reanimated.View>
     );
   };
 
   const LeftAction = (prog: SharedValue<number>, drag: SharedValue<number>) => {
+    const styleAnimation = useAnimatedStyle(() => {
+      return {
+        transform: [{ translateX: drag.value - (width / 7) * 3 }],
+      };
+    });
     return (
-      <View>
+      <Reanimated.View style={styleAnimation}>
         <View style={localStyles.swipeableContainer}>
           <TouchableRipple style={localStyles.swipeableUtils} onPress={() => handlePrint(selectItemId)}>
             <MaterialCommunityIcons
@@ -52,7 +64,7 @@ export default function AccountScreen() {
             <FontAwesome6 name="edit" color={Colors.text.accent} style={localStyles.swipeableIcon} />
           </TouchableRipple>
         </View>
-      </View>
+      </Reanimated.View>
     );
   };
 
@@ -230,13 +242,13 @@ export default function AccountScreen() {
 const localStyles = StyleSheet.create({
   swipeableDelete: {
     flex: 1,
-    width: scale(60),
+    width: width / 7,
     backgroundColor: Colors.text.error,
     alignSelf: "center",
     justifyContent: "center",
   },
   swipeableUtils: {
-    width: scale(50),
+    width: width / 7,
     height: "100%",
     backgroundColor: Colors.background,
     alignSelf: "center",
