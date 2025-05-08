@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, Modal } from "react-native";
-import { Button } from "react-native-paper";
-import Slider from "@react-native-community/slider"; // Import Slider
+import React from "react";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import styles from "@style/MainStyle";
-import CalcController from "@controller/CalcController";
 import CalcFooter from "@views/common/CalcFooter";
+import Header from "@/views/common/Header";
 
 // Data giả lập result
 const result = {
@@ -86,10 +84,117 @@ const result = {
   ],
 };
 
-export default function SelectDiamShaftScreen() {
-  const calcController = CalcController.getInstance();
-  // Bước 5 là kiểm nghiệm trục và xuất kết quả kiểm nghiệm
-  // const result = calcController.testDurability()
+export default function Shaft5Screen() {
+  return (
+    <View style={styles.container}>
+      <Header title="Kết quả độ bền trục" />
+      <ScrollView horizontal>
+        <View style={localStyles.table}>
+          {/* Header Row */}
+          <View style={[localStyles.row, localStyles.headerRow]}>
+            <Text style={[localStyles.cell, localStyles.headerCell]}>
+              Thông số
+            </Text>
+            <Text style={[localStyles.cell, localStyles.headerCell]}>
+              Trục 1
+            </Text>
+            <Text style={[localStyles.cell, localStyles.headerCell]}>
+              Trục 2
+            </Text>
+            <Text style={[localStyles.cell, localStyles.headerCell]}>
+              Trục 3
+            </Text>
+          </View>
 
-  // In result ra (lấy tạm mấy data result giả lập ở trên để design cũng được đề phòng có lỗi gì đó trong tính toán)
+          {/* W_j Row */}
+          <View style={localStyles.row}>
+            <Text style={localStyles.cell}>W_j</Text>
+            {result.fatigueDura.map((item, index) => (
+              <Text key={index} style={localStyles.cell}>
+                {item.W_j.toFixed(4)}
+              </Text>
+            ))}
+          </View>
+
+          {/* M_j Row */}
+          <View style={localStyles.row}>
+            <Text style={localStyles.cell}>M_j</Text>
+            {result.fatigueDura.map((item, index) => (
+              <Text key={index} style={localStyles.cell}>
+                {item.M_j.toFixed(4)}
+              </Text>
+            ))}
+          </View>
+
+          {/* Sigma_aj Row */}
+          <View style={localStyles.row}>
+            <Text style={localStyles.cell}>Sigma_aj</Text>
+            {result.fatigueDura.map((item, index) => (
+              <Text key={index} style={localStyles.cell}>
+                {item.sigma_aj.toFixed(4)}
+              </Text>
+            ))}
+          </View>
+
+          {/* Tau_aj Row */}
+          <View style={localStyles.row}>
+            <Text style={localStyles.cell}>Tau_aj</Text>
+            {result.fatigueDura.map((item, index) => (
+              <Text key={index} style={localStyles.cell}>
+                {item.tau_aj.toFixed(4)}
+              </Text>
+            ))}
+          </View>
+
+          {/* D_max Row */}
+          <View style={localStyles.row}>
+            <Text style={localStyles.cell}>D_max</Text>
+            {result.staticDura.map((item, index) => (
+              <Text key={index} style={localStyles.cell}>
+                {item.d_max.toFixed(4)}
+              </Text>
+            ))}
+          </View>
+
+          {/* M_max Row */}
+          <View style={localStyles.row}>
+            <Text style={localStyles.cell}>M_max</Text>
+            {result.staticDura.map((item, index) => (
+              <Text key={index} style={localStyles.cell}>
+                {item.M_max.toFixed(4)}
+              </Text>
+            ))}
+          </View>
+        </View>
+      </ScrollView>
+      <CalcFooter />
+    </View>
+  );
 }
+
+const localStyles = StyleSheet.create({
+  table: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    margin: 10,
+    backgroundColor: "#f0f0f0",
+  },
+  row: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+  },
+  headerRow: {
+    backgroundColor: "#f0f0f0",
+  },
+  cell: {
+    flex: 1,
+    padding: 10,
+    textAlign: "center",
+    borderRightWidth: 1,
+    borderColor: "#ccc",
+  },
+  headerCell: {
+    fontWeight: "bold",
+  },
+});
