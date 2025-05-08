@@ -11,6 +11,7 @@ import CalcFooterStyle from "@/src/style/CalcFooterStyle";
 import { FontAwesome5, FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons";
 import { scale } from "react-native-size-matters";
 import Reanimated, { SharedValue, useAnimatedStyle } from "react-native-reanimated";
+import Utils from "@services/Utils";
 
 export default function AccountScreen() {
   const [user, setUser] = useState<any>();
@@ -20,30 +21,18 @@ export default function AccountScreen() {
   const [selectItemId, setSelectItemId] = useState<number>(0);
 
   const RightAction = (prog: SharedValue<number>, drag: SharedValue<number>) => {
-    const styleAnimation = useAnimatedStyle(() => {
-      return {
-        transform: [{ translateX: drag.value + scale(60) }],
-      };
-    });
-
     return (
-      <Reanimated.View style={styleAnimation} pointerEvents="box-none">
+      <View>
         <TouchableRipple style={localStyles.swipeableDelete} onPress={() => handleRemove(selectItemId)}>
           <Text style={localStyles.swipeableTxt}>Xóa</Text>
         </TouchableRipple>
-      </Reanimated.View>
+      </View>
     );
   };
 
   const LeftAction = (prog: SharedValue<number>, drag: SharedValue<number>) => {
-    const styleAnimation = useAnimatedStyle(() => {
-      return {
-        transform: [{ translateX: drag.value - scale(150) }],
-      };
-    });
-
     return (
-      <Reanimated.View style={styleAnimation} pointerEvents="box-none">
+      <View>
         <View style={localStyles.swipeableContainer}>
           <TouchableRipple style={localStyles.swipeableUtils} onPress={() => handlePrint(selectItemId)}>
             <MaterialCommunityIcons
@@ -63,7 +52,7 @@ export default function AccountScreen() {
             <FontAwesome6 name="edit" color={Colors.text.accent} style={localStyles.swipeableIcon} />
           </TouchableRipple>
         </View>
-      </Reanimated.View>
+      </View>
     );
   };
 
@@ -98,7 +87,7 @@ export default function AccountScreen() {
   };
 
   const handlePrint = (historyId: any) => {
-    console.log("Print", historyId);
+    Utils.printReportPDF(user.user_metadata.history.find((item: any) => item.id === historyId));
   };
 
   const handleView = (historyId: any) => {
@@ -109,95 +98,90 @@ export default function AccountScreen() {
     console.log("Edit", historyId);
   };
 
-  return (
-    <View style={styles.containerStart}>
-      {loading ? (
-        <LoadingScreen />
-      ) : (
-        <ScrollView
-          style={styles.gridContainer}
-          contentContainerStyle={styles.scrollContainer}
-          showsVerticalScrollIndicator={false}
-        >
-          <Text style={styles.pageTitle}>Thông tin tài khoản</Text>
-          <View style={{ ...styles.colContainer, width: "90%" }}>
-            <Image
-              style={styles.profileImg}
-              source={require("@img/default-avatar.jpg")}
-              resizeMode="contain"
-            ></Image>
-            <View style={styles.tableContainerPad10}>
-              <Text style={{ color: "white" }}>
-                <Text style={{ fontWeight: "bold" }}>Tên: </Text>
-                {user.user_metadata.username}
-              </Text>
-              <Text style={{ color: "white" }}>
-                <Text style={{ fontWeight: "bold" }}>Email: </Text>
-                {user.email}
-              </Text>
-              <Text style={{ color: "white" }}>
-                <Text style={{ fontWeight: "bold" }}>Thiết kế đã lưu: </Text>
-                {user.user_metadata.history.length}
-              </Text>
-            </View>
+  return loading ? (
+    <View style={styles.container}>
+      <LoadingScreen />
+    </View>
+  ) : (
+    <View style={{ ...styles.containerStart, justifyContent: "space-evenly", gap: 0, paddingTop: scale(10) }}>
+      <Text style={styles.pageTitle}>Thông tin tài khoản</Text>
+      <View style={{ ...styles.colContainer, width: "90%" }}>
+        <Image
+          style={styles.profileImg}
+          source={require("@img/default-avatar.jpg")}
+          resizeMode="contain"
+        ></Image>
+        <View style={styles.tableContainerPad10}>
+          <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
+            <Text style={{ color: "white", fontWeight: "bold" }}>Tên: </Text>
+            <Text style={{ color: "white" }}>{user.user_metadata.username}</Text>
           </View>
-          <Text style={styles.pageTitle}>Lịch sử tính toán</Text>
-          <View style={styles.historyContainer}>
-            {/* Header */}
-            <View style={styles.historyHeader}>
-              <Text style={styles.historyHeaderCell}>Tên</Text>
-              <Text style={styles.historyHeaderCell}>Thời gian</Text>
-              <Text style={styles.historyHeaderCell}>Trạng thái</Text>
-            </View>
+          <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
+            <Text style={{ color: "white", fontWeight: "bold" }}>Email: </Text>
+            <Text style={{ color: "white" }}>{user.email}</Text>
+          </View>
+          <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
+            <Text style={{ color: "white", fontWeight: "bold" }}>Thiết kế đã lưu: </Text>
+            <Text style={{ color: "white" }}>{user.user_metadata.history.length}</Text>
+          </View>
+        </View>
+      </View>
+      <Text style={styles.pageTitle}>Lịch sử tính toán</Text>
+      <View style={styles.historyContainer}>
+        {/* Header */}
+        <View style={styles.historyHeader}>
+          <Text style={styles.historyHeaderCell}>Tên</Text>
+          <Text style={styles.historyHeaderCell}>Thời gian</Text>
+          <Text style={styles.historyHeaderCell}>Trạng thái</Text>
+        </View>
 
-            {/* Body */}
-            {user.user_metadata.history.length > 0 ? (
-              <FlatList
-                data={user.user_metadata.history} // Dùng cái này sau khi setup history
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => (
-                  <Swipeable
-                    renderRightActions={RightAction}
-                    renderLeftActions={LeftAction}
-                    overshootRight={false}
-                    overshootLeft={false}
-                    friction={3}
-                    onSwipeableOpen={() => setSelectItemId(item.id)}
-                  >
-                    <View style={styles.historyRow}>
-                      <Text style={styles.historyCell}>{item.design._type}</Text>
-                      <Text style={styles.historyCell}>{item.time}</Text>
-                      <View style={styles.historyCell}>
-                        <Text
-                          style={{
-                            ...styles.historyStatusCell,
-                            backgroundColor: item.isFinish ? Colors.text.success : Colors.text.warning,
-                          }}
-                        >
-                          {item.isFinish ? "Đã xong" : "Chưa xong"}
-                        </Text>
-                      </View>
-                    </View>
-                  </Swipeable>
-                )}
-              />
-            ) : (
-              <View>
-                <Text style={styles.noDataWarn}>Không có lịch sử tính toán</Text>
-              </View>
+        {/* Body */}
+        {user.user_metadata.history.length > 0 ? (
+          <FlatList
+            data={user.user_metadata.history.reverse()}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <Swipeable
+                renderRightActions={RightAction}
+                renderLeftActions={LeftAction}
+                overshootRight={false}
+                overshootLeft={false}
+                friction={2}
+                onSwipeableOpen={() => setSelectItemId(item.id)}
+              >
+                <View style={styles.historyRow}>
+                  <Text style={styles.historyCell}>{item.design._type}</Text>
+                  <Text style={styles.historyCell}>{item.time}</Text>
+                  <View style={styles.historyCell}>
+                    <Text
+                      style={{
+                        ...styles.historyStatusCell,
+                        backgroundColor: item.isFinish ? Colors.text.success : Colors.text.warning,
+                      }}
+                    >
+                      {item.isFinish ? "Đã xong" : "Chưa xong"}
+                    </Text>
+                  </View>
+                </View>
+              </Swipeable>
             )}
-
-            <Button
-              mode="contained"
-              style={styles.deleteBtn}
-              labelStyle={styles.deleteBtnTxt}
-              onPress={() => setModalConfirmVisible(true)}
-            >
-              Xóa tất cả
-            </Button>
+          />
+        ) : (
+          <View>
+            <Text style={styles.noDataWarn}>Không có lịch sử tính toán</Text>
           </View>
-        </ScrollView>
-      )}
+        )}
+
+        <Button
+          mode="contained"
+          style={styles.deleteBtn}
+          labelStyle={styles.deleteBtnTxt}
+          onPress={() => setModalConfirmVisible(true)}
+        >
+          Xóa tất cả
+        </Button>
+      </View>
+
       <Portal>
         <Modal visible={modalVisible} onDismiss={() => setModalConfirmVisible(false)} style={styles.overlay}>
           <View style={styles.modalView}>

@@ -1,4 +1,4 @@
-import Utils from "../services/Utils";
+import Utils from "@services/Utils";
 
 const psi_bdValues = [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6];
 const a_wValues = [40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400];
@@ -375,7 +375,7 @@ export default class GearSet {
       m: this._m,
       b_w: this._b_w,
       u_m: this._u_m,
-      beta: this._Beta_angle,
+      Beta_angle: this._Beta_angle,
       z1: this._z1,
       z2: this._z2,
       d1: this._d1,

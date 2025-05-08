@@ -4,7 +4,7 @@ import MainStyle from "@/src/style/MainStyle";
 import { Href, router } from "expo-router";
 import { Button, IconButton, Portal, Modal, Snackbar } from "react-native-paper";
 import Colors from "@/src/style/Colors";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { scale } from "react-native-size-matters";
 import { useState } from "react";
 import DatabaseService from "@/src/services/DatabaseService";
@@ -15,10 +15,18 @@ interface CalcFooterProp {
   nextIcon?: string;
   finish?: boolean;
   nextPage?: Href;
+  isComponentPage?: boolean;
   onValidate?: () => boolean;
 }
 
-export default function CalcFooter({ backHome, nextIcon, finish, nextPage, onValidate }: CalcFooterProp) {
+export default function CalcFooter({
+  backHome,
+  nextIcon,
+  finish,
+  nextPage,
+  isComponentPage,
+  onValidate,
+}: CalcFooterProp) {
   const [modalHomeVisible, setModalHomeVisible] = useState(false);
   const [modalFinishVisible, setModalFinishVisible] = useState(false);
   const [snackBarSaveVisible, setSnackBarSaveVisible] = useState(false);
@@ -65,13 +73,15 @@ export default function CalcFooter({ backHome, nextIcon, finish, nextPage, onVal
           onPress={handleBackPress}
         />
       )}
-      <IconButton
-        icon={"home"}
-        size={30}
-        iconColor={Colors.text.error}
-        style={{ backgroundColor: "transparent" }}
-        onPress={handleBackHome}
-      />
+      {!isComponentPage && (
+        <IconButton
+          icon={"home"}
+          size={30}
+          iconColor={Colors.text.error}
+          style={{ backgroundColor: "transparent" }}
+          onPress={handleBackHome}
+        />
+      )}
       <Portal>
         <Modal
           visible={modalHomeVisible}
@@ -109,9 +119,10 @@ export default function CalcFooter({ backHome, nextIcon, finish, nextPage, onVal
           style={MainStyle.overlay}
         >
           <View style={MainStyle.modalView}>
-            <FontAwesome5 name="exclamation-triangle" size={scale(30)} color={Colors.primary} />
-            <Text style={MainStyle.modalMediumTxt}>Bạn có chắc chắn muốn quay về trang chủ không?</Text>
-            <Text style={{ ...MainStyle.modalMediumTxt, fontStyle: "italic" }}>(Mọi thay đổi sẽ bị mất)</Text>
+            <MaterialIcons name="cloud-done" size={scale(100)} color={Colors.text.success} />
+            <Text style={MainStyle.modalMediumTxt}>
+              Bạn có chắc chắn muốn hoàn tất thiết kế và lưu không?
+            </Text>
             <View style={styles.buttonFooter}>
               <Button
                 mode="contained"
@@ -124,8 +135,8 @@ export default function CalcFooter({ backHome, nextIcon, finish, nextPage, onVal
               </Button>
               <Button
                 mode="contained"
-                style={{ ...MainStyle.mainBtnSmall, backgroundColor: Colors.text.error }}
-                labelStyle={{ ...MainStyle.mainBtnSmallTxt, color: "white" }}
+                style={{ ...MainStyle.mainBtnSmall, backgroundColor: Colors.text.success }}
+                labelStyle={MainStyle.mainBtnSmallTxt}
                 onPress={saveAndGoHome}
               >
                 Đồng ý

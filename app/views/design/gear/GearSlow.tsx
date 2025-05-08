@@ -96,7 +96,7 @@ export default function GearSlowScreen() {
 
   return (
     <View style={styles.container}>
-      <Header title="Bộ truyền bánh răng cấp chậm" rightIcon={<SaveComponent />} />
+      <Header title="Bộ bánh răng cấp chậm" rightIcon={<SaveComponent />} />
       <Text style={styles.pageTitle}>Chọn thông số vật liệu</Text>
       <View style={styles.colContainer}>
         {/* Chọn độ rắn cho cặp bánh răng bộ truyền cấp chậm */}
@@ -111,7 +111,11 @@ export default function GearSlowScreen() {
                   <Text style={styles.paramType}>{selectMats[item as keyof typeof materialStats].label}</Text>
                   <GestureHandlerRootView>
                     <Slider
-                      theme={{ ...sliderTheme, minimumTrackTintColor: HBColor }}
+                      theme={{
+                        ...sliderTheme,
+                        minimumTrackTintColor: HBColor,
+                        bubbleBackgroundColor: HBColor,
+                      }}
                       bubble={(value) => `${Math.round(value)}`}
                       renderThumb={() => <FontAwesome6 name="diamond" size={20} color={HBColor} />}
                       bubbleOffsetX={5}

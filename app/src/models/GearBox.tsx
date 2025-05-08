@@ -1,7 +1,9 @@
-import CalculatedChain from "./Chain";
-import { CalculatedEngine, SelectedEngine } from "./EngineModel";
-import { CalculatedGear } from "./Gear";
-import CalculatedShaft from "./Shaft";
+import CalculatedChain from "@models/Chain";
+import { CalculatedEngine, SelectedEngine } from "@models/EngineModel";
+import { CalculatedGear } from "@models/Gear";
+import CalculatedShaft from "@models/Shaft";
+import { SelectedRollerBearing } from "@models/RollerBearing";
+import Lubricant from "@models/Lubricant";
 
 export class GearBox {
   private _design!: any;
@@ -11,6 +13,9 @@ export class GearBox {
   private _mechDrive: CalculatedChain | any;
   private _gearSet: CalculatedGear[] | any = [];
   private _shaft: CalculatedShaft | any;
+  private _rollerBearing: SelectedRollerBearing[] = [];
+  private _box: any;
+  private _lubricant!: { lubricant: Lubricant; usedFor: string }[];
 
   set design(storedDesign: any) {
     this._design = storedDesign;
@@ -54,6 +59,24 @@ export class GearBox {
   get shaft(): CalculatedShaft {
     return this._shaft;
   }
+  set rollerBearing(rollerBearing: SelectedRollerBearing[]) {
+    this._rollerBearing = rollerBearing;
+  }
+  get rollerBearing(): SelectedRollerBearing[] {
+    return this._rollerBearing;
+  }
+  set box(box: any) {
+    this._box = box;
+  }
+  get box(): any {
+    return this._box;
+  }
+  set lubricant(lub: { lubricant: Lubricant; usedFor: string }[]) {
+    this._lubricant = lub;
+  }
+  get lubricant(): { lubricant: Lubricant; usedFor: string }[] {
+    return this._lubricant;
+  }
 }
 
 //
@@ -68,6 +91,8 @@ interface Builder {
   setMechDrive(mechDrive: CalculatedChain | any): void;
   setGearSet(gears: CalculatedGear | any): void;
   setShaft(shaft: CalculatedShaft): void;
+  setRollerBearing(rollerBearing: any): void;
+  setBox(box: any): void;
   build(): GearBox;
 }
 
@@ -119,6 +144,24 @@ export default class GearBoxBuilder implements Builder {
   }
   getShaft(): CalculatedShaft {
     return this._gearBox.shaft;
+  }
+  setRollerBearing(rollerBearing: SelectedRollerBearing): void {
+    this._gearBox.rollerBearing.push(rollerBearing);
+  }
+  getRollerBearing(): SelectedRollerBearing[] {
+    return this._gearBox.rollerBearing;
+  }
+  setBox(box: any): void {
+    this._gearBox.box = box;
+  }
+  getBox(): any {
+    return this._gearBox.box;
+  }
+  setLubricant(lubricant: Lubricant, usedFor: string): void {
+    this._gearBox.lubricant.push({ lubricant, usedFor });
+  }
+  getLubricant(): { lubricant: Lubricant; usedFor: string }[] {
+    return this._gearBox.lubricant;
   }
   build(): GearBox {
     return this._gearBox;

@@ -1,5 +1,5 @@
-import CalculatedKey from "../models/Key";
-import DatabaseService from "../services/DatabaseService";
+import CalculatedKey from "@models/Key";
+import DatabaseService from "@services/DatabaseService";
 
 export default class KeyController {
   static async generateKey(lm: number, T: number, d: number) {

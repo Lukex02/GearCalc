@@ -105,9 +105,10 @@ export default class DatabaseService {
     if (error || !data?.user) {
       console.error("Không lấy được user:", error);
     } else {
-      const recentHistory = data.user.user_metadata.history[0] || null;
+      const recentHistory =
+        data.user.user_metadata.history[data.user.user_metadata.history.length - 1] || null;
       const recentUnfinishHistory =
-        data.user.user_metadata.history.find((item: any) => !item.isFinish) || null;
+        data.user.user_metadata.history.findLast((item: any) => !item.isFinish) || null;
       const designedNum = data.user.user_metadata.history.filter((item: any) => item.isFinish).length;
       const printedNum = data.user.user_metadata.history.reduce(
         (prev: any, curr: any) => (prev + curr.printed ? curr.printed : 0),
@@ -152,7 +153,7 @@ export default class DatabaseService {
 
   static async getCatalogAll(): Promise<any[]> {
     const res = [];
-    const tables = ["Engine", "chain"];
+    const tables = ["Engine", "chain", "key_flat", "roller_bearing", "lubricantAt50C"];
 
     for (const tableName of tables) {
       const { data, error } = await supabase.from(tableName).select("*").limit(2); // Tránh lãng phí data
@@ -176,6 +177,25 @@ export default class DatabaseService {
       .gt("d_min", d)
       .lt("d_max", d)
       .limit(1);
+    if (error) console.error("Lỗi khi lấy dữ liệu ", error);
+    return data ?? [];
+  }
+
+  static async getSelectableRollerBearingList(type: string, d: number): Promise<any[]> {
+    const { data, error } = await supabase
+      .from("roller_bearing")
+      .select("*")
+      .eq("type", type)
+      .eq("d", d)
+      .limit(5);
+
+    if (error) console.error("Lỗi khi lấy dữ liệu ", error);
+    return data ?? [];
+  }
+
+  static async getLubricant() {
+    const { data, error } = await supabase.from("lubricantAt50C").select("*");
+
     if (error) console.error("Lỗi khi lấy dữ liệu ", error);
     return data ?? [];
   }

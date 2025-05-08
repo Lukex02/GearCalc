@@ -1,5 +1,5 @@
-import Utils from "../services/Utils";
-import { CalculatedEngine, SelectedEngine } from "./EngineModel";
+import Utils from "@services/Utils";
+import { CalculatedEngine, SelectedEngine } from "@models/EngineModel";
 
 export interface IRatio {
   type: string;

@@ -1,5 +1,5 @@
-import CalculatedChain, { SelectedChain } from "../models/Chain";
-import DatabaseService from "../services/DatabaseService";
+import CalculatedChain, { SelectedChain } from "@models/Chain";
+import DatabaseService from "@services/DatabaseService";
 
 export default class ChainController {
   static generateCalculatedChain(
@@ -11,7 +11,7 @@ export default class ChainController {
     k_dc: number,
     k_bt: number,
     k_d: number,
-    k_c: number,
+    k_c: number
   ) {
     return new CalculatedChain(P, u_x, n, k_0, k_a, k_dc, k_bt, k_d, k_c);
   }
@@ -31,7 +31,7 @@ export default class ChainController {
               chain.P_max,
               chain.Q,
               chain.q_p,
-              chain.A,
+              chain.A
             );
           }
         })

@@ -23,6 +23,7 @@ export const Colors = {
   },
   overlay: "rgba(0,0,0,0.5)",
   unselected: "gray",
+  utilBtn: "rgba(20, 21, 22, 0.6)",
 };
 
 export default Colors;

@@ -1,17 +1,21 @@
-import EngineController from "./EngineController";
-import Efficiency, { IEfficiency } from "../models/Efficiency";
-import { CalculatedEngine, SelectedEngine } from "../models/EngineModel";
-import GearBoxBuilder from "../models/GearBox";
-import TransRatio, { TransRatioType1, TransRatioType2 } from "../models/GearRatio";
-import ChainController from "./ChainController";
-import GearController from "./GearController";
-import CalculatedChain, { SelectedChain } from "../models/Chain";
-import GearSet from "../models/Gear";
-import ShaftController from "./ShaftController";
-import CalculatedShaft from "../models/Shaft";
-import Utils from "../services/Utils";
-import KeyController from "./KeyController";
-import CalculatedKey from "../models/Key";
+import EngineController from "@controller/EngineController";
+import Efficiency, { IEfficiency } from "@models/Efficiency";
+import { CalculatedEngine, SelectedEngine } from "@models/EngineModel";
+import GearBoxBuilder from "@models/GearBox";
+import TransRatio, { TransRatioType1, TransRatioType2 } from "@models/GearRatio";
+import ChainController from "@controller/ChainController";
+import GearController from "@controller/GearController";
+import CalculatedChain, { SelectedChain } from "@models/Chain";
+import GearSet from "@models/Gear";
+import ShaftController from "@controller/ShaftController";
+import CalculatedShaft from "@models/Shaft";
+import Utils from "@services/Utils";
+import KeyController from "@controller/KeyController";
+import CalculatedKey from "@models/Key";
+import RollerBearingController from "@controller/RollerBearingController";
+import { SelectedRollerBearing } from "@models/RollerBearing";
+import BoxController from "@controller/BoxController";
+import Lubricant from "@models/Lubricant";
 
 type GearBox1GearSetInput = {
   sigma_b: [number, number];
@@ -88,13 +92,22 @@ interface DesignStrategy {
   get shaftDiagram(): any;
   designKey(shaft: CalculatedShaft): any;
   testDurability(calcShaft: CalculatedShaft): any;
+  designRollerBearing(shaft: CalculatedShaft, shaftNo: 1 | 2 | 3): any;
+  checkRollerBearing(
+    type: string,
+    F_a: number,
+    F_r: number,
+    selectedRB: SelectedRollerBearing,
+    spinSpd: number
+  ): boolean;
+  designBox(gears?: any, shaft?: any, D1?: number[]): any;
 }
 
 //
 // -------------- Hộp giảm tốc 2 cấp khai triển (2 cặp bánh răng)
 // Quay một chiều, làm việc 2 ca, tải va đập nhẹ: 1 năm làm việc 300 ngày, 1 ca làm việc 8 giờ.
 //
-class DesignGearBox1 implements DesignStrategy {
+export class DesignGearBox1 implements DesignStrategy {
   _designInputStats: any;
   _designEngineStats: any;
   _shaftDiagramData: any;
@@ -221,7 +234,7 @@ class DesignGearBox1 implements DesignStrategy {
         t1: this._designInputStats.t1,
         T2: this._designInputStats.T2,
         t2: this._designInputStats.t2,
-        L_h: this._designInputStats.L,
+        L_h: this._designInputStats.L * 300 * 2 * 8,
       },
       input.K_qt
     );
@@ -348,12 +361,28 @@ class DesignGearBox1 implements DesignStrategy {
     this._shaftDiagramData = { ...this._shaftDiagramData, Shaft1: { Q1x, Q1y, M1x, M1y, M1z } };
     shaft.addIndiviDia(
       [
-        { point: "A", Mx: 0, My: 0 },
-        { point: "B", Mx: 0, My: F_r * l12 }, // Tương tự ở D
-        { point: "C", Mx: R1_By * l13, My: F_r * l12 - (-F_r + R1_By) * l13 },
+        { point: "A", Mx: 0, My: 0, Rx: 0, Ry: 0 },
+        { point: "B", Mx: 0, My: F_r * l12, Rx: R1_Bx, Ry: R1_By }, // Tương tự ở D
+        { point: "C", Mx: R1_By * l13, My: F_r * l12 - (-F_r + R1_By) * l13, Rx: 0, Ry: 0 },
+        { point: "D", Mx: 0, My: F_r * l12, Rx: R1_Dx, Ry: R1_Dy },
       ],
-      1
+      1,
+      [
+        {
+          name: "l11",
+          value: l11,
+        },
+        {
+          name: "l12",
+          value: l12,
+        },
+        {
+          name: "l13",
+          value: l13,
+        },
+      ]
     );
+    shaft.addAxialForce(F_a1);
 
     // ------ Xác định lực tác dụng lên trục II
     // Lực trên bánh răng lớn của bộ truyền cấp nhanh
@@ -435,16 +464,35 @@ class DesignGearBox1 implements DesignStrategy {
     this._shaftDiagramData = { ...this._shaftDiagramData, Shaft2: { Q2x, Q2y, M2x, M2y, M2z } };
     shaft.addIndiviDia(
       [
-        { point: "A", Mx: 0, My: 0 },
-        { point: "B", Mx: Math.abs(R2_Ay) * l22, My: R2_Ax * l22 }, // Tương tự ở D
+        { point: "A", Mx: 0, My: 0, Rx: R2_Ax, Ry: R2_Ay }, // Tương tự ở D
+        { point: "B", Mx: Math.abs(R2_Ay) * l22, My: R2_Ax * l22, Rx: 0, Ry: 0 },
         {
           point: "C",
           Mx: Math.abs(R2_Ay) * l22 - (F_a2 * gears.fastGear.d2) / 2 + (Math.abs(R2_Ay) + F_r2) * (l23 - l22),
           My: R2_Ax * l22 - (-R2_Ax + F_t2) * (l23 - l22),
+          Rx: 0,
+          Ry: 0,
         },
+        { point: "D", Mx: 0, My: 0, Rx: R2_Dx, Ry: R2_Dy },
       ],
-      2
+      2,
+      [
+        {
+          name: "l21",
+          value: l21,
+        },
+        {
+          name: "l22",
+          value: l22,
+        },
+        {
+          name: "l23",
+          value: l23,
+        },
+      ]
     );
+    shaft.addAxialForce(F_a2);
+    shaft.addAxialForce(F_a3);
 
     // ------ Xác định lực tác dụng lên trục III
     // Lực trên bánh răng lớn của bộ truyền cấp chậm
@@ -505,18 +553,41 @@ class DesignGearBox1 implements DesignStrategy {
     this._shaftDiagramData = { ...this._shaftDiagramData, Shaft3: { Q3x, Q3y, M3x, M3y, M3z } };
     shaft.addIndiviDia(
       [
-        { point: "A", Mx: 0, My: 0 }, // Tương tự ở D
-        { point: "B", Mx: R3_Ay * l32, My: -R3_Ax * l32 },
+        {
+          point: "A",
+          Mx: R3_Ay * l32 - (F_a4 * gears.slowGear.d2) / 2,
+          My: -R3_Ax * l32 - (R3_Ax - F_t4) * (l33 - l32),
+          Rx: R3_Ax,
+          Ry: R3_Ay,
+        }, // Tương tự ở C
+        { point: "B", Mx: R3_Ay * l32, My: -R3_Ax * l32, Rx: 0, Ry: 0 },
         {
           point: "C",
           Mx: R3_Ay * l32 - (F_a4 * gears.slowGear.d2) / 2,
           My: -R3_Ax * l32 - (R3_Ax - F_t4) * (l33 - l32),
+          Rx: R3_Cx,
+          Ry: R3_Cy,
         },
+        { point: "D", Mx: 0, My: 0, Rx: 0, Ry: 0 },
       ],
-      3
+      3,
+      [
+        {
+          name: "l31",
+          value: l31,
+        },
+        {
+          name: "l32",
+          value: l32,
+        },
+        {
+          name: "l33",
+          value: l33,
+        },
+      ]
     );
-    console.log("Diagram: ", this._shaftDiagramData);
-    console.log("Shaft step 1: ", shaft);
+    shaft.addAxialForce(F_a4);
+    // console.log("Diagram: ", this._shaftDiagramData);
     return shaft;
   }
   get shaftDiagram() {
@@ -638,6 +709,86 @@ class DesignGearBox1 implements DesignStrategy {
     });
     return { fatigueDura, staticDura };
   }
+  designRollerBearing(shaft: CalculatedShaft, shaftNo: 1 | 2 | 3) {
+    try {
+      // const L_h = this._designInputStats.L;
+      const F_a = shaft.getAxialForce(shaftNo);
+      const indiShaft = shaft.getIndividualShaft(shaftNo);
+
+      // Get roller bearing calculation
+      const getRollerBearing = (p1: string, p2: string) => {
+        const statsOnFirstPoint = indiShaft.getStatAtPoint(p1);
+        const statsOnSecondPoint = indiShaft.getStatAtPoint(p2);
+        const rB1st = RollerBearingController.generateRollerBearing(
+          statsOnFirstPoint.R_x,
+          statsOnFirstPoint.R_y
+        );
+        const rB2nd = RollerBearingController.generateRollerBearing(
+          statsOnSecondPoint.R_x,
+          statsOnSecondPoint.R_y
+        );
+        return { rB1st, rB2nd };
+      };
+
+      // Call function on corresponding shaft number
+      const { rB1st: rollerBearingFirstPoint, rB2nd: rollerBearingSecondPoint } =
+        shaftNo === 1
+          ? getRollerBearing("B", "D")
+          : shaftNo === 2
+          ? getRollerBearing("A", "D")
+          : getRollerBearing("A", "C");
+
+      if (rollerBearingFirstPoint && rollerBearingSecondPoint) {
+        const maxFr = Math.max(rollerBearingFirstPoint.Fr, rollerBearingSecondPoint.Fr);
+        return {
+          type: Utils.chooseRollerBearingType(F_a, maxFr),
+          F_a: F_a,
+          F_r: maxFr,
+        };
+      } else {
+        throw new Error("Không tạo được ổ lăn");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Lỗi khi tính toán ổ lăn: ${error.message}`);
+      }
+    }
+  }
+  checkRollerBearing(
+    type: string,
+    F_a: number,
+    F_r: number,
+    selectedRB: SelectedRollerBearing,
+    spinSpd: number
+  ) {
+    if (type === "single_row_ball") {
+      const iFa_Co = (1 * F_a) / selectedRB.C_O;
+      // Chọn e theo iFa_Co, làm hàm bên Utils dò bảng
+      let { X, Y, e } = Utils.getRollerCoeffi(type, iFa_Co)!;
+      if (F_a / (1 * F_r) <= e) {
+        X = 1;
+        Y = 0;
+      }
+      const Q_B = (X * 1 * F_r + Y * F_a) * 1 * 1.3;
+      const Q_td =
+        Q_B *
+        ((this._designInputStats.t1 / 60) * this._designInputStats.T1 ** (1 / 3) +
+          (this._designInputStats.t2 / 60) * this._designInputStats.T2 ** (1 / 3)) **
+          (1 / 3);
+      const L = (60 * (this._designInputStats.L * 300 * 2 * 8 * 3) * spinSpd) / 10 ** 6;
+      const C_d = Q_td * L ** (1 / 3);
+      if (C_d < selectedRB.C) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      throw new Error("Hiện tại chỉ mới áp dụng cho ổ bi đỡ một dãy");
+    }
+  }
+  designBox(gearSet: GearSet[], shaft: CalculatedShaft, D1: number[]) {
+    return BoxController.generateBox(gearSet, shaft, D1);
+  }
 }
 
 //
@@ -753,6 +904,19 @@ class DesignGearBox2 implements DesignStrategy {
   testDurability(calcShaft: CalculatedShaft): boolean {
     return true;
   }
+  designRollerBearing(input: any) {
+    return null;
+  }
+  checkRollerBearing(
+    type: string,
+    F_a: number,
+    F_r: number,
+    selectedRB: SelectedRollerBearing,
+    spinSpd: number
+  ) {
+    return true;
+  }
+  designBox() {}
 }
 
 //
@@ -764,10 +928,7 @@ export default class CalcController {
   private _effiency!: Efficiency;
   private _ratio!: TransRatio;
   private _calcEngine!: CalculatedEngine;
-  // private _calcEnginePostStats: any;
-  // private _calcMechDrive: CalculatedChain | any; // || CalculatedBelt; nếu có belt
-  // private _calcGearSet: GearSet[] = [];
-  // private _calcShaft!: CalculatedShaft;
+  private _calcRollerBearing!: any;
   private _gearBoxBuilder: GearBoxBuilder;
 
   // Implement semi-Singleton to store object state
@@ -800,10 +961,10 @@ export default class CalcController {
   }
 
   initDesign(F: number, v: number, T1: number, t1: number, T2: number, t2: number, L: number, output: any) {
-    this._designStrategy.storeDesignInput(F, v, T1, t1, T2, t2, L, output);
+    this._designStrategy.storeDesignInput(F, v, T1, t1, T2, t2, L, output); // Thêm sẵn làm việc trong 300 ngày, 2 ca, 8h
+    this._gearBoxBuilder.setDesign({ designStrategy: this._designStrategy, order: this._order });
   }
   getGearBox() {
-    this._gearBoxBuilder.setDesign({ designStrategy: this._designStrategy, order: this._order });
     return this._gearBoxBuilder.build();
   }
   calcEngineBase() {
@@ -817,7 +978,7 @@ export default class CalcController {
       // Adjust engine parameters
       this._calcEngine = this._designStrategy.recalcEngine(efficiency, ratio);
     } else {
-      throw new Error("Base engine calculation has not been performed");
+      throw new Error("Tính toán động cơ điện chưa được thực hiện");
     }
   }
 
@@ -857,7 +1018,7 @@ export default class CalcController {
         }
       } catch (error) {
         if (error instanceof Error) {
-          alert(`Error while calculating engine stats: ${error.message}`);
+          throw new Error(`Lỗi khi tính toán động cơ điện: ${error.message}`);
         }
       }
     }
@@ -908,7 +1069,7 @@ export default class CalcController {
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
-        alert(`Lỗi khi tính toán bộ truyền: ${error.message}`);
+        throw new Error(`Lỗi khi tính toán bộ truyền: ${error.message}`);
       }
     }
   }
@@ -964,7 +1125,7 @@ export default class CalcController {
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
-        alert(`Lỗi khi tính toán bộ truyền: ${error.message}`);
+        throw new Error(`Lỗi khi tính toán bộ truyền: ${error.message}`);
       }
     }
   }
@@ -1001,9 +1162,51 @@ export default class CalcController {
       } catch (error) {
         console.log(error);
         if (error instanceof Error) {
-          alert(`Lỗi khi tính toán trục: ${error.message}`);
+          throw new Error(`Lỗi khi tính toán trục: ${error.message}`);
         }
       }
     }
+  }
+
+  // Tính điều kiện chọn ổ lăn
+  calcRollerBearing(shaftNo: 1 | 2 | 3) {
+    const shaft = this._gearBoxBuilder.getShaft();
+    if (!shaft) {
+      throw new Error("Chưa thiết kế trục, không thể tính ổ lăn");
+    }
+    this._calcRollerBearing = this._designStrategy.designRollerBearing(shaft, shaftNo);
+  }
+
+  // Chọn ổ lăn và kiểm thử
+  chooseRollerBearing(selected: SelectedRollerBearing, shaftNo: 1 | 2 | 3) {
+    // Kiểm tra lại lựa chọn rồi mới set hoặc báo chọn lại
+    try {
+      const calcRb = this._calcRollerBearing;
+      const spinSpd = this._gearBoxBuilder.getCalcEnginePostStats().distShaft.n[shaftNo];
+      if (this._designStrategy.checkRollerBearing(selected.type, calcRb.F_a, calcRb.F_r, selected, spinSpd)) {
+        this._gearBoxBuilder.setRollerBearing(selected);
+      } else {
+        throw new Error("Ổ lăn không đạt yêu cầu");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Ổ lăn được chọn không đạt yêu cầu: ${error.message}`);
+      }
+    }
+  }
+
+  // Thiết kế vỏ hộp
+  calcBox() {
+    const gears = this._gearBoxBuilder.getGearSet();
+    const rollerBearings = this._gearBoxBuilder.getRollerBearing();
+    const shaft = this._gearBoxBuilder.getShaft();
+    const D1 = rollerBearings.map((rb) => rb.D);
+    const box = this._designStrategy.designBox(gears, shaft, D1);
+    this._gearBoxBuilder.setBox(box);
+  }
+
+  // Chọn bôi trơn
+  chooseLubricant(lubricant: Lubricant, usedFor: string) {
+    this._gearBoxBuilder.setLubricant(lubricant, usedFor);
   }
 }

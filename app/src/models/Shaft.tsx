@@ -1,7 +1,7 @@
-import Utils from "../services/Utils";
-import Efficiency, { IEfficiency } from "./Efficiency";
-import TransRatio from "./GearRatio";
-import CalculatedKey from "./Key";
+import Utils from "@services/Utils";
+import Efficiency, { IEfficiency } from "@models/Efficiency";
+import TransRatio from "@models/GearRatio";
+import CalculatedKey from "@models/Key";
 
 export class DistributedShaftStats {
   private _n: number[]; // Tốc độ quay trên các trục, [n_dc, n1, n2, n3,..., n_ct]
@@ -55,11 +55,12 @@ export default class CalculatedShaft {
   private _d_sb: number[]; // Sơ bộ đường kính trục, với nhiều trục thì sẽ có d_<thứ tự> tương ứng
   private _d!: number[]; // Đường kính trục (đã xác định), với nhiều trục thì sẽ có d_<thứ tự> tương ứng
   private _bO!: number[]; // Chiều rộng ổ lăn
-  private _hub_length!: any[]; // Độ dài của điều trục
+  private _hub_length!: { name: string; value: number }[]; // Độ dài của điều trục
   private _k1!: number; // Khoảng cách từ mặt mút của chi tiết quay đến thành trong của hộp hoặc khoảng cách giữa các chi tiết quay
   private _k2!: number; // Khoảng cách từ mặt mút ổ đến thành trong của hộp (lấy giá trị nhỏ khi bôi trơn ổ bằng dầu trong hộp giảm tốc)
   private _k3!: number; // Khoảng cách từ mặt mút của chi tiết quay đến nắp ổ
   private _h_n!: number; // Chiều cao nắp ổ và đầu bulông
+  private _F_a!: number[]; // Lực dọc trục
 
   private _indiShaft: IndividualShaft[] = [];
 
@@ -133,10 +134,23 @@ export default class CalculatedShaft {
       }
     });
   }
-  addIndiviDia(MParam: { point: string; Mx: number; My: number }[], shaftNo: 1 | 2 | 3) {
+  addIndiviDia(
+    MParam: { point: string; Mx: number; My: number; Rx: number; Ry: number }[],
+    shaftNo: 1 | 2 | 3,
+    l: { name: string; value: number }[]
+  ) {
     const sigma_allow = Utils.getSigmaAllowInShaft(this._d[shaftNo - 1]);
     const T = this._distributedTorque[shaftNo - 1];
-    this._indiShaft.push(new IndividualShaft(MParam, T, sigma_allow));
+    this._indiShaft.push(new IndividualShaft(MParam, T, sigma_allow, l));
+  }
+  addAxialForce(F_a: number) {
+    if (!this._F_a) this._F_a = [];
+    this._F_a.push(F_a);
+  }
+  getAxialForce(shaftNo: 1 | 2 | 3) {
+    if (shaftNo === 1) return this._F_a[0];
+    if (shaftNo === 2) return Math.abs(this._F_a[2] - this._F_a[1]);
+    else return this._F_a[3];
   }
   getHubLength(name: string) {
     return this._hub_length.find((h) => h.name === name)!.value;
@@ -181,6 +195,7 @@ export default class CalculatedShaft {
 
 class IndividualShaft {
   private _T: number; // Lực tác dụng lên trục này
+  private _l: { name: string; value: number }[];
   private _maxStats: {
     d: number;
     M: number;
@@ -192,11 +207,19 @@ class IndividualShaft {
     M_td: number; // Momen tương đương
     M_x: number; // Momen theo trục x
     M_y: number; // Momentheo trục y
+    R_x: number; // Phản lực theo trục x
+    R_y: number; // Phản lực theo trục y
     key: CalculatedKey | undefined; // Then
   }[];
 
-  constructor(MParam: { point: string; Mx: number; My: number }[], T: number, sigma_allow: number) {
+  constructor(
+    MParam: { point: string; Mx: number; My: number; Rx: number; Ry: number }[],
+    T: number,
+    sigma_allow: number,
+    l: { name: string; value: number }[]
+  ) {
     this._T = T;
+    this._l = l;
     this._maxStats = { d: 0, M: 0 };
     this._statAtPoint = MParam.map((curr) => {
       const M_td = Math.sqrt(curr.Mx ** 2 + curr.My ** 2 + 0.75 * T ** 2);
@@ -206,6 +229,8 @@ class IndividualShaft {
         M_td: M_td,
         M_x: curr.Mx,
         M_y: curr.My,
+        R_x: curr.Rx,
+        R_y: curr.Ry,
         d_sb: M_td / (0.1 * sigma_allow) ** 1 / 3,
         d: undefined,
         key: undefined,
@@ -235,5 +260,8 @@ class IndividualShaft {
   }
   get maxStats() {
     return this._maxStats;
+  }
+  get l() {
+    return this._l;
   }
 }

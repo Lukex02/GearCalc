@@ -1,4 +1,4 @@
-import CalculatedShaft from "../models/Shaft";
+import CalculatedShaft from "@models/Shaft";
 
 export default class GearController {
   static generateShaft(
