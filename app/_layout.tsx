@@ -1,12 +1,14 @@
 import { Stack, useRouter } from "expo-router";
 import { PaperProvider } from "react-native-paper";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Header from "@views/common/Header";
+import { StatusBar } from "expo-status-bar";
+import Colors from "@style/Colors";
 
 export default function RootLayout() {
   return (
     <GestureHandlerRootView>
       <PaperProvider>
+        <StatusBar style="light" backgroundColor={Colors.background} />
         <Stack
           screenOptions={{
             headerStyle: { backgroundColor: "#415A77" },

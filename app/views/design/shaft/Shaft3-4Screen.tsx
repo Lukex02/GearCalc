@@ -1,28 +1,145 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, Modal } from "react-native";
+import React, { useState, useRef } from "react";
+import { View, Text, FlatList, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
-import Slider from "@react-native-community/slider"; // Import Slider
-import styles from "@style/MainStyle";
+import { Slider } from "react-native-awesome-slider";
+import styles, { sliderTheme } from "@style/MainStyle";
+import { Colors } from "@style/Colors";
 import CalcController from "@controller/CalcController";
 import CalcFooter from "@views/common/CalcFooter";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { useSharedValue } from "react-native-reanimated";
+import { useNavigation } from "@react-navigation/native";
+import Header from "@/views/common/Header";
+import SaveComponent from "@/views/common/SaveComponent";
 
 // Giả lập keyData
 const keyData = [
-  { shaft: 1, point: "A", d: 10, lm: 10, lt: 11, b: 10, h: 10, t1: 10, T: 57000, sigma_d: 1, tau_c: 1 },
-  { shaft: 1, point: "C", d: 10, lm: 10, lt: 11, b: 10, h: 10, t1: 10, T: 57000, sigma_d: 1, tau_c: 1 },
-  { shaft: 2, point: "B", d: 10, lm: 10, lt: 11, b: 10, h: 10, t1: 10, T: 57000, sigma_d: 1, tau_c: 1 },
-  { shaft: 2, point: "C", d: 10, lm: 10, lt: 11, b: 10, h: 10, t1: 10, T: 57000, sigma_d: 1, tau_c: 1 },
-  { shaft: 3, point: "A", d: 10, lm: 10, lt: 11, b: 10, h: 10, t1: 10, T: 57000, sigma_d: 1, tau_c: 1 },
-  { shaft: 3, point: "C", d: 10, lm: 10, lt: 11, b: 10, h: 10, t1: 10, T: 57000, sigma_d: 1, tau_c: 1 },
+  { shaft: 1, point: "A", d: 10 },
+  { shaft: 1, point: "C", d: 10 },
+  { shaft: 2, point: "B", d: 10 },
+  { shaft: 2, point: "C", d: 10 },
+  { shaft: 3, point: "A", d: 10 },
+  { shaft: 3, point: "C", d: 10 },
 ];
 
 export default function SelectDiamShaftScreen() {
+  const [selectedDiameters, setSelectedDiameters] = useState<
+    Record<string, number>
+  >({});
   const calcController = CalcController.getInstance();
-  // Bước 3 là chọn đường kính trục cho từng tiết diện của từng trục
-  // Sẽ thực hiện gọi hàm ở dưới 3 * 4 = 12 lần (3 trục, 4 điểm)
-  // calcController.chooseIndiShaftDiameter(1, [{ point: "A", value: 10 }]); // Ví dụ trục I tại điểm A có đường kính 10
-  // *** Gọi luôn calcController.calcKey() ở đây nhưng mà phải sau khi chọn xong tất cả ở trên, và phải xử lý async
-  // const keyData = calcController.calcKey() // Kết quả trả về sẽ là những then được chọn tự nhiên theo thiết kế của trục
+  const isSliding = useRef(false);
+  const navigation = useNavigation();
+  // Sử dụng useRef để lưu trữ SharedValue
+  const progressValues = useRef(
+    keyData.map((item) => useSharedValue(item.d))
+  ).current;
 
-  // In kết quả keyData ra
+  const minimumValue = useSharedValue(5); // Giá trị tối thiểu
+  const maximumValue = useSharedValue(50); // Giá trị tối đa
+
+  const handleSelection = (
+    shaft: number,
+    point: string,
+    value: number,
+    index: number
+  ) => {
+    setSelectedDiameters((prev) => ({
+      ...prev,
+      [`${shaft}-${point}`]: value,
+    }));
+    progressValues[index].value = value; // Cập nhật SharedValue
+  };
+
+  const handleCalculation = async () => {
+    const shaftSelections: Record<number, { point: string; value: number }[]> =
+      {};
+
+    Object.keys(selectedDiameters).forEach((key) => {
+      const [shaft, point] = key.split("-");
+      const shaftNo = parseInt(shaft, 10);
+
+      if (!shaftSelections[shaftNo]) {
+        shaftSelections[shaftNo] = [];
+      }
+
+      shaftSelections[shaftNo].push({ point, value: selectedDiameters[key] });
+    });
+
+    for (const [shaftNo, d_choose] of Object.entries(shaftSelections)) {
+      await calcController.chooseIndiShaftDiameter(
+        parseInt(shaftNo, 10) as 1 | 2 | 3,
+        d_choose
+      );
+    }
+
+    const result = await calcController.calcKey();
+    console.log("Kết quả tính toán:", result);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Header title="Chọn đường kính trục" />
+      <View style={styles.tableContainer}>
+        <FlatList
+          data={keyData}
+          keyExtractor={(item) => `${item.shaft}-${item.point}`}
+          renderItem={({ item, index }) => (
+            <View style={localStyles.itemContainer}>
+              <Text
+                style={styles.paramType}
+              >{`Trục ${item.shaft} - Điểm ${item.point}`}</Text>
+              <Slider
+                theme={sliderTheme}
+                bubble={(value) => `${value} mm`}
+                renderThumb={() => (
+                  <FontAwesome6
+                    name="diamond"
+                    size={20}
+                    color={Colors.primary}
+                  />
+                )}
+                bubbleOffsetX={5}
+                style={styles.slider}
+                containerStyle={{ borderRadius: 40 }}
+                progress={progressValues[index]} // Sử dụng SharedValue
+                minimumValue={minimumValue} // Sử dụng SharedValue
+                maximumValue={maximumValue} // Sử dụng SharedValue
+                step={1}
+                onSlidingStart={() => (isSliding.current = true)}
+                onSlidingComplete={(value) => {
+                  isSliding.current = false;
+                  handleSelection(item.shaft, item.point, value, index);
+                }}
+              />
+              <Text style={styles.resultText}>
+                Đường kính:{" "}
+                <Text style={{ color: Colors.primary, fontWeight: "bold" }}>
+                  {(
+                    selectedDiameters[`${item.shaft}-${item.point}`] || item.d
+                  ).toFixed(5)}{" "}
+                  mm
+                </Text>
+              </Text>
+            </View>
+          )}
+        />
+        <Button
+          mode="contained"
+          onPress={handleCalculation}
+          style={styles.mainBtn}
+        >
+          Tính toán
+        </Button>
+        <CalcFooter nextPage={"/views/design/shaft/Shaft5Screen"} />
+      </View>
+    </View>
+  );
 }
+
+const localStyles = StyleSheet.create({
+  itemContainer: {
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border.primary,
+  },
+});

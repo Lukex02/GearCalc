@@ -1,8 +1,8 @@
-import Efficiency from "../models/Efficiency";
-import EngineFactory, { CalculatedEngine, SelectedEngine } from "../models/EngineModel";
-import TransRatio from "../models/GearRatio";
-import { DistributedShaftStats } from "../models/Shaft";
-import DatabaseService from "../services/DatabaseService";
+import Efficiency from "@models/Efficiency";
+import EngineFactory, { CalculatedEngine, SelectedEngine } from "@models/EngineModel";
+import TransRatio from "@models/GearRatio";
+import { DistributedShaftStats } from "@models/Shaft";
+import DatabaseService from "@services/DatabaseService";
 
 export default class EngineController {
   static generateCalculatedEngine(
@@ -14,7 +14,7 @@ export default class EngineController {
     T2: number,
     t2: number,
     efficieny: Efficiency,
-    ratio: TransRatio,
+    ratio: TransRatio
   ) {
     return EngineFactory.createCalculatedEngine(
       F,
@@ -25,13 +25,13 @@ export default class EngineController {
       T2,
       t2,
       efficieny.n_system,
-      ratio.ratio_spec,
+      ratio.ratio_spec
     );
   }
   static async getSelectedEngine(
     reqPower: number, // CalculatedEngine.p_ct
     reqRpm: number, // CalculatedEngine.n_sb
-    T_mm_T: number, // CalculatedEngine.T1 (có thể là T2 tùy vào lúc khởi động chạy cái nào, ở đây bài đang làm theo thì lấy T1)
+    T_mm_T: number // CalculatedEngine.T1 (có thể là T2 tùy vào lúc khởi động chạy cái nào, ở đây bài đang làm theo thì lấy T1)
   ): Promise<SelectedEngine[]> {
     // List of satisfied engine
     const dataList = await DatabaseService.getSelectableEngine(reqPower, reqRpm);
@@ -48,7 +48,7 @@ export default class EngineController {
               engine.Efficiency,
               engine["Tmax/Tdn"],
               engine["Tk/Tdn"],
-              T_mm_T,
+              T_mm_T
             );
           }
         })
@@ -66,7 +66,7 @@ export default class EngineController {
     p_td: number,
     final_effi: Efficiency,
     final_ratio: TransRatio,
-    order: string[],
+    order: string[]
   ) {
     return new DistributedShaftStats(n_dc, p_td, final_effi, final_ratio, order);
   }

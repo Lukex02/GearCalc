@@ -1,4 +1,4 @@
-import GearSet from "../models/Gear";
+import GearSet from "@models/Gear";
 
 export default class GearController {
   static generateGearSet(
@@ -18,7 +18,7 @@ export default class GearController {
       t2: number;
       L_h: number;
     },
-    K_qt: number,
+    K_qt: number
   ): GearSet {
     const gearSet = new GearSet(sigma_b, sigma_ch, HB, S_max, distributedShaftStats, desStats, true);
     if (!gearSet.contactDuraCheck()) {

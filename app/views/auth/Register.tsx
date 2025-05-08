@@ -6,6 +6,8 @@ import DatabaseService from "@services/DatabaseService";
 import styles from "@style/MainStyle";
 import LoadingScreen from "@views/common/LoadingScreen";
 import { Colors } from "@/src/style/Colors";
+import calcFooterStyle from "@/src/style/CalcFooterStyle";
+import Header from "@views/common/Header";
 
 export default function RegisterScreen() {
   const [username, setUsername] = useState("");
@@ -19,7 +21,6 @@ export default function RegisterScreen() {
       async function restoreSession() {
         const authStatus = await DatabaseService.checkAuth();
         if (authStatus) {
-          alert("User đã đăng nhập");
           router.push("/(tabs)/home");
         }
         setLoading(false);
@@ -30,14 +31,19 @@ export default function RegisterScreen() {
   if (loading) return <LoadingScreen />;
 
   const handleRegister = () => {
-    if (username.length < 3 || email.length < 3 || password.length < 6) {
-      alert("Vui lòng nhập tên người dùng, email và mật khẩu ít nhất 3 ký tự");
+    if (username.length < 6 || email.length < 6 || password.length < 6) {
+      alert("Vui lòng nhập tên người dùng, email và mật khẩu ít nhất 6 ký tự");
       return;
     }
-    console.log("Đăng ký với:", { username, email, password });
     DatabaseService.signUp(username, email, password).then((res) => {
       if (res.error) {
-        console.log("Error:", res.error);
+        if (res.error.code === "email_exists") {
+          alert("Email đã được sử dụng");
+        } else if (res.error.code === "invalid_credentials") {
+          alert("Tên người dùng, email và mật khẩu không sử dụng được");
+        } else {
+          alert("Đăng ký thất bại");
+        }
       } else {
         router.push("/(tabs)/home");
       }
@@ -46,6 +52,7 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.containerCentered}>
+      <Header title="Đăng ký" />
       <View style={styles.inputContainer}>
         <Text style={styles.inputFieldLabel}>Tên người dùng</Text>
         <TextInput
@@ -76,9 +83,14 @@ export default function RegisterScreen() {
           secureTextEntry
         />
       </View>
-      <TouchableOpacity style={styles.mainBtn} onPress={handleRegister}>
-        <Text style={styles.mainBtnTxt}>ĐĂNG KÍ</Text>
-      </TouchableOpacity>
+      <View style={calcFooterStyle.buttonFooter}>
+        <TouchableOpacity style={styles.mainBtnMedium} onPress={() => router.push("/views/auth/Login")}>
+          <Text style={styles.mainBtnMediumTxt}>Về đăng nhập</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.mainBtnMedium} onPress={handleRegister}>
+          <Text style={styles.mainBtnMediumTxt}>ĐĂNG KÍ</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }

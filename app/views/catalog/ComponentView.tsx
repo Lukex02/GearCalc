@@ -7,6 +7,7 @@ import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 import { scale } from "react-native-size-matters";
 import CalcFooter from "@views/common/CalcFooter";
 import Header from "@views/common/Header";
+import { rollerBearingLabel } from "@views/common/Label";
 
 const ComponentPage = () => {
   const data = useLocalSearchParams();
@@ -74,7 +75,8 @@ const ComponentPage = () => {
             <Text style={styles.componentInfoName}>d_0:</Text> {data.d_0} (mm)
           </Text>
           <Text style={styles.componentInfo}>
-            <Text style={styles.componentInfoName}>l:</Text> {data.l + " (mm)" || "Không có dữ liệu"}
+            <Text style={styles.componentInfoName}>l:</Text>{" "}
+            {(data.l && data.l + " (mm)") || "Không có dữ liệu"}
           </Text>
           <Text style={styles.componentInfo}>
             <Text style={styles.componentInfoName}>h lớn nhất:</Text> {data.h_max} (mm)
@@ -90,6 +92,108 @@ const ComponentPage = () => {
           </Text>
         </View>
         <CalcFooter />
+      </View>
+    )) ||
+    (data.type === "key_flat" && (
+      <View style={styles.container}>
+        <Header title="Thông số kỹ thuật" />
+        <MaterialCommunityIcons
+          name="screwdriver"
+          size={scale(120)}
+          style={styles.componentImg}
+          color={Colors.primary}
+        />
+        <Text style={styles.componentTitle}>Then bằng</Text>
+        <View style={styles.componentInfoContainer}>
+          <Text style={styles.componentInfo}>
+            <Text style={styles.componentInfoName}>Đường kính trục d: </Text>
+            {data.d_min}...{data.d_max} (mm)
+          </Text>
+          <Text style={styles.componentInfo}>
+            <Text style={styles.componentInfoName}>Kích thước tiết diện then (b x h): </Text>
+            {data.b} x {data.h} (mm)
+          </Text>
+          <Text style={styles.componentInfo}>
+            <Text style={styles.componentInfoName}>Chiều sâu rãnh then trên trục t1:</Text> {data.t1} (mm)
+          </Text>
+          <Text style={styles.componentInfo}>
+            <Text style={styles.componentInfoName}>Chiều sâu rãnh then trên lỗ t2:</Text> {data.t2} (mm)
+          </Text>
+          <Text style={styles.componentInfo}>
+            <Text style={styles.componentInfoName}>Bán kính góc lượn của rãnh r: </Text>
+            {data.r_min}...{data.r_max} (mm)
+          </Text>
+        </View>
+        <CalcFooter />
+      </View>
+    )) ||
+    (data.type === "roller_bearing" && (
+      <View style={styles.container}>
+        <Header title="Thông số kỹ thuật" />
+        <MaterialCommunityIcons
+          name="movie-roll"
+          size={scale(120)}
+          style={styles.componentImg}
+          color={Colors.primary}
+        />
+        <Text style={styles.componentTitle}>
+          {rollerBearingLabel[data.rb_type as keyof typeof rollerBearingLabel]}
+        </Text>
+        <View style={styles.componentInfoContainer}>
+          <Text style={styles.componentInfo}>
+            <Text style={styles.componentInfoName}>d: </Text>
+            {data.d} (mm)
+          </Text>
+          <Text style={styles.componentInfo}>
+            <Text style={styles.componentInfoName}>D: </Text>
+            {data.D} (mm)
+          </Text>
+          <Text style={styles.componentInfo}>
+            <Text style={styles.componentInfoName}>b = T: </Text>
+            {(data.b && data.b + " (mm)") || "Không có dữ liệu"}
+          </Text>
+          <Text style={styles.componentInfo}>
+            <Text style={styles.componentInfoName}>B: </Text>
+            {(data.B && data.B + " (mm)") || "Không có dữ liệu"}
+          </Text>
+          <Text style={styles.componentInfo}>
+            <Text style={styles.componentInfoName}>r: </Text>
+            {data.r} (mm)
+          </Text>
+          <Text style={styles.componentInfo}>
+            <Text style={styles.componentInfoName}>r1: </Text>
+            {(data.r1 && data.r1 + " (mm)") || "Không có dữ liệu"}
+          </Text>
+          <Text style={styles.componentInfo}>
+            <Text style={styles.componentInfoName}>C: </Text>
+            {data.C} (mm)
+          </Text>
+          <Text style={styles.componentInfo}>
+            <Text style={styles.componentInfoName}>Co: </Text>
+            {data.Co} (mm)
+          </Text>
+        </View>
+        <CalcFooter />
+      </View>
+    )) ||
+    (data.type === "lubricantAt50C" && (
+      <View style={styles.container}>
+        <Header title="Thông số kỹ thuật" />
+        <MaterialCommunityIcons
+          name="oil"
+          size={scale(120)}
+          style={styles.componentImg}
+          color={Colors.primary}
+        />
+        <Text style={styles.componentTitle}>{data.name}</Text>
+        <View style={styles.componentInfoContainer}>
+          <Text style={styles.componentInfo}>
+            <Text style={styles.componentInfoName}>Độ nhớt centistoc ở 50°C: </Text>
+            {!data.centistoc_max && "≥"}
+            {data.centistoc_min} - {data.centistoc_max}
+          </Text>
+        </View>
+        <CalcFooter isComponentPage={true} />
       </View>
     ))
   );

@@ -38,7 +38,7 @@ export default function GearResult() {
 
   useEffect(() => {
     if (gearSetFast && gearSetSlow) {
-      setH2((gearSetFast.da2 - gearSetSlow.df2) / 2);
+      setH2((gearSetFast.da2 - gearSetFast.df2) / 2);
       setda4Over3(gearSetSlow.da2 / 3);
       setH({ min: gearSetFast.da2 / 2 - 10 - 15, max: gearSetFast.da2 / 2 - 10 - 10 });
       setLubricationSatisfied(h2 < 10 && H.min >= da4Over3 && H.max >= da4Over3);
@@ -46,48 +46,55 @@ export default function GearResult() {
     }
   }, [gearSetSlow, gearSetFast]);
 
-  return isValid ? (
+  return (
     <View style={styles.container}>
       <Header title="Kết quả tính toán" rightIcon={<SaveComponent />} />
 
       {/* Bảng hiển thị thông số */}
-      <View style={localStyles.table}>
-        <View style={{ ...localStyles.row, backgroundColor: "rgba(34, 34, 34, 0.38)", borderBottomWidth: 1 }}>
-          <Text style={{ ...localStyles.cell, color: Colors.primary }}>Thông số</Text>
-          <Text style={{ ...localStyles.cell, color: Colors.primary }}>Giá trị (mm)</Text>
+      {isValid ? (
+        <View style={localStyles.table}>
+          <View
+            style={{ ...localStyles.row, backgroundColor: "rgba(34, 34, 34, 0.38)", borderBottomWidth: 1 }}
+          >
+            <Text style={{ ...localStyles.cell, color: Colors.primary }}>Thông số</Text>
+            <Text style={{ ...localStyles.cell, color: Colors.primary }}>Giá trị (mm)</Text>
+          </View>
+          <View style={localStyles.row}>
+            <Text style={localStyles.cell}>Chiều cao răng của bánh răng lớn cấp nhanh</Text>
+            <Text style={localStyles.cell}>{h2.toFixed(2)}</Text>
+          </View>
+          <View style={localStyles.row}>
+            <Text style={localStyles.cell}>Mức dầu thấp nhất và mức dầu cao nhất</Text>
+            <Text style={localStyles.cell}>
+              {H.min.toFixed(2)} ÷ {H.max.toFixed(2)}
+            </Text>
+          </View>
+          <View style={localStyles.row}>
+            <Text style={localStyles.cell}>1/3 bán kính bánh lớn phần cấp chậm</Text>
+            <Text style={localStyles.cell}>{da4Over3.toFixed(2)}</Text>
+          </View>
         </View>
-        <View style={localStyles.row}>
-          <Text style={localStyles.cell}>Chiều cao răng của bánh răng lớn cấp nhanh</Text>
-          <Text style={localStyles.cell}>{h2.toFixed(2)}</Text>
-        </View>
-        <View style={localStyles.row}>
-          <Text style={localStyles.cell}>Mức dầu thấp nhất và mức dầu cao nhất</Text>
-          <Text style={localStyles.cell}>
-            {H.min.toFixed(2)} ÷ {H.max.toFixed(2)}
-          </Text>
-        </View>
-        <View style={localStyles.row}>
-          <Text style={localStyles.cell}>1/3 bán kính bánh lớn phần cấp chậm</Text>
-          <Text style={localStyles.cell}>{da4Over3.toFixed(2)}</Text>
-        </View>
-      </View>
-
+      ) : (
+        <LoadingScreen />
+      )}
       {/* Thông báo điều kiện bôi trơn */}
-      <View style={localStyles.lubricationContainer}>
-        {lubricationSatisfied ? (
-          <Text style={localStyles.lubricationSatisfied}>
-            Bộ truyền thỏa mãn điều kiện bôi trơn {H.min.toFixed(2)} ÷ {H.max.toFixed(2)} {">"}{" "}
-            {da4Over3.toFixed(2)}
-          </Text>
-        ) : (
-          <Text style={localStyles.lubricationNotSatisfied}>Bộ truyền không thỏa mãn điều kiện bôi trơn</Text>
-        )}
-      </View>
+      {isValid && (
+        <View style={localStyles.lubricationContainer}>
+          {lubricationSatisfied ? (
+            <Text style={localStyles.lubricationSatisfied}>
+              Bộ truyền thỏa mãn điều kiện bôi trơn {H.min.toFixed(2)} ÷ {H.max.toFixed(2)} {">"}{" "}
+              {da4Over3.toFixed(2)}
+            </Text>
+          ) : (
+            <Text style={localStyles.lubricationNotSatisfied}>
+              Bộ truyền không thỏa mãn điều kiện bôi trơn
+            </Text>
+          )}
+        </View>
+      )}
 
       <CalcFooter onValidate={handleValidation} finish={true} />
     </View>
-  ) : (
-    <LoadingScreen />
   );
 }
 

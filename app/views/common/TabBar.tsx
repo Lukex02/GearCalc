@@ -23,10 +23,10 @@ export default function TabBar({ state, descriptors, navigation }: any) {
       style={{
         flexDirection: "row",
         backgroundColor: "#121212",
-        borderTopLeftRadius: 50,
-        borderTopRightRadius: 50,
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
         height: scale(60),
-        position: "fixed",
+        position: "absolute",
         left: 0,
         right: 0,
         bottom: 0,
@@ -40,7 +40,7 @@ export default function TabBar({ state, descriptors, navigation }: any) {
             width: tabWidth / 3,
             marginHorizontal: tabWidth / 3,
             backgroundColor: Colors.border.accent,
-            bottom: verticalScale(15),
+            bottom: verticalScale(12),
             borderRadius: 10,
           },
           indicatorStyle,
@@ -62,8 +62,8 @@ export default function TabBar({ state, descriptors, navigation }: any) {
           }
         };
 
-        let iconName: "home" | "book" | "account" = "home";
-        if (route.name === "catalog") iconName = "book";
+        let iconName: "home" | "book-open-page-variant" | "account" = "home";
+        if (route.name === "catalog") iconName = "book-open-page-variant";
         else if (route.name === "account") iconName = "account";
 
         return (

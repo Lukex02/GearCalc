@@ -35,7 +35,7 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
     paddingHorizontal: Math.round(scale(30)),
-    paddingVertical: verticalScale(30),
+    paddingVertical: verticalScale(40),
     justifyContent: "space-between",
     alignItems: "center",
   },
@@ -43,7 +43,7 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
     paddingHorizontal: Math.round(scale(30)),
-    paddingVertical: verticalScale(30),
+    paddingVertical: verticalScale(40),
     gap: Math.round(scale(40)),
     alignItems: "center",
     justifyContent: "center",
@@ -51,7 +51,7 @@ export default StyleSheet.create({
   containerStart: {
     flex: 1,
     backgroundColor: Colors.background,
-    paddingTop: verticalScale(30),
+    paddingTop: verticalScale(40),
     paddingBottom: verticalScale(50),
     gap: Math.round(scale(10)),
     alignItems: "center",
@@ -171,7 +171,7 @@ export default StyleSheet.create({
     ...shadows.default,
   },
   historyContainer: {
-    height: verticalScale(300),
+    height: verticalScale(250),
     width: "90%",
     justifyContent: "space-between",
     backgroundColor: Colors.card,
@@ -211,16 +211,14 @@ export default StyleSheet.create({
     color: Colors.text.secondary,
     borderRadius: 3,
     fontSize: Math.round(scale(10)),
-    paddingHorizontal: Math.round(scale(5)),
+    padding: Math.round(scale(5)),
     ...shadows.default,
   },
   utilBtnContainer: {
     flex: 1,
-    backgroundColor: "rgba(39, 43, 49, 0.49)",
-    margin: "auto",
+    backgroundColor: "rgba(20, 21, 22, 0.6)",
     alignItems: "center",
-    marginHorizontal: Math.round(scale(10)),
-    width: scale(80),
+    width: "100%",
     ...shadows.default,
   },
   utilBtnTxt: {
@@ -242,6 +240,7 @@ export default StyleSheet.create({
     flexDirection: "row",
   },
   homeCardCol: {
+    margin: "auto",
     alignItems: "flex-start",
     justifyContent: "space-between",
     gap: verticalScale(20),
@@ -249,6 +248,12 @@ export default StyleSheet.create({
   homeCardTxt: {
     color: Colors.text.primary,
     fontSize: scale(12),
+  },
+  homeCardMedTxt: {
+    color: Colors.text.primary,
+    fontSize: scale(16),
+    alignSelf: "center",
+    textAlign: "center",
   },
   homeCardBigTxt: {
     color: Colors.text.primary,
@@ -295,7 +300,7 @@ export default StyleSheet.create({
   },
 
   scrollContainer: {
-    marginBottom: verticalScale(30),
+    paddingBottom: verticalScale(30),
     gap: Math.round(verticalScale(30)),
     alignItems: "center",
   },

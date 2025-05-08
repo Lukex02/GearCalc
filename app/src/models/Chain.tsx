@@ -18,7 +18,7 @@ export default class CalculatedChain {
     n: number;
   };
   private _a!: number;
-  private _x_c!: number; // Số măt xích chẵn
+  private _x!: number; // Số măt xích chẵn
   private _i!: number; // Số lần va đập của bản lề xích trong 1 giây
   private _s!: number; // Hệ số an toàn
 
@@ -104,21 +104,19 @@ export default class CalculatedChain {
       (this._z1 + this._z2) / 2 +
       ((this._z2 - this._z1) ** 2 * this._p) / (4 * this._a * Math.PI ** 2);
     const rounded_x = Math.floor(x);
-    if (rounded_x % 2 == 0) this._x_c = rounded_x;
+    if (rounded_x % 2 == 0) this._x = rounded_x;
     else {
-      this._x_c = rounded_x - 1; // Làm tròn xuống số chẵn
+      this._x = rounded_x - 1; // Làm tròn xuống số chẵn
     }
     const a_recalc =
       0.25 *
       this._p *
-      (this._x_c -
+      (this._x -
         0.5 * (this._z1 + this._z2) +
-        Math.sqrt(
-          (this._x_c - 0.5 * (this._z1 + this._z2)) ** 2 - 2 * ((this._z2 - this._z1) / Math.PI) ** 2
-        ));
+        Math.sqrt((this._x - 0.5 * (this._z1 + this._z2)) ** 2 - 2 * ((this._z2 - this._z1) / Math.PI) ** 2));
     const delta_a = 0.002 * a_recalc;
     this._a = Math.round((a_recalc - delta_a) / 10) * 10;
-    this._i = (this._z1 * this._shaftStats.n) / (15 * this._x_c);
+    this._i = (this._z1 * this._shaftStats.n) / (15 * this._x);
     if (this._p == 38.1 && this._i > 20) throw new Error("Số lần va đập vượt mức"); // Làm 1 trường hợp này tạm thời
 
     const v = (this._z1 * this._p * this._shaftStats.n) / 60000;
@@ -185,7 +183,7 @@ export default class CalculatedChain {
       p: this._p, // Bước xích
       B: this._B, // Chiều dài ống lót
       d_c: this._d_c, // Đường kính chốt
-      x: this._x_c, // Số mắt xích
+      x: this._x, // Số mắt xích
       a: this._a, // Khoảng cách trục
       d1: this._d1, // Đường kính vòng chia đĩa xích dẫn
       d2: this._d2, // Đường kính vòng chia đĩa bị dẫn

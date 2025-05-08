@@ -7,7 +7,7 @@ import CalcFooterStyle from "@/src/style/CalcFooterStyle";
 import { Colors } from "@/src/style/Colors";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { scale } from "react-native-size-matters";
-import CalcController from "@/src/controller/CalcController";
+import CalcController, { DesignGearBox1 } from "@/src/controller/CalcController";
 import DatabaseService from "@/src/services/DatabaseService";
 import Header from "./Header";
 import LoadingScreen from "./LoadingScreen";
@@ -21,7 +21,7 @@ export default function SaveComponent() {
 
   const sheetRef = useRef<BottomSheet>(null);
   const data = useMemo(
-    () => ["_type", "_calcEnginePostStats", "_engine", "_mechDrive", "_gearSet", "_shaft"],
+    () => ["_type", "_design", "_calcEnginePostStats", "_engine", "_mechDrive", "_gearSet", "_shaft"], // ! Cần thêm điều kiện thiết kế trong _design.designStrategy._designInputStats
     []
   );
 
@@ -35,7 +35,7 @@ export default function SaveComponent() {
   }, []);
 
   const renderStats = useCallback((item: any, type: string, index?: number) => {
-    console.log(type, item);
+    // console.log(type, item);
     if (type === "_calcEnginePostStats") {
       return (
         <View>
@@ -98,11 +98,16 @@ export default function SaveComponent() {
             ? ("engineLabel" as keyof typeof Label)
             : type === "_gearSet"
             ? ("gearSetLabel" as keyof typeof Label)
+            : type === "_design"
+            ? ("inputLabel" as keyof typeof Label)
+            : type === "_shaft"
+            ? ("shaftLabel" as keyof typeof Label)
             : ("chainLabel" as keyof typeof Label)
         ];
       const itemKeys = Object.keys(labels);
+      // console.log(item.designStrategy);
       return (
-        <View>
+        <View key={index}>
           {index != null && (
             <Text style={styles.bottomSheetSmallBoldTxt}>Bộ truyền bánh răng {index + 1}: </Text>
           )}
@@ -114,6 +119,23 @@ export default function SaveComponent() {
                 ? item.getChainPostStats()[key as keyof typeof labels] // CalculatedChain
                 : item instanceof GearSet
                 ? item.returnPostStats()[key as keyof typeof labels] // GearSet
+                : item.designStrategy &&
+                  item.designStrategy instanceof DesignGearBox1 &&
+                  item.designStrategy._designInputStats
+                ? typeof item.designStrategy._designInputStats[key as keyof typeof labels] === "object"
+                  ? Object.keys(item.designStrategy._designInputStats[key as keyof typeof labels]).map(
+                      (outputKey) => {
+                        return (
+                          <Text key={outputKey} style={styles.bottomSheetSmallTxt}>
+                            {"\n+ "}
+                            {
+                              Label.outputInDesignLabel[outputKey as keyof typeof Label.outputInDesignLabel]
+                            }: {item.designStrategy._designInputStats[key as keyof typeof labels][outputKey]}
+                          </Text>
+                        );
+                      }
+                    )
+                  : item.designStrategy._designInputStats[key as keyof typeof labels] // DesignStrategy
                 : item[key]}
             </Text>
           ))}
@@ -125,7 +147,7 @@ export default function SaveComponent() {
     const calcController = CalcController.getInstance();
     const gearBox = calcController.getGearBox();
     const stats = gearBox[item as keyof typeof gearBox];
-
+    // console.log(stats);
     return (
       <View key={item} style={styles.bottomSheetContent}>
         <Text style={styles.bottomSheetLargeTxt}>
@@ -170,7 +192,7 @@ export default function SaveComponent() {
           style={styles.overlay}
         >
           <View style={styles.modalView}>
-            <FontAwesome5 name="exclamation-triangle" size={scale(30)} color={Colors.primary} />
+            <FontAwesome5 name="save" size={scale(50)} color={Colors.text.secondaryAccent} />
             <Text style={styles.modalMediumTxt}>Bạn có chắc chắn muốn lưu thiết kế hiện tại không?</Text>
             <View style={CalcFooterStyle.buttonFooter}>
               <Button
@@ -184,7 +206,7 @@ export default function SaveComponent() {
               </Button>
               <Button
                 mode="contained"
-                style={styles.mainBtnSmall}
+                style={{ ...styles.mainBtnSmall, backgroundColor: Colors.text.secondaryAccent }}
                 labelStyle={styles.mainBtnSmallTxt}
                 onPress={handleSave}
               >
