@@ -1,6 +1,6 @@
 import CalculatedShaft from "@models/Shaft";
 
-export default class GearController {
+export default class ShaftController {
   static generateShaft(
     sigma_b: number,
     sigma_ch: number,

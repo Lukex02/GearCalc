@@ -74,7 +74,7 @@ interface DesignStrategy {
   continueCalcMechDrive(calculated: CalculatedChain | any, selected: SelectedChain | any): void;
   designGear(input: GearSetInput): GearSet | any; // Sẽ chỉ làm 1 hàm tính bánh răng dùng chung
   designShaft(
-    input: { sigma_b: number; sigma_ch: number; HB: number },
+    input: { sigma_b: number; sigma_ch: number; HB: number; k1: number; k2: number; k3: number; h_n: number },
     order: string[],
     distributedTorque: number[],
     gears: any,
@@ -279,6 +279,7 @@ export class DesignGearBox1 implements DesignStrategy {
       [15, 20, 30]
     );
     shaft.add_distance(input.k1, input.k2, input.k3, input.h_n);
+    // Phải chọn được d trước khi tính cái dưới
     shaft.calc_hub_length(
       order,
       gears.fastGear.b_w,
@@ -289,10 +290,9 @@ export class DesignGearBox1 implements DesignStrategy {
       hubParam?.hub_bv,
       hubParam?.hub_brc
     );
-
     // ------ Tính chiều dài trục II
     // l22 = 0,5(lm22 + b_o2) + k1 + k2
-    const l22 = shaft.getHubLength("lm22") + shaft.getBO(1) + shaft.k1 + shaft.k2;
+    const l22 = 0.5 * (shaft.getHubLength("lm22") + shaft.getBO(2)) + shaft.k1 + shaft.k2;
     // l23 = l22 + 0.5(lm22 + lm23) + k1
     const l23 = l22 + 0.5 * (shaft.getHubLength("lm22") + shaft.getHubLength("lm23")) + shaft.k1;
     // l21 = lm22 + lm23 + 3k1 + 2k2 + b_o2
@@ -311,7 +311,7 @@ export class DesignGearBox1 implements DesignStrategy {
 
     // ------ Xác định lực tác dụng lên trục I
     // Lực tác dụng từ khớp nối, lực hướng tâm
-    const F_r = 0.2 * 2 * distributedTorque[0];
+    const F_r = (0.2 * 2 * distributedTorque[0]) / 63;
     // Lực trên bánh răng nhỏ của bộ truyền cấp nhanh
     const F_t1 = (2 * distributedTorque[0]) / gears.fastGear.d1; // Lực vòng
     const F_a1 = F_t1 * Math.tan((gears.fastGear.beta * Math.PI) / 180); // Lực dọc trục
@@ -326,10 +326,10 @@ export class DesignGearBox1 implements DesignStrategy {
     const Q1x = [
       { x: 0, y: -F_r },
       { x: l12, y: -F_r },
-      { x: l12, y: -F_r + R1_By },
-      { x: l12 + l13, y: -F_r + R1_By },
-      { x: l12 + l13, y: -F_r + R1_By - F_t1 },
-      { x: l12 + l11, y: -F_r + R1_By - F_t1 },
+      { x: l12, y: -F_r + R1_Bx },
+      { x: l12 + l13, y: -F_r + R1_Bx },
+      { x: l12 + l13, y: -F_r + R1_Bx - F_t1 },
+      { x: l12 + l11, y: -F_r + R1_Bx - F_t1 },
     ];
 
     const Q1y = [
@@ -344,14 +344,17 @@ export class DesignGearBox1 implements DesignStrategy {
       { x: l12, y: 0 }, // M1xB
       { x: l12 + l13, y: R1_By * l13 }, // M1xC
       { x: l12 + l13, y: R1_By * l13 - (F_a1 * gears.fastGear.d1) / 2 },
-      { x: l12 + l11, y: R1_By * l13 - (F_a1 * gears.fastGear.d1) / 2 + (R1_By - F_r1) * (l11 - l13) }, // M1xD, should be 0
+      {
+        x: l12 + l11,
+        y: Math.round(R1_By * l13 - (F_a1 * gears.fastGear.d1) / 2 + (R1_By - F_r1) * (l11 - l13)),
+      }, // M1xD, should be 0
     ];
 
     const M1y = [
       { x: 0, y: 0 }, // M1yA
       { x: l12, y: F_r * l12 }, // M1yB
-      { x: l12 + l13, y: F_r * l12 - (-F_r + R1_By) * l13 }, // M1yC
-      { x: l12 + l11, y: F_r * l12 - (-F_r + R1_By) * l13 - (-F_r + R1_By - F_t1) * (l11 - l13) }, // M1yD, should be 0
+      { x: l12 + l13, y: F_r * l12 - (-F_r + R1_Bx) * l13 }, // M1yC
+      { x: l12 + l11, y: Math.round(F_r * l12 - (-F_r + R1_Bx) * l13 - (-F_r + R1_Bx - F_t1) * (l11 - l13)) }, // M1yD, should be 0
     ];
 
     const M1z = [
@@ -363,7 +366,7 @@ export class DesignGearBox1 implements DesignStrategy {
       [
         { point: "A", Mx: 0, My: 0, Rx: 0, Ry: 0 },
         { point: "B", Mx: 0, My: F_r * l12, Rx: R1_Bx, Ry: R1_By }, // Tương tự ở D
-        { point: "C", Mx: R1_By * l13, My: F_r * l12 - (-F_r + R1_By) * l13, Rx: 0, Ry: 0 },
+        { point: "C", Mx: R1_By * l13, My: F_r * l12 - (-F_r + R1_Bx) * l13, Rx: 0, Ry: 0 },
         { point: "D", Mx: 0, My: F_r * l12, Rx: R1_Dx, Ry: R1_Dy },
       ],
       1,
@@ -389,17 +392,18 @@ export class DesignGearBox1 implements DesignStrategy {
     const F_t2 = F_t1; // Lực vòng
     const F_a2 = F_a1; // Lực dọc trục
     const F_r2 = F_r1; // Lực trên bánh răng
+
     // Lực trên bánh răng nhỏ của bộ truyền cấp chậm
     const F_t3 = (2 * distributedTorque[1]) / gears.slowGear.d1; // Lực vòng
     const F_a3 = F_t3 * Math.tan((gears.slowGear.beta * Math.PI) / 180); // Lực dọc trục
     const F_r3 = (F_t3 * Math.tan(gears.slowGear.a_tw)) / Math.cos((gears.slowGear.beta * Math.PI) / 180); // Lực trên bánh răng
 
     const R2_Az = F_a3 - F_a2;
-    const R2_Ax = (-F_t2 * (l21 - l22) + F_t3 * (l21 - l23)) / l21;
+    const R2_Ax = (F_t2 * (l21 - l22) + F_t3 * (l21 - l23)) / l21;
     const R2_Ay =
-      (-F_r2 * (l21 - l22) +
-        F_r3 * (l21 - l23) +
-        (F_a2 * gears.fastGear.d2) / 2 +
+      (F_r2 * (l21 - l22) -
+        F_r3 * (l21 - l23) -
+        (F_a2 * gears.fastGear.d2) / 2 -
         (F_a3 * gears.slowGear.d1) / 2) /
       l21;
     const R2_Dx = F_t2 + F_t3 - R2_Ax;
@@ -441,12 +445,7 @@ export class DesignGearBox1 implements DesignStrategy {
       },
       {
         x: l21,
-        y:
-          Math.abs(R2_Ay) * l22 -
-          (F_a2 * gears.fastGear.d2) / 2 +
-          (Math.abs(R2_Ay) + F_r2) * (l23 - l22) -
-          (F_a3 * gears.slowGear.d1) / 2 -
-          (Math.abs(R2_Ay) + F_r2 - F_r3) * (l21 - l23), // should be 0
+        y: 0, // Cho luôn 0
       }, // MxD
     ];
 
@@ -454,7 +453,7 @@ export class DesignGearBox1 implements DesignStrategy {
       { x: 0, y: 0 }, // M2yA
       { x: l22, y: R2_Ax * l22 }, // M2yB
       { x: l23, y: R2_Ax * l22 - (-R2_Ax + F_t2) * (l23 - l22) }, // M2yC
-      { x: l21, y: R2_Ax * l22 - (-R2_Ax + F_t2) * (l23 - l22) - (R2_Ax - F_t2 - F_t3) * (l21 - l23) }, // M2yD, should be 0
+      { x: l21, y: 0 }, // M2yD, should be 0
     ];
 
     const M2z = [
@@ -504,8 +503,8 @@ export class DesignGearBox1 implements DesignStrategy {
 
     const R3_Cz = F_a4;
     const R3_Ax = (F_t4 * (l31 - l32) + F_rx * (l33 - l31)) / l31;
-    const R3_Ay = (-F_r4 * (l31 - l32) + (F_a4 * gears.slowGear.d2) / 2) / l31;
-    const R3_Cx = F_t4 - F_rx - R3_Ax;
+    const R3_Ay = (F_r4 * (l31 - l32) - (F_a4 * gears.slowGear.d2) / 2) / l31;
+    const R3_Cx = -(F_t4 - F_rx - R3_Ax);
     const R3_Cy = F_r4 - R3_Ay;
 
     const Q3x = [
@@ -522,7 +521,7 @@ export class DesignGearBox1 implements DesignStrategy {
       { x: l32, y: Math.abs(R3_Ay) }, // A -> B
       { x: l32, y: Math.abs(R3_Ay) + F_r4 }, // B
       { x: l31, y: Math.abs(R3_Ay) + F_r4 }, // B -> C
-      { x: l31, y: Math.abs(R3_Ay) + F_r4 - Math.abs(R3_Cy) }, // C, should be 0
+      { x: l31, y: 0 }, // C, should be 0
     ];
 
     const M3x = [
@@ -532,17 +531,17 @@ export class DesignGearBox1 implements DesignStrategy {
       { x: l31, y: R3_Ay * l32 - (F_a4 * gears.slowGear.d2) / 2 - (Math.abs(R3_Ay) + F_r4) * (l31 - l32) },
       {
         x: l31,
-        y: R3_Ay * l32 - (F_a4 * gears.slowGear.d2) / 2 - (Math.abs(R3_Ay) + F_r4) * (l31 - l32) - R3_Cy, // should be 0
+        y: 0, // should be 0
       }, // M3xD
     ];
 
     const M3y = [
       { x: 0, y: 0 }, // M3yA
       { x: l32, y: -R3_Ax * l32 }, // M3yB
-      { x: l31, y: -R3_Ax * l32 - (R3_Ax - F_t4) * (l33 - l32) }, // M3yC
+      { x: l31, y: -R3_Ax * l32 - (R3_Ax - F_t4) * (l31 - l32) }, // M3yC
       {
         x: l33,
-        y: -R3_Ax * l32 - (R3_Ax - F_t4) * (l33 - l32) - (R3_Ax - F_t4 - Math.abs(R3_Cx)) * (l33 - l31), // should be 0
+        y: 0, // should be 0
       }, // M3yD
     ];
 
@@ -556,7 +555,7 @@ export class DesignGearBox1 implements DesignStrategy {
         {
           point: "A",
           Mx: R3_Ay * l32 - (F_a4 * gears.slowGear.d2) / 2,
-          My: -R3_Ax * l32 - (R3_Ax - F_t4) * (l33 - l32),
+          My: -R3_Ax * l32 - (R3_Ax - F_t4) * (l31 - l32),
           Rx: R3_Ax,
           Ry: R3_Ay,
         }, // Tương tự ở C
@@ -564,7 +563,7 @@ export class DesignGearBox1 implements DesignStrategy {
         {
           point: "C",
           Mx: R3_Ay * l32 - (F_a4 * gears.slowGear.d2) / 2,
-          My: -R3_Ax * l32 - (R3_Ax - F_t4) * (l33 - l32),
+          My: -R3_Ax * l32 - (R3_Ax - F_t4) * (l31 - l32),
           Rx: R3_Cx,
           Ry: R3_Cy,
         },
@@ -587,7 +586,6 @@ export class DesignGearBox1 implements DesignStrategy {
       ]
     );
     shaft.addAxialForce(F_a4);
-    // console.log("Diagram: ", this._shaftDiagramData);
     return shaft;
   }
   get shaftDiagram() {
@@ -1082,7 +1080,7 @@ export default class CalcController {
 
   // Bước 1 của trục: tính sơ bộ
   calcShaft(
-    mats: { sigma_b: number; sigma_ch: number; HB: number },
+    mats: { sigma_b: number; sigma_ch: number; HB: number; k1: number; k2: number; k3: number; h_n: number },
     hubParam?: {
       hub_d_x_brt?: number;
       hub_kn_tvdh?: number;
@@ -1105,15 +1103,15 @@ export default class CalcController {
               b_w: this._gearBoxBuilder.getGearSet()[0].returnPostStats().b_w,
               d1: this._gearBoxBuilder.getGearSet()[0].returnPostStats().d1,
               d2: this._gearBoxBuilder.getGearSet()[0].returnPostStats().d2,
-              beta: this._gearBoxBuilder.getGearSet()[0].returnPostStats().beta,
+              beta: this._gearBoxBuilder.getGearSet()[0].returnPostStats().Beta_angle,
               a_tw: this._gearBoxBuilder.getGearSet()[0].a_tw_rad,
             },
             slowGear: {
               b_w: this._gearBoxBuilder.getGearSet()[1].returnPostStats().b_w,
               d1: this._gearBoxBuilder.getGearSet()[1].returnPostStats().d1,
               d2: this._gearBoxBuilder.getGearSet()[1].returnPostStats().d2,
-              beta: this._gearBoxBuilder.getGearSet()[0].returnPostStats().beta,
-              a_tw: this._gearBoxBuilder.getGearSet()[0].a_tw_rad,
+              beta: this._gearBoxBuilder.getGearSet()[1].returnPostStats().Beta_angle,
+              a_tw: this._gearBoxBuilder.getGearSet()[1].a_tw_rad,
             },
           }, // Gears
           {
@@ -1123,21 +1121,14 @@ export default class CalcController {
         )
       );
     } catch (error) {
-      console.log(error);
       if (error instanceof Error) {
-        throw new Error(`Lỗi khi tính toán bộ truyền: ${error.message}`);
+        throw new Error(`Lỗi khi tính toán trục: ${error.message}`);
       }
     }
   }
-  // Bước 1.5 của trục: Lấy tọa độ để vẽ biểu đồ lực
+  // Bước 2 của trục: Lấy tọa độ để vẽ biểu đồ lực
   getShaftDiagram() {
     this._designStrategy.shaftDiagram;
-  }
-  // Bước 2 của trục: Chọn đường kính trục chung
-  chooseShaftDiameter(d_choose: number[]) {
-    if (this._gearBoxBuilder.getShaft()) {
-      this._gearBoxBuilder.getShaft().choose_d(d_choose);
-    }
   }
   // Bước 3 của trục: Chọn đường kính trục cho từng tiết diện của từng trục
   chooseIndiShaftDiameter(shaftNo: 1 | 2 | 3, d_choose: { point: string; value: number }[]) {

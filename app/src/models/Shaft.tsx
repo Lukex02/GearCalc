@@ -52,17 +52,16 @@ export default class CalculatedShaft {
   private _sigma_ch: number; // Giới hạn chảy
   private _HB: number; // Độ rắn
   private _distributedTorque: number[];
-  private _d_sb: number[]; // Sơ bộ đường kính trục, với nhiều trục thì sẽ có d_<thứ tự> tương ứng
   private _d!: number[]; // Đường kính trục (đã xác định), với nhiều trục thì sẽ có d_<thứ tự> tương ứng
   private _bO!: number[]; // Chiều rộng ổ lăn
-  private _hub_length!: { name: string; value: number }[]; // Độ dài của điều trục
+  private _hub_length: { name: string; value: number }[]; // Độ dài của điều trục
   private _k1!: number; // Khoảng cách từ mặt mút của chi tiết quay đến thành trong của hộp hoặc khoảng cách giữa các chi tiết quay
   private _k2!: number; // Khoảng cách từ mặt mút ổ đến thành trong của hộp (lấy giá trị nhỏ khi bôi trơn ổ bằng dầu trong hộp giảm tốc)
   private _k3!: number; // Khoảng cách từ mặt mút của chi tiết quay đến nắp ổ
   private _h_n!: number; // Chiều cao nắp ổ và đầu bulông
   private _F_a!: number[]; // Lực dọc trục
 
-  private _indiShaft: IndividualShaft[] = [];
+  private _indiShaft: IndividualShaft[];
 
   constructor(
     sigma_b: number,
@@ -74,17 +73,14 @@ export default class CalculatedShaft {
     this._sigma_b = sigma_b;
     this._sigma_ch = sigma_ch;
     this._HB = HB;
-    // this._d = distributedTorque.map((torque, idx) => {
-    //   return Math.ceil(Math.pow(torque / (0.2 * tau_allow[idx]), 1 / 3) / 5) * 5;
-    // });
-    // this._bO = this._d.map((d) => Utils.getBO(d));
-    this._d_sb = distributedTorque.map((torque, idx) => Math.pow(torque / (0.2 * tau_allow[idx]), 1 / 3));
+    this._d = distributedTorque.map((torque, idx) => {
+      return Math.ceil(Math.pow(torque / (0.2 * tau_allow[idx]), 1 / 3) / 5) * 5;
+    });
+    this._d = [25, 45, 55];
+    this._bO = this._d.map((d) => Utils.getBO(d));
     this._distributedTorque = distributedTorque;
-  }
-  choose_d(d_choose: number[]) {
-    // Về lý thuyết sẽ không thể xảy ra vì đã số lượng d cho chọn đã được xác định từ trang view
-    if (d_choose.length != this._d_sb.length) throw new Error("Số lượng d vượt quá số lượng d sơ bộ");
-    this._d = d_choose;
+    this._hub_length = [];
+    this._indiShaft = [];
   }
 
   add_distance(k1: number, k2: number, k3: number, h_n: number) {
@@ -105,7 +101,7 @@ export default class CalculatedShaft {
   ) {
     // Tính độ rắn
     order.forEach((comp) => {
-      if (comp === "brt1") {
+      if (comp === "brt_1") {
         // Bánh răng trụ 1 (cấp nhanh)
         this._hub_length.push({
           name: "lm13",
@@ -115,7 +111,7 @@ export default class CalculatedShaft {
           name: "lm22",
           value: hub_d_x_brt * this._d[1] < b_w1 ? b_w1 : hub_d_x_brt * this._d[1],
         });
-      } else if (comp == "brt2") {
+      } else if (comp == "brt_2") {
         // Bánh răng trụ 2 (cấp chậm)
         this._hub_length.push({
           name: "lm23",
@@ -169,9 +165,6 @@ export default class CalculatedShaft {
   }
   get HB() {
     return this._HB;
-  }
-  get d_sb() {
-    return this._d_sb;
   }
   get k1() {
     return this._k1;

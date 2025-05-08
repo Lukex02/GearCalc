@@ -93,7 +93,7 @@ export default function GearResult() {
         </View>
       )}
 
-      <CalcFooter onValidate={handleValidation} finish={true} />
+      <CalcFooter onValidate={handleValidation} nextPage={"/views/design/shaft/Shaft1-2Screen"} />
     </View>
   );
 }

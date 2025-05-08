@@ -120,10 +120,26 @@ function getCoeffLoad(v: number): CoeffLoadResult {
   };
 }
 
-const d_bOTables = [15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 47];
+const d_bOTables: Record<number, number> = {
+  20: 15,
+  25: 17,
+  30: 19,
+  35: 21,
+  40: 23,
+  45: 25,
+  50: 27,
+  55: 29,
+  60: 31,
+  65: 33,
+  70: 35,
+  75: 37,
+  80: 39,
+  85: 41,
+  90: 43,
+  100: 47,
+};
 function getBO(d: number): number {
-  const idx = d_bOTables.indexOf(d);
-  return d_bOTables[idx];
+  return d_bOTables[d];
 }
 
 // [Sigma] này được lấy theo cột Thép CT6, 45 có sigma_b >= 600
@@ -355,6 +371,7 @@ async function renderStats(stats: any, key: string) {
       const inputStatsKey = Object.keys(inputLabel);
       const { base64Img: designTemplateImg, mimeType } = await imageToBase64("gearbox1_template");
       content = `
+      <img src="data:${mimeType};base64,${designTemplateImg}" class="design" />
       <section>
         <h2 class="componentTitle">${Label.mainlabel[key as keyof typeof Label.mainlabel]}</h2>
         ${inputStatsKey
@@ -377,7 +394,6 @@ async function renderStats(stats: any, key: string) {
           })
           .join("")}
       </section>
-      <img src="data:${mimeType};base64,${designTemplateImg}" class="design" />
       `;
     } else if (key === "_calcEnginePostStats") {
       content = `
@@ -434,9 +450,11 @@ async function renderStats(stats: any, key: string) {
       content = `
       <section>
         <h2 class="componentTitle">${Label.mainlabel[key as keyof typeof Label.mainlabel]}</h2>
+        <div class="grid-container">
         ${Object.keys(Label[tableLabel])
           .map((statKey) => {
-            return `<p class="medTxt">${statsLabel[statKey as keyof typeof statsLabel]}: ${
+            return `<p class="grid-item-2-sm">${statsLabel[statKey as keyof typeof statsLabel]}</p>
+            <p class="grid-item-2-lg">${
               stats[statKey as keyof typeof stats]
                 ? stats[statKey as keyof typeof stats]
                 : stats[("_" + statKey) as keyof typeof stats]
@@ -444,6 +462,7 @@ async function renderStats(stats: any, key: string) {
           `;
           })
           .join("")}
+        </div>
       </section>
       `;
     }
@@ -452,6 +471,7 @@ async function renderStats(stats: any, key: string) {
     const tableLabel = Label.labelTable[key as keyof typeof Label.labelTable] as keyof typeof Label;
     const statsLabel = Label[tableLabel];
     content += `
+    <h2 class="componentTitle">${Label.mainlabel[key as keyof typeof Label.mainlabel]}</h2>
     <div class="grid-container">
     ${stats
       .map((stat: any, index: number) => {
@@ -673,7 +693,7 @@ async function printReportPDF(history: any) {
   </html>
         `;
   const { uri } = await Print.printToFileAsync({ html: report });
-  console.log("File has been saved to:", uri);
+  // console.log("File has been saved to:", uri);
   await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
 }
 
