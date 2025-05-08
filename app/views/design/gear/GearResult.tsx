@@ -38,7 +38,7 @@ export default function GearResult() {
 
   useEffect(() => {
     if (gearSetFast && gearSetSlow) {
-      setH2((gearSetFast.da2 - gearSetSlow.df2) / 2);
+      setH2((gearSetFast.da2 - gearSetFast.df2) / 2);
       setda4Over3(gearSetSlow.da2 / 3);
       setH({ min: gearSetFast.da2 / 2 - 10 - 15, max: gearSetFast.da2 / 2 - 10 - 10 });
       setLubricationSatisfied(h2 < 10 && H.min >= da4Over3 && H.max >= da4Over3);

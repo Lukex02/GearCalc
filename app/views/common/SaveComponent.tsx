@@ -107,7 +107,7 @@ export default function SaveComponent() {
       const itemKeys = Object.keys(labels);
       // console.log(item.designStrategy);
       return (
-        <View>
+        <View key={index}>
           {index != null && (
             <Text style={styles.bottomSheetSmallBoldTxt}>Bộ truyền bánh răng {index + 1}: </Text>
           )}

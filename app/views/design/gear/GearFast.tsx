@@ -96,7 +96,7 @@ export default function GearFastScreen() {
 
   return (
     <View style={styles.container}>
-      <Header title="Bộ truyền bánh răng cấp nhanh" rightIcon={<SaveComponent />} />
+      <Header title="Bộ bánh răng cấp nhanh" rightIcon={<SaveComponent />} />
       <Text style={styles.pageTitle}>Chọn thông số vật liệu </Text>
 
       <View style={styles.colContainer}>

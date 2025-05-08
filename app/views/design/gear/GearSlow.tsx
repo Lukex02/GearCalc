@@ -96,7 +96,7 @@ export default function GearSlowScreen() {
 
   return (
     <View style={styles.container}>
-      <Header title="Bộ truyền bánh răng cấp chậm" rightIcon={<SaveComponent />} />
+      <Header title="Bộ bánh răng cấp chậm" rightIcon={<SaveComponent />} />
       <Text style={styles.pageTitle}>Chọn thông số vật liệu</Text>
       <View style={styles.colContainer}>
         {/* Chọn độ rắn cho cặp bánh răng bộ truyền cấp chậm */}
