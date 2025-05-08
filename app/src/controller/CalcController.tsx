@@ -1171,6 +1171,9 @@ export default class CalcController {
   // Tính điều kiện chọn ổ lăn
   calcRollerBearing(shaftNo: 1 | 2 | 3) {
     const shaft = this._gearBoxBuilder.getShaft();
+    if (!shaft) {
+      throw new Error("Chưa thiết kế trục, không thể tính ổ lăn");
+    }
     this._calcRollerBearing = this._designStrategy.designRollerBearing(shaft, shaftNo);
   }
 
