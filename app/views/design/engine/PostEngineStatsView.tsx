@@ -1,105 +1,133 @@
-import { useEffect, useState } from "react";
-import { View, Text } from "react-native";
-import { useRouter } from "expo-router"; // Khởi tạo router từ expo-router
-import CalcController from "@controller/CalcController";
-import CalcFooter from "@/views/common/CalcFooter";
-import styles from "@style/MainStyle";
-import { Colors } from "@style/Colors";
-import Header from "@/views/common/Header";
-import SaveComponent from "@/views/common/SaveComponent";
+import React, { useState, useEffect } from "react";
+import { View, Text, Modal, ScrollView } from "react-native";
+import { Button } from "react-native-paper";
+import Slider from "@react-native-community/slider"; // Import Slider
+import styles from "@style/MainStyle"; // Import styles có sẵn
+import CalcController from "@controller/CalcController"; // Import CalcController
+import CalcFooter from "@views/common/CalcFooter"; // Import CalcFooter
+import { ForceOnShaftDiagram } from "@services/Utils"; // Import ForceOnShaftDiagram từ Utils.tsx
 
-export default function SelectEngineScreen() {
-  const router = useRouter(); // Khởi tạo router để điều hướng
+// Bảng Data cứng khi chọn luôn vật liệu là Thép 45 - Thường hóa chế tạo (Input)
+const materialStats = {
+  label: "Vật liệu chế tạo trục",
+  sigma_b: 600,
+  sigma_ch: 340,
+  HB_min: 170,
+  HB_max: 217,
+  S_max: 60,
+};
+
+export default function Shaft1_2Screen() {
   const calcController = CalcController.getInstance();
-  const [isValid, setIsValid] = useState(false);
-  const postStats = calcController.getEnginePostStats();
-  const [post_p, setPostP] = useState<number[]>([]);
-  const [post_n, setPostN] = useState<number[]>([]);
-  const [post_T, setPostT] = useState<number[]>([]);
-  const [post_u, setPostU] = useState<any[]>([]);
 
+  // Trạng thái cho modal chọn đường kính trục
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [shaftDiameter, setShaftDiameter] = useState<number[]>([30]);
+  const [shaftData, setShaftData] = useState<any>(null);
+
+  // Gọi phương thức tính toán trục
   useEffect(() => {
-    if (postStats) {
-      // console.log(postStats);
-      setPostP(postStats.distShaft.p);
-      setPostN(postStats.distShaft.n);
-      setPostT(postStats.distShaft.T);
-      setPostU(postStats.ratio);
-      setIsValid(true);
-    } else {
-      alert("Động cơ không phù hợp, hãy chọn động cơ khác");
-      router.back();
-    }
+    calcController.calcShaft({
+      sigma_b: materialStats.sigma_b,
+      sigma_ch: materialStats.sigma_ch,
+      HB: materialStats.HB_min,
+    });
+
+    // Lấy dữ liệu đồ thị trục
+    const shaftDiagram = calcController.getShaftDiagram();
+    setShaftData(shaftDiagram);
   }, []);
 
-  if (isValid) {
+  // Hàm mở modal để chọn đường kính trục
+  const openShaftDiameterModal = () => {
+    setModalVisible(true);
+  };
+
+  // Hàm đóng modal
+  const closeShaftDiameterModal = () => {
+    setModalVisible(false);
+  };
+
+  // Hàm xử lý chọn đường kính trục và lưu vào state
+  const handleShaftDiameterSelect = (selectedDiameter: number[]) => {
+    setShaftDiameter(selectedDiameter);
+    calcController.chooseShaftDiameter(selectedDiameter);
+    closeShaftDiameterModal();
+  };
+
+  // Hàm hiển thị các thông số vật liệu
+  const renderMaterialStats = () => {
     return (
-      <View style={styles.container}>
-        <Header title="Thông số động học" rightIcon={<SaveComponent />} />
-        <View style={styles.specContainer}>
-          {/* Header */}
-          <View style={styles.specHeader}>
-            <Text style={styles.specHeaderCell}>Thông số</Text>
-            <Text style={styles.specHeaderCell}>Trục động cơ</Text>
-            <Text style={styles.specHeaderCell}>Trục 1</Text>
-            <Text style={styles.specHeaderCell}>Trục 2</Text>
-            <Text style={styles.specHeaderCell}>Trục 3</Text>
-            <Text style={styles.specHeaderCell}>Trục công tác</Text>
-          </View>
-
-          {/* Cột Công suất trên các trục p */}
-          <View style={styles.specCol}>
-            <Text style={styles.specHeaderCell}>P{"\n"}(kW)</Text>
-            {post_p.map((p, index) => (
-              <Text
-                key={index}
-                style={{ ...styles.specHeaderCell, fontWeight: "normal", color: Colors.text.primary }}
-              >
-                {p.toFixed(4)}
-              </Text>
-            ))}
-          </View>
-
-          {/* Cột Tốc độ quay trên các trục n */}
-          <View style={styles.specCol}>
-            <Text style={styles.specHeaderCell}>n{"\n"}(rpm)</Text>
-            {post_n.map((n, index) => (
-              <Text
-                key={index}
-                style={{ ...styles.specHeaderCell, fontWeight: "normal", color: Colors.text.primary }}
-              >
-                {n.toFixed(2)}
-              </Text>
-            ))}
-          </View>
-
-          {/* Cột Momen xoắn trên các trục T */}
-          <View style={styles.specCol}>
-            <Text style={styles.specHeaderCell}>T{"\n"}(N.mm)</Text>
-            {post_T.map((T, index) => (
-              <Text
-                key={index}
-                style={{ ...styles.specHeaderCell, fontWeight: "normal", color: Colors.text.primary }}
-              >
-                {T.toFixed(4)}
-              </Text>
-            ))}
-          </View>
-
-          {/* Cột Tỷ số truyền u */}
-          <View style={styles.specCol}>
-            <Text style={styles.specHeaderCell}>u{"\n"}</Text>
-            {post_u.map((u, index) => (
-              <Text key={index} style={styles.specCell}>
-                {u.value.toFixed(2)}
-              </Text>
-            ))}
-          </View>
-        </View>
-
-        {/* Truyền địa chỉ trang xích tiếp theo ở đây */}
-        <CalcFooter nextPage="/views/design/chain/InputChain" />
+      <View>
+        <Text style={styles.infoText}>Sigma_b: {materialStats.sigma_b}</Text>
+        <Text style={styles.infoText}>Sigma_ch: {materialStats.sigma_ch}</Text>
+        <Text style={styles.infoText}>HB Min: {materialStats.HB_min}</Text>
+        <Text style={styles.infoText}>HB Max: {materialStats.HB_max}</Text>
+        <Text style={styles.infoText}>S_max: {materialStats.S_max}</Text>
       </View>
     );
-  }
+  };
+
+  // Hàm hiển thị đồ thị lực trục
+  const renderShaftDiagram = () => {
+    if (!shaftData) return <Text>Đang tải đồ thị...</Text>;
+
+    return (
+      <View style={styles.containerCentered}>
+        <ForceOnShaftDiagram
+          data={shaftData.Shaft1.Q1x} // Chọn dữ liệu trục cần vẽ
+          fillColor="blue"
+          lineColor="red"
+        />
+      </View>
+    );
+  };
+
+  return (
+    <ScrollView style={styles.container}>
+      <Text style={styles.welcomeTitle}>{materialStats.label}</Text>
+
+      {/* Hiển thị các thông số vật liệu */}
+      {renderMaterialStats()}
+
+      {/* Hiển thị nút để chọn đường kính trục */}
+      <Button mode="contained" onPress={openShaftDiameterModal} style={styles.mainBtn}>
+        Chọn đường kính trục
+      </Button>
+
+      {/* Hiển thị đồ thị trục nếu có */}
+      {renderShaftDiagram()}
+
+      {/* Modal để chọn đường kính trục */}
+      <Modal
+        visible={isModalVisible}
+        animationType="slide"
+        onRequestClose={closeShaftDiameterModal}
+      >
+        <View style={styles.modalContainer}>
+          <Text>Chọn đường kính trục</Text>
+          <Slider
+            minimumValue={10}
+            maximumValue={100}
+            step={1}
+            value={shaftDiameter[0]}
+            onValueChange={(value) => setShaftDiameter([value])}
+            style={styles.slider}
+          />
+          <Text>Đường kính trục: {shaftDiameter[0]} mm</Text>
+
+          <Button mode="contained" onPress={() => handleShaftDiameterSelect(shaftDiameter)} style={styles.mainBtnMedium}>
+            Xác nhận
+          </Button>
+
+          <Button mode="outlined" onPress={closeShaftDiameterModal} style={styles.mainBtnSmall}>
+            Hủy
+          </Button>
+        </View>
+      </Modal>
+
+      {/* Footer */}
+      <CalcFooter />
+    </ScrollView>
+  );
 }
