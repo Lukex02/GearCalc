@@ -81,4 +81,7 @@ yarn-error.*
 # VSCode
 .vscode/
 
+# Ignore folder
+ignore/
+
 # @end expo-cli
