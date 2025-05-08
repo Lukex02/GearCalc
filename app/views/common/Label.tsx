@@ -1,14 +1,15 @@
-const mainlabel = {
+export const mainlabel = {
   _type: "Loại",
-  _design: "Điều kiện thiết kế",
-  _calcEnginePostStats: "Số liệu động học và động lực học trên các trục",
+  _design: "Số liệu thiết kế",
   _engine: "Động cơ điện",
+  _calcEnginePostStats: "Số liệu động học và động lực học trên các trục",
   _mechDrive: "Xích",
   _gearSet: "Bộ truyền",
   _shaft: "Trục",
+  _rollerBearing: "Ổ lăn",
 };
 
-const inputLabel = {
+export const inputLabel = {
   F: "Lực vòng F (N)",
   v: "Vận tốc V (m/s)",
   T1: "Momen xoắn T1 (N.m)",
@@ -16,10 +17,14 @@ const inputLabel = {
   T2: "Momen xoắn T2 (N.m)",
   t2: "Thời gian tải t2 (giờ)",
   L: "Thời gian làm việc L (năm)",
-  // output: "Đối tượng đầu ra",
+  output: "Đối tượng đầu ra",
 };
 
-const engineLabel = {
+export const outputInDesignLabel = {
+  D: "Đường kính tang D (mm)",
+};
+
+export const engineLabel = {
   name: "Tên",
   power: "Công suất (kW)",
   n_t: "Tốc độ vòng quay (rpm)",
@@ -29,7 +34,7 @@ const engineLabel = {
   T_k_T_dn: "Hệ số momen khởi động / Momen danh nghĩa",
 };
 
-const chainLabel = {
+export const chainLabel = {
   z1: "Số bánh răng dẫn",
   z2: "Số bánh răng bị dẫn",
   p: "Bước xích (mm)",
@@ -42,12 +47,12 @@ const chainLabel = {
   F_rx: "Lực tác dụng lên đĩa xích (N)",
 };
 
-const gearSetLabel = {
+export const gearSetLabel = {
   a_w: "Khoảng cách trục (mm)",
   m: "Modul pháp (mm)",
   b_w: "Chiều rộng vành răng (mm)",
   u_m: "Tỉ số truyền thực (mm)",
-  beta: "Góc β (°)",
+  Beta_angle: "Góc β (°)",
   z1: "Số răng bánh nhỏ (mm)",
   z2: "Số răng bánh lớn (mm)",
   d1: "Đường kính vòng chia đĩa bánh nhỏ (mm)",
@@ -60,11 +65,11 @@ const gearSetLabel = {
   dw2: "Đường kính lăn bánh lớn (mm)",
 };
 
-const shaftLabel = {
+export const shaftLabel = {
   sigma_b: "Giới hạn bền",
 };
 
-const selectRollerBearingLabel = {
+export const selectRollerBearingLabel = {
   ELM: "Cỡ siêu nhẹ, vừa", // Extra light, medium
   ESLN: "Cỡ đặc biệt nhẹ, hẹp", // Extra light, narrow
   ESLM: "Cỡ đặc biệt nhẹ, vừa", // Extra light, medium
@@ -73,19 +78,34 @@ const selectRollerBearingLabel = {
   H: "Cỡ nặng", // Heavy
 };
 
-const rollerBearingLabel = {
+export const rollerBearingTypeLabel = {
   single_row_ball: "Ổ bi đỡ một dãy",
   thrust: "Ổ đỡ - chặn",
   tapered: "Ổ đũa côn",
 };
 
-export {
+export const rollerBearingLabel = {};
+
+export const labelTable = {
+  _designInputStats: "inputLabel",
+  _engine: "engineLabel",
+  _mechDrive: "chainLabel",
+  _gearSet: "gearSetLabel",
+  _shaft: "shaftLabel",
+  _rollerBearing: "rollerBearingLabel",
+};
+
+const Label = {
   mainlabel,
   inputLabel,
+  outputInDesignLabel,
   engineLabel,
   chainLabel,
   gearSetLabel,
   shaftLabel,
   selectRollerBearingLabel,
-  rollerBearingLabel,
+  rollerBearingTypeLabel,
+  labelTable,
 };
+
+export default Label;

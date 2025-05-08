@@ -375,7 +375,7 @@ export default class GearSet {
       m: this._m,
       b_w: this._b_w,
       u_m: this._u_m,
-      beta: this._Beta_angle,
+      Beta_angle: this._Beta_angle,
       z1: this._z1,
       z2: this._z2,
       d1: this._d1,

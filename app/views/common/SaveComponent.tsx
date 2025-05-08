@@ -122,7 +122,20 @@ export default function SaveComponent() {
                 : item.designStrategy &&
                   item.designStrategy instanceof DesignGearBox1 &&
                   item.designStrategy._designInputStats
-                ? item.designStrategy._designInputStats[key as keyof typeof labels] // DesignStrategy
+                ? typeof item.designStrategy._designInputStats[key as keyof typeof labels] === "object"
+                  ? Object.keys(item.designStrategy._designInputStats[key as keyof typeof labels]).map(
+                      (outputKey) => {
+                        return (
+                          <Text key={outputKey} style={styles.bottomSheetSmallTxt}>
+                            {"\n+ "}
+                            {
+                              Label.outputInDesignLabel[outputKey as keyof typeof Label.outputInDesignLabel]
+                            }: {item.designStrategy._designInputStats[key as keyof typeof labels][outputKey]}
+                          </Text>
+                        );
+                      }
+                    )
+                  : item.designStrategy._designInputStats[key as keyof typeof labels] // DesignStrategy
                 : item[key]}
             </Text>
           ))}

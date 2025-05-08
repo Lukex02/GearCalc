@@ -142,7 +142,7 @@ export default function AccountScreen() {
             {/* Body */}
             {user.user_metadata.history.length > 0 ? (
               <FlatList
-                data={user.user_metadata.history} // Dùng cái này sau khi setup history
+                data={user.user_metadata.history.reverse()}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
                   <Swipeable
