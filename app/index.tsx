@@ -24,14 +24,6 @@ const FullscreenImageBackground: React.FC = () => {
       >
         <Text style={styles.mainBtnTxt}>Bắt đầu</Text>
       </Button>
-      {/* <Button
-        style={styles.mainBtn}
-        mode="contained"
-        compact={true}
-        onPress={() => router.push("/views/TestDiagram")}
-      >
-        <Text style={styles.mainBtnTxt}>Diagram</Text>
-      </Button> */}
     </View>
   );
 };

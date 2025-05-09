@@ -708,11 +708,14 @@ export default StyleSheet.create({
   },
   graphcontainer: {
     padding: Math.round(scale(10)),
-    backgroundColor: Colors.card,
     borderRadius: 20,
     alignItems: "center",
     width: "100%",
     justifyContent: "center",
     ...shadows.default,
+  },
+  graphImg: {
+    width: scale(230),
+    height: verticalScale(70),
   },
 });

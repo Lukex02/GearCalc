@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Dimensions, Image } from "react-native";
 import { Button, Portal, Modal } from "react-native-paper";
 import { Slider } from "react-native-awesome-slider";
 import styles, { sliderTheme } from "@style/MainStyle";
@@ -13,6 +13,7 @@ import SaveComponent from "@/views/common/SaveComponent";
 import { useSharedValue, SharedValue } from "react-native-reanimated";
 import { FontAwesome6 } from "@expo/vector-icons";
 import CalcFooterStyle from "@/src/style/CalcFooterStyle";
+import Carousel, { Pagination } from "react-native-reanimated-carousel";
 
 // Bảng Data cứng khi chọn luôn vật liệu là Thép 45 - Thường hóa chế tạo (Input)
 const materialStats = {
@@ -23,11 +24,20 @@ const materialStats = {
   HB_max: 217,
   S_max: 60,
 };
+const width = Dimensions.get("window").width;
 
 export default function Shaft1_2Screen() {
+  const progress = useSharedValue<number>(0);
   const [isModalVisible, setModalVisible] = useState(false);
   const [shaftDiameter, setShaftDiameter] = useState<number[]>([]);
-  const [shaftDataDiagram, setShaftDataDiagram] = useState<any>(null);
+  const [shaftDataDiagram, setShaftDataDiagram] = useState<
+    | {
+        onShaft: string;
+        diaName: string;
+        data: { x: number; y: number }[];
+      }[]
+    | null
+  >(null);
   const [selectedDiameter, setSelectedDiameter] = useState<number[]>([]);
   const ShaftDiaProgressValues = useRef([20, 20, 20].map((item) => useSharedValue(item))).current;
 
@@ -63,7 +73,7 @@ export default function Shaft1_2Screen() {
   };
   useEffect(() => {
     updateShaftData(); // Cập nhật số liệu khi load trang
-    // openShaftDiameterModal(); // Mở modal để chọn đường kính trục sau khi d sơ bộ được tính
+    openShaftDiameterModal(); // Mở modal để chọn đường kính trục sau khi d sơ bộ được tính
   }, []);
 
   // Hàm mở modal để chọn đường kính trục
@@ -79,7 +89,13 @@ export default function Shaft1_2Screen() {
       calcController.calcShaft();
       // console.log("shaft in UI", calcController.getShaftDiagram());
       const shaftDiagram = calcController.getShaftDiagram();
-      setShaftDataDiagram(shaftDiagram);
+      setShaftDataDiagram(
+        Object.keys(shaftDiagram).flatMap((shaftNo) => {
+          return Object.keys(shaftDiagram[shaftNo]).map((diaName) => {
+            return { onShaft: shaftNo, diaName: diaName, data: shaftDiagram[shaftNo][diaName] };
+          });
+        })
+      );
       setModalVisible(false);
     } else {
       alert("Vui lòng chọn đủ đường kính trục");
@@ -96,44 +112,82 @@ export default function Shaft1_2Screen() {
   // Hàm hiển thị các thông số vật liệu
   const renderMaterialStats = () => {
     return (
-      <View style={styles.resultContainer}>
-        <Text style={{ fontStyle: "italic", color: Colors.primary, fontWeight: "bold", fontSize: scale(16) }}>
-          Loại vật liệu được chọn mặc định là Thép 45 - Thường hóa chế tạo
+      <View style={{ ...styles.resultContainer, paddingVertical: verticalScale(10) }}>
+        <Text style={styles.tableTitle}>{materialStats.label}</Text>
+        <Text style={{ fontStyle: "italic", color: Colors.primary, fontWeight: "bold", fontSize: scale(12) }}>
+          Thép 45 - Thường hóa chế tạo
         </Text>
-        <Text style={{ fontStyle: "italic", color: Colors.text.success, fontSize: scale(12) }}>
+        <Text style={{ fontStyle: "italic", color: Colors.text.success, fontSize: scale(11) }}>
           Độ rắn HB: {materialStats.HB_min} .. {materialStats.HB_max} mm
         </Text>
-        <Text style={{ fontStyle: "italic", color: Colors.text.success, fontSize: scale(12) }}>
+        <Text style={{ fontStyle: "italic", color: Colors.text.success, fontSize: scale(11) }}>
           σb = {materialStats.sigma_b} MPa, σch = {materialStats.sigma_ch} MPa, S ≤ {materialStats.S_max} mm
         </Text>
       </View>
     );
   };
   // đồ thị
-  const renderShaftDiagram = (diagramData: any) => {
-    if (!diagramData) return <Text style={styles.noDataWarn}>Đang tải đồ thị...</Text>;
-
-    const data: ForceOnShaftDataPoint[] = diagramData.Shaft1.Q1x.map((point: { x: number; y: number }) => ({
-      x: point.x,
-      y: point.y,
-    }));
-
+  const renderShaftDiagram = () => {
+    if (!shaftDataDiagram) return <Text style={styles.noDataWarn}>Đang tải đồ thị...</Text>;
+    const shaftImg = {
+      Shaft1: require("@img/GB1/Shaft1.png"),
+      Shaft2: require("@img/GB1/Shaft2.png"),
+      Shaft3: require("@img/GB1/Shaft3.png"),
+    };
     return (
-      <View style={styles.graphcontainer}>
-        <Text style={styles.tableTitle}>Biểu đồ lực</Text>
-        <Utils.ForceOnShaftDiagram
-          xStroke={2}
-          yStroke={2}
-          labelSize={scale(10)}
-          borderColor={Colors.text.primary}
-          yUnit="N"
-          xUnit="mm"
-          diagramWidth={scale(290)}
-          diagramHeight={verticalScale(200)}
-          padding={scale(50)}
-          data={data}
-          fillColor={Colors.graph}
-          lineColor="transparent"
+      <View>
+        <Pagination.Basic
+          progress={progress}
+          data={shaftDataDiagram}
+          activeDotStyle={{ backgroundColor: Colors.border.accent, borderRadius: 50 }}
+          dotStyle={{ backgroundColor: Colors.overlay, borderRadius: 50 }}
+          containerStyle={{ gap: 5 }}
+        />
+        <Carousel
+          autoPlayInterval={2000}
+          data={shaftDataDiagram}
+          height={verticalScale(320)}
+          loop={true}
+          pagingEnabled={true}
+          snapEnabled={true}
+          width={width}
+          mode="parallax"
+          modeConfig={{
+            parallaxScrollingScale: 0.9,
+            parallaxScrollingOffset: 50,
+          }}
+          onProgressChange={progress}
+          renderItem={({ item: diagramData, index, animationValue }) => {
+            const data: ForceOnShaftDataPoint[] = diagramData.data.map(
+              (point: { x: number; y: number }) => point
+            );
+            return (
+              <View style={styles.optionCard} pointerEvents="box-none">
+                <Text style={styles.tableTitle}>
+                  Biểu đồ nội lực {diagramData.diaName} trên trục {diagramData.onShaft.slice(5)}
+                </Text>
+                <Image
+                  source={shaftImg[diagramData.onShaft as keyof typeof shaftImg]}
+                  style={styles.graphImg}
+                  resizeMode="stretch"
+                />
+                <Utils.ForceOnShaftDiagram
+                  xStroke={2}
+                  yStroke={2}
+                  labelSize={scale(10)}
+                  borderColor={Colors.text.primary}
+                  yUnit="N"
+                  xUnit="mm"
+                  diagramWidth={scale(290)}
+                  diagramHeight={verticalScale(180)}
+                  padding={scale(50)}
+                  data={data}
+                  fillColor={Colors.graph}
+                  lineColor="transparent"
+                />
+              </View>
+            );
+          }}
         />
       </View>
     );
@@ -142,7 +196,6 @@ export default function Shaft1_2Screen() {
   return (
     <View style={styles.container}>
       <Header title="Thông số trục" rightIcon={<SaveComponent />} />
-      <Text style={styles.pageTitle}>{materialStats.label}</Text>
 
       {/* Hiển thị các thông số vật liệu */}
       {renderMaterialStats()}
@@ -152,15 +205,14 @@ export default function Shaft1_2Screen() {
         mode="contained"
         compact={true}
         onPress={openShaftDiameterModal}
-        style={{ ...styles.mainBtn, height: "auto" }}
-        labelStyle={{ ...styles.mainBtnTxt, flexWrap: "wrap", height: "auto" }}
-        contentStyle={{ flexWrap: "wrap", height: "auto" }}
+        style={{ ...styles.mainBtnSmall, width: "auto", paddingHorizontal: scale(10) }}
+        labelStyle={styles.mainBtnSmallTxt}
       >
-        Chọn d trục
+        Chọn đường kính trục
       </Button>
 
       {/* Hiển thị đồ thị trục nếu có */}
-      {renderShaftDiagram(shaftDataDiagram)}
+      {renderShaftDiagram()}
 
       {/* Modal để chọn đường kính trục */}
       <Portal>

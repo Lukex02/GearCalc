@@ -397,8 +397,13 @@ export class DesignGearBox1 implements DesignStrategy {
     const M1z = [
       { x: 0, y: distributedTorque[0] },
       { x: l12 + l13, y: distributedTorque[0] },
+      { x: l12 + l13, y: 0 },
+      { x: l12 + l11, y: 0 },
     ];
-    this._shaftDiagramData = { ...this._shaftDiagramData, Shaft1: { Q1x, Q1y, M1x, M1y, M1z } };
+    this._shaftDiagramData = {
+      ...this._shaftDiagramData,
+      Shaft1: { Qx: Q1x, Qy: Q1y, Mx: M1x, My: M1y, Mz: M1z },
+    };
     shaft.addIndiviDia(
       [
         { point: "A", Mx: 0, My: 0, Rx: 0, Ry: 0 },
@@ -494,10 +499,16 @@ export class DesignGearBox1 implements DesignStrategy {
     ];
 
     const M2z = [
+      { x: l22, y: 0 },
       { x: l22, y: -distributedTorque[1] },
       { x: l23, y: -distributedTorque[1] },
+      { x: l23, y: 0 },
+      { x: l21, y: 0 },
     ];
-    this._shaftDiagramData = { ...this._shaftDiagramData, Shaft2: { Q2x, Q2y, M2x, M2y, M2z } };
+    this._shaftDiagramData = {
+      ...this._shaftDiagramData,
+      Shaft2: { Qx: Q2x, Qy: Q2y, Mx: M2x, My: M2y, Mz: M2z },
+    };
     shaft.addIndiviDia(
       [
         { point: "A", Mx: 0, My: 0, Rx: R2_Ax, Ry: R2_Ay }, // Tương tự ở D
@@ -559,17 +570,16 @@ export class DesignGearBox1 implements DesignStrategy {
       { x: l32, y: Math.abs(R3_Ay) + F_r4 }, // B
       { x: l31, y: Math.abs(R3_Ay) + F_r4 }, // B -> C
       { x: l31, y: 0 }, // C, should be 0
+      { x: l33, y: 0 },
     ];
 
     const M3x = [
       { x: 0, y: 0 }, // M3xA
       { x: l32, y: R3_Ay * l32 }, // M3xB
       { x: l32, y: R3_Ay * l32 - (F_a4 * gears.slowGear.d2) / 2 }, // M3xC
-      { x: l31, y: R3_Ay * l32 - (F_a4 * gears.slowGear.d2) / 2 - (Math.abs(R3_Ay) + F_r4) * (l31 - l32) },
-      {
-        x: l31,
-        y: 0, // should be 0
-      }, // M3xD
+      { x: l31, y: R3_Ay * l32 - (F_a4 * gears.slowGear.d2) / 2 + (Math.abs(R3_Ay) + F_r4) * (l31 - l32) },
+      { x: l31, y: 0 }, // M3xD
+      { x: l33, y: 0 },
     ];
 
     const M3y = [
@@ -583,10 +593,13 @@ export class DesignGearBox1 implements DesignStrategy {
     ];
 
     const M3z = [
-      { x: l22, y: distributedTorque[2] },
-      { x: l23, y: distributedTorque[2] },
+      { x: l32, y: distributedTorque[2] },
+      { x: l33, y: distributedTorque[2] },
     ];
-    this._shaftDiagramData = { ...this._shaftDiagramData, Shaft3: { Q3x, Q3y, M3x, M3y, M3z } };
+    this._shaftDiagramData = {
+      ...this._shaftDiagramData,
+      Shaft3: { Qx: Q3x, Qy: Q3y, Mx: M3x, My: M3y, Mz: M3z },
+    };
     shaft.addIndiviDia(
       [
         {
