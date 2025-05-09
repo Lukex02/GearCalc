@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Modal } from "react-native";
-import { Button } from "react-native-paper";
-import Slider from "@react-native-community/slider";
-import styles from "@style/MainStyle";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { View, Text } from "react-native";
+import { Button, Portal, Modal } from "react-native-paper";
+import { Slider } from "react-native-awesome-slider";
+import styles, { sliderTheme } from "@style/MainStyle";
 import CalcController from "@controller/CalcController";
 import CalcFooter from "@views/common/CalcFooter";
 import Utils, { ForceOnShaftDataPoint } from "@services/Utils";
+import { scale, verticalScale } from "react-native-size-matters";
+import Colors from "@/src/style/Colors";
+import Header from "@/views/common/Header";
+import SaveComponent from "@/views/common/SaveComponent";
+import { useSharedValue, SharedValue } from "react-native-reanimated";
+import { FontAwesome6 } from "@expo/vector-icons";
+import CalcFooterStyle from "@/src/style/CalcFooterStyle";
 
 // Bảng Data cứng khi chọn luôn vật liệu là Thép 45 - Thường hóa chế tạo (Input)
 const materialStats = {
@@ -19,38 +26,44 @@ const materialStats = {
 
 export default function Shaft1_2Screen() {
   const [isModalVisible, setModalVisible] = useState(false);
-  const [shaftDiameter, setShaftDiameter] = useState<number[]>([30]);
-  const [shaftData, setShaftData] = useState<any>(null);
-  const [selectedDiameter, setSelectedDiameter] = useState<number>(30);
+  const [shaftDiameter, setShaftDiameter] = useState<number[]>([]);
+  const [shaftDataDiagram, setShaftDataDiagram] = useState<any>(null);
+  const [selectedDiameter, setSelectedDiameter] = useState<number[]>([]);
+  const ShaftDiaProgressValues = useRef([20, 20, 20].map((item) => useSharedValue(item))).current;
+
+  const ShaftDiaMinValues = useSharedValue(20);
+  const ShaftDiaMaxValues = useSharedValue(90);
+
+  const calcController = CalcController.getInstance();
 
   // Gọi phương thức tính toán trục khi thay đổi đường kính
   const updateShaftData = () => {
-    const calcController = CalcController.getInstance();
-
-    if (calcController && typeof calcController.calcShaft === 'function') {
-      const hubParam = {
-        hub_d_x_brt: 1.5,  // Giá trị tùy chỉnh cho hub_d_x_brt
-        hub_kn_tvdh: 2.3,   // Giá trị tùy chỉnh cho hub_kn_tvdh
-      };
-
+    try {
+      // const hubParam = {
+      //   hub_d_x_brt: 1.5,  // Giá trị tùy chỉnh cho hub_d_x_brt
+      //   hub_kn_tvdh: 2.3,   // Giá trị tùy chỉnh cho hub_kn_tvdh
+      // };
       // Tính toán lại với đường kính mới
-      calcController.calcShaft({
+      const d_sb = calcController.getPreShaft({
         sigma_b: materialStats.sigma_b,
         sigma_ch: materialStats.sigma_ch,
-        HB: materialStats.HB_min,
+        HB: (materialStats.HB_max + materialStats.HB_min) / 2, // Làm cứng luôn, vì về sau không quan trọng hay dùng tới
+        k1: 10,
+        k2: 7,
+        k3: 16,
+        h_n: 17,
       });
-
-      // Lấy lại dữ liệu đồ thị sau khi tính toán
-      const shaftDiagram = calcController.getShaftDiagram();
-      setShaftData(shaftDiagram);
-    } else {
-      console.error("calcShaft method is not available in calcController");
+      setShaftDiameter(d_sb);
+      return d_sb;
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(`Lỗi ở tính trục: ${error.message}`);
+      }
     }
   };
-
-  // Gọi phương thức tính toán khi thay đổi đường kính trục
   useEffect(() => {
     updateShaftData(); // Cập nhật số liệu khi load trang
+    // openShaftDiameterModal(); // Mở modal để chọn đường kính trục sau khi d sơ bộ được tính
   }, []);
 
   // Hàm mở modal để chọn đường kính trục
@@ -60,122 +73,148 @@ export default function Shaft1_2Screen() {
 
   // Hàm đóng modal
   const closeShaftDiameterModal = () => {
-    setModalVisible(false);
+    if (selectedDiameter.length === shaftDiameter.length) {
+      // Lấy lại dữ liệu đồ thị sau khi tính toán
+      calcController.chooseShaftDiamenter(selectedDiameter);
+      calcController.calcShaft();
+      // console.log("shaft in UI", calcController.getShaftDiagram());
+      const shaftDiagram = calcController.getShaftDiagram();
+      setShaftDataDiagram(shaftDiagram);
+      setModalVisible(false);
+    } else {
+      alert("Vui lòng chọn đủ đường kính trục");
+    }
   };
 
   // Hàm xử lý chọn đường kính trục và lưu vào state
-  const handleShaftDiameterSelect = () => {
-    setShaftDiameter([selectedDiameter]);
-    updateShaftData();
-    closeShaftDiameterModal();
+  const handleShaftDiameterSelect = (index: number, value: number) => {
+    const clone = [...selectedDiameter];
+    clone[index] = value;
+    setSelectedDiameter(clone);
   };
 
   // Hàm hiển thị các thông số vật liệu
   const renderMaterialStats = () => {
     return (
       <View style={styles.resultContainer}>
-        <Text style={styles.resultText}>Sigma_b: {materialStats.sigma_b} MPa</Text>
-        <Text style={styles.resultText}>Sigma_ch: {materialStats.sigma_ch} MPa</Text>
-        <Text style={styles.resultText}>HB Min: {materialStats.HB_min}</Text>
-        <Text style={styles.resultText}>HB Max: {materialStats.HB_max}</Text>
-        <Text style={styles.resultText}>S_max: {materialStats.S_max} mm</Text>
+        <Text style={{ fontStyle: "italic", color: Colors.primary, fontWeight: "bold", fontSize: scale(16) }}>
+          Loại vật liệu được chọn mặc định là Thép 45 - Thường hóa chế tạo
+        </Text>
+        <Text style={{ fontStyle: "italic", color: Colors.text.success, fontSize: scale(12) }}>
+          Độ rắn HB: {materialStats.HB_min} .. {materialStats.HB_max} mm
+        </Text>
+        <Text style={{ fontStyle: "italic", color: Colors.text.success, fontSize: scale(12) }}>
+          σb = {materialStats.sigma_b} MPa, σch = {materialStats.sigma_ch} MPa, S ≤ {materialStats.S_max} mm
+        </Text>
       </View>
     );
   };
-// đồ thị
-  const renderShaftDiagram = () => {
-    if (!shaftData) return <Text style={styles.noDataWarn}>Đang tải đồ thị...</Text>;
+  // đồ thị
+  const renderShaftDiagram = (diagramData: any) => {
+    if (!diagramData) return <Text style={styles.noDataWarn}>Đang tải đồ thị...</Text>;
 
-    const data: ForceOnShaftDataPoint[] = shaftData.Shaft1.Q1x.map((point: { x: number, y: number }) => ({
+    const data: ForceOnShaftDataPoint[] = diagramData.Shaft1.Q1x.map((point: { x: number; y: number }) => ({
       x: point.x,
       y: point.y,
     }));
 
     return (
-      <View style={styles.resultContainer}>
-        <Text style={styles.tableTitle}>Biểu đồ lực tác dụng lên trục I</Text>
+      <View style={styles.graphcontainer}>
+        <Text style={styles.tableTitle}>Biểu đồ lực</Text>
         <Utils.ForceOnShaftDiagram
+          xStroke={2}
+          yStroke={2}
+          labelSize={scale(10)}
+          borderColor={Colors.text.primary}
+          yUnit="N"
+          xUnit="mm"
+          diagramWidth={scale(290)}
+          diagramHeight={verticalScale(200)}
+          padding={scale(50)}
           data={data}
-          fillColor="rgba(0, 0, 255, 0.2)"
-          lineColor="blue"
+          fillColor={Colors.graph}
+          lineColor="transparent"
         />
       </View>
     );
   };
 
   return (
-    <View style={styles.containerStart}>  
-      <Text style={styles.componentTitle}>{materialStats.label}</Text>
+    <View style={styles.container}>
+      <Header title="Thông số trục" rightIcon={<SaveComponent />} />
+      <Text style={styles.pageTitle}>{materialStats.label}</Text>
 
       {/* Hiển thị các thông số vật liệu */}
       {renderMaterialStats()}
 
-      {/* Hiển thị đường kính trục đã chọn */}
-      <View style={styles.resultContainer}>
-        <Text style={styles.resultText}>
-          Đường kính trục đã chọn: {shaftDiameter[0]} mm
-        </Text>
-      </View>
-
       {/* Hiển thị nút để chọn đường kính trục */}
-      <Button 
-        mode="contained" 
-        onPress={openShaftDiameterModal} 
-        style={styles.mainBtn}
-        labelStyle={styles.mainBtnTxt}
+      <Button
+        mode="contained"
+        compact={true}
+        onPress={openShaftDiameterModal}
+        style={{ ...styles.mainBtn, height: "auto" }}
+        labelStyle={{ ...styles.mainBtnTxt, flexWrap: "wrap", height: "auto" }}
+        contentStyle={{ flexWrap: "wrap", height: "auto" }}
       >
-        Chọn đường kính trục
+        Chọn d trục
       </Button>
 
       {/* Hiển thị đồ thị trục nếu có */}
-      {renderShaftDiagram()}
+      {renderShaftDiagram(shaftDataDiagram)}
 
       {/* Modal để chọn đường kính trục */}
-      <Modal
-        visible={isModalVisible}
-        animationType="slide"
-        onRequestClose={closeShaftDiameterModal}
-        transparent={true}
-      >
-        <View style={styles.overlay}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalMediumTxt}>Chọn đường kính trục</Text>
-            
-            <Slider
-              minimumValue={10}
-              maximumValue={100}
-              step={1}
-              value={selectedDiameter}
-              onValueChange={(value) => setSelectedDiameter(value)}
-              style={styles.slider}
-            />
-            
-            <Text style={styles.modalMediumTxt}>
-              Đường kính trục: {selectedDiameter} mm
+      <Portal>
+        <Modal visible={isModalVisible} onDismiss={closeShaftDiameterModal} style={styles.overlay}>
+          <View style={{ ...styles.modalView, width: "auto" }}>
+            <Text style={styles.pageTitle}>Chọn đường kính trục</Text>
+            <Text style={styles.resultText}>
+              Đã chọn:{" "}
+              <Text style={{ color: Colors.text.success, fontWeight: "bold" }}>
+                {selectedDiameter.join(", ")} mm
+              </Text>
             </Text>
+            {shaftDiameter &&
+              shaftDiameter.map((diameter, index) => (
+                <View style={{ width: "100%" }} key={index}>
+                  <Slider
+                    key={index}
+                    theme={{
+                      ...sliderTheme,
+                      bubbleBackgroundColor: Colors.primary,
+                    }}
+                    bubble={(value) => `${Math.round(value)}`}
+                    renderThumb={() => <FontAwesome6 name="diamond" size={20} color={Colors.primary} />}
+                    bubbleOffsetX={5}
+                    style={styles.slider}
+                    forceSnapToStep={true}
+                    steps={(90 - 20) / 5}
+                    renderMark={({ index }) => <View></View>}
+                    containerStyle={{ borderRadius: 40 }}
+                    progress={ShaftDiaProgressValues[index]}
+                    minimumValue={ShaftDiaMinValues}
+                    maximumValue={ShaftDiaMaxValues}
+                    onSlidingComplete={(value) => handleShaftDiameterSelect(index, value)}
+                  />
 
-            <View style={{ flexDirection: 'row', gap: 10 }}>
-              <Button 
-                mode="contained" 
-                onPress={handleShaftDiameterSelect} 
-                style={styles.mainBtnMedium}
-                labelStyle={styles.mainBtnMediumTxt}
+                  <Text style={styles.modalSmallTxt}>
+                    Trục {index + 1} sơ bộ: {shaftDiameter[index]} mm
+                  </Text>
+                </View>
+              ))}
+
+            <View>
+              <Button
+                mode="contained"
+                onPress={closeShaftDiameterModal}
+                style={{ ...styles.mainBtnSmall, backgroundColor: Colors.primary }}
+                labelStyle={styles.mainBtnSmallTxt}
               >
                 Xác nhận
               </Button>
-
-              <Button 
-                mode="outlined" 
-                onPress={closeShaftDiameterModal} 
-                style={styles.mainBtnSmall}
-                labelStyle={styles.mainBtnSmallTxt}
-              >
-                Hủy
-              </Button>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      </Portal>
 
       <CalcFooter nextPage={"/views/design/shaft/Shaft3-4Screen"} />
     </View>

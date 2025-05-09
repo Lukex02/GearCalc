@@ -17,6 +17,7 @@ const { width } = Dimensions.get("window");
 
 export default function AccountScreen() {
   const [user, setUser] = useState<any>();
+  const [history, setHistory] = useState<any>([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalConfirmVisible] = useState(false);
   const [snackBarVisible, setsnackBarVisible] = useState(false);
@@ -73,6 +74,7 @@ export default function AccountScreen() {
       DatabaseService.getUser().then((user) => {
         if (user) {
           setUser(user);
+          setHistory(user.user_metadata.history.reverse());
           setLoading(false);
         }
       });
@@ -148,9 +150,9 @@ export default function AccountScreen() {
         </View>
 
         {/* Body */}
-        {user.user_metadata.history.length > 0 ? (
+        {history && history.length > 0 ? (
           <FlatList
-            data={user.user_metadata.history.reverse()}
+            data={history}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <Swipeable

@@ -8,6 +8,7 @@ import Animated, { useSharedValue, withTiming, useAnimatedReaction, runOnJS } fr
 import * as FileSystem from "expo-file-system";
 import { Asset } from "expo-asset";
 import Label, { inputLabel } from "@/views/common/Label";
+import { scale, verticalScale } from "react-native-size-matters";
 
 const math = create(all);
 
@@ -162,9 +163,18 @@ function getEpsilonSigmaAndTau(d: number) {
 }
 
 interface ForceOnShaftDataProps {
+  diagramWidth: number;
+  diagramHeight: number;
+  padding: number;
+  xStroke: number;
+  yStroke: number;
+  labelSize: number;
   data: ForceOnShaftDataPoint[];
+  borderColor: ColorValue;
   fillColor: ColorValue;
   lineColor: ColorValue;
+  xUnit: string;
+  yUnit: string;
 }
 
 export interface ForceOnShaftDataPoint {
@@ -172,10 +182,20 @@ export interface ForceOnShaftDataPoint {
   y: number;
 }
 
-const ForceOnShaftDiagram = ({ data, fillColor, lineColor }: ForceOnShaftDataProps) => {
-  const diagramWidth = 350;
-  const diagramHeight = 200;
-  const padding = 30;
+const ForceOnShaftDiagram = ({
+  diagramWidth,
+  diagramHeight,
+  padding,
+  data,
+  xStroke,
+  yStroke,
+  labelSize,
+  borderColor,
+  fillColor,
+  lineColor,
+  xUnit,
+  yUnit,
+}: ForceOnShaftDataProps) => {
   const maxX = Math.max(...data.map((p) => p.x));
   const minY = Math.min(...data.map((p) => p.y), 0);
   const maxY = Math.max(...data.map((p) => p.y), 0);
@@ -237,8 +257,8 @@ const ForceOnShaftDiagram = ({ data, fillColor, lineColor }: ForceOnShaftDataPro
           y1={originY}
           x2={diagramWidth - padding}
           y2={originY}
-          stroke="black"
-          strokeWidth={1}
+          stroke={borderColor}
+          strokeWidth={xStroke}
         />
 
         {/* Trục y */}
@@ -247,8 +267,8 @@ const ForceOnShaftDiagram = ({ data, fillColor, lineColor }: ForceOnShaftDataPro
           y1={padding}
           x2={padding}
           y2={diagramHeight - padding}
-          stroke="black"
-          strokeWidth={1}
+          stroke={borderColor}
+          strokeWidth={yStroke}
         />
 
         {/* Giá trị  */}
@@ -258,19 +278,22 @@ const ForceOnShaftDiagram = ({ data, fillColor, lineColor }: ForceOnShaftDataPro
 
           return (
             <React.Fragment key={`label-${index}`}>
-              <Text x={padding - 40} y={y + 4} fontSize={10} fill="black">
+              <Text x={padding - 40} y={y + 4} fontSize={labelSize} fill={borderColor}>
                 {point.y.toFixed(2)}
               </Text>
-              <Text x={x + 4} y={originY + 15} fontSize={10} fill="black">
+              <Text x={x + 4} y={originY + 15} fontSize={labelSize} fill={borderColor}>
                 {Math.round(point.x)}
               </Text>
             </React.Fragment>
           );
         })}
 
-        {/* Ký hiệu trục */}
-        <Text x={diagramWidth - padding - 40} y={padding - 5} fontSize={10} fill={lineColor}>
-          (N)
+        {/* Ký hiệu đơn vị trục */}
+        <Text x={padding - 10} y={padding - 20} fontSize={labelSize} fill={borderColor}>
+          ({yUnit})
+        </Text>
+        <Text x={diagramWidth - padding - 10} y={diagramHeight - 30} fontSize={labelSize} fill={borderColor}>
+          ({xUnit})
         </Text>
       </Svg>
     </View>

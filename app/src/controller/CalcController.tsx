@@ -73,8 +73,21 @@ interface DesignStrategy {
   designMechDrive(input: MechDriveInput): any;
   continueCalcMechDrive(calculated: CalculatedChain | any, selected: SelectedChain | any): void;
   designGear(input: GearSetInput): GearSet | any; // Sẽ chỉ làm 1 hàm tính bánh răng dùng chung
+  generateShaft(
+    input: {
+      sigma_b: number;
+      sigma_ch: number;
+      HB: number;
+      k1: number;
+      k2: number;
+      k3: number;
+      h_n: number;
+    },
+    distributedTorque: number[]
+  ): CalculatedShaft;
   designShaft(
-    input: { sigma_b: number; sigma_ch: number; HB: number; k1: number; k2: number; k3: number; h_n: number },
+    // input: { sigma_b: number; sigma_ch: number; HB: number; k1: number; k2: number; k3: number; h_n: number },
+    shaft: CalculatedShaft,
     order: string[],
     distributedTorque: number[],
     gears: any,
@@ -239,8 +252,31 @@ export class DesignGearBox1 implements DesignStrategy {
       input.K_qt
     );
   }
+  generateShaft(
+    input: {
+      sigma_b: number;
+      sigma_ch: number;
+      HB: number;
+      k1: number;
+      k2: number;
+      k3: number;
+      h_n: number;
+    },
+    distributedTorque: number[]
+  ) {
+    const shaft = ShaftController.generateShaft(
+      input.sigma_b,
+      input.sigma_ch,
+      input.HB,
+      distributedTorque,
+      [15, 20, 30]
+    );
+    shaft.add_distance(input.k1, input.k2, input.k3, input.h_n);
+    return shaft;
+  }
   designShaft(
-    input: { sigma_b: number; sigma_ch: number; HB: number; k1: number; k2: number; k3: number; h_n: number },
+    // input: { sigma_b: number; sigma_ch: number; HB: number; k1: number; k2: number; k3: number; h_n: number },
+    shaft: CalculatedShaft,
     order: string[],
     distributedTorque: number[],
     gears: {
@@ -271,14 +307,15 @@ export class DesignGearBox1 implements DesignStrategy {
     }
   ): CalculatedShaft {
     // Design shaft here
-    const shaft = ShaftController.generateShaft(
-      input.sigma_b,
-      input.sigma_ch,
-      input.HB,
-      distributedTorque,
-      [15, 20, 30]
-    );
-    shaft.add_distance(input.k1, input.k2, input.k3, input.h_n);
+    // const shaft = ShaftController.generateShaft(
+    //   input.sigma_b,
+    //   input.sigma_ch,
+    //   input.HB,
+    //   distributedTorque,
+    //   [15, 20, 30]
+    // );
+    // shaft.add_distance(input.k1, input.k2, input.k3, input.h_n);
+
     // Phải chọn được d trước khi tính cái dưới
     shaft.calc_hub_length(
       order,
@@ -887,6 +924,28 @@ class DesignGearBox2 implements DesignStrategy {
   designGear(input: any) {
     // Design gears here
   }
+  generateShaft(
+    input: {
+      sigma_b: number;
+      sigma_ch: number;
+      HB: number;
+      k1: number;
+      k2: number;
+      k3: number;
+      h_n: number;
+    },
+    distributedTorque: number[]
+  ) {
+    const shaft = ShaftController.generateShaft(
+      input.sigma_b,
+      input.sigma_ch,
+      input.HB,
+      distributedTorque,
+      [15, 20, 30]
+    );
+    shaft.add_distance(input.k1, input.k2, input.k3, input.h_n);
+    return shaft;
+  }
   designShaft(
     input: { sigma_b: number; sigma_ch: number; HB: number },
     order: string[],
@@ -1077,10 +1136,27 @@ export default class CalcController {
   getGearSet() {
     return this._gearBoxBuilder.getGearSet();
   }
-
+  getPreShaft(mats: {
+    sigma_b: number;
+    sigma_ch: number;
+    HB: number;
+    k1: number;
+    k2: number;
+    k3: number;
+    h_n: number;
+  }): number[] {
+    const shaft = this._designStrategy.generateShaft(
+      mats,
+      this._gearBoxBuilder
+        .getCalcEnginePostStats()
+        .distShaft.T.slice(1, this._gearBoxBuilder.getCalcEnginePostStats().distShaft.T.length - 1)
+    );
+    this._gearBoxBuilder.setShaft(shaft);
+    return shaft.getCurrD();
+  }
   // Bước 1 của trục: tính sơ bộ
   calcShaft(
-    mats: { sigma_b: number; sigma_ch: number; HB: number; k1: number; k2: number; k3: number; h_n: number },
+    // mats: { sigma_b: number; sigma_ch: number; HB: number; k1: number; k2: number; k3: number; h_n: number },
     hubParam?: {
       hub_d_x_brt?: number;
       hub_kn_tvdh?: number;
@@ -1093,7 +1169,8 @@ export default class CalcController {
     try {
       this._gearBoxBuilder.setShaft(
         this._designStrategy.designShaft(
-          mats,
+          // mats,
+          this._gearBoxBuilder.getShaft(),
           this._order,
           this._gearBoxBuilder
             .getCalcEnginePostStats()
@@ -1126,9 +1203,13 @@ export default class CalcController {
       }
     }
   }
+  // Bước 1.5 của trục: Chọn đường kính trục cụ thể thay sơ bộ
+  chooseShaftDiamenter(d_choose: number[]) {
+    this._gearBoxBuilder.getShaft().choose_d(d_choose);
+  }
   // Bước 2 của trục: Lấy tọa độ để vẽ biểu đồ lực
   getShaftDiagram() {
-    this._designStrategy.shaftDiagram;
+    return this._designStrategy.shaftDiagram;
   }
   // Bước 3 của trục: Chọn đường kính trục cho từng tiết diện của từng trục
   chooseIndiShaftDiameter(shaftNo: 1 | 2 | 3, d_choose: { point: string; value: number }[]) {

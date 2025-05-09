@@ -73,16 +73,23 @@ export default class CalculatedShaft {
     this._sigma_b = sigma_b;
     this._sigma_ch = sigma_ch;
     this._HB = HB;
+    // this._d = distributedTorque.map((torque, idx) => {
+    //   return Math.ceil(Math.pow(torque / (0.2 * tau_allow[idx]), 1 / 3) / 5) * 5;
+    // });
     this._d = distributedTorque.map((torque, idx) => {
-      return Math.ceil(Math.pow(torque / (0.2 * tau_allow[idx]), 1 / 3) / 5) * 5;
+      return Number(Math.pow(torque / (0.2 * tau_allow[idx]), 1 / 3).toFixed(2));
     });
-    this._d = [25, 45, 55];
-    this._bO = this._d.map((d) => Utils.getBO(d));
     this._distributedTorque = distributedTorque;
     this._hub_length = [];
     this._indiShaft = [];
   }
-
+  getCurrD() {
+    return this._d;
+  }
+  choose_d(d_choose: number[]) {
+    this._d = d_choose;
+    this._bO = this._d.map((d) => Utils.getBO(d));
+  }
   add_distance(k1: number, k2: number, k3: number, h_n: number) {
     this._k1 = k1;
     this._k2 = k2;

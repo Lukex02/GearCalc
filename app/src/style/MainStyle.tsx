@@ -515,7 +515,8 @@ export default StyleSheet.create({
     fontStyle: "italic",
   },
   slider: {
-    width: "80%",
+    width: "90%",
+    margin: "auto",
     marginVertical: verticalScale(20),
   },
 
@@ -668,6 +669,11 @@ export default StyleSheet.create({
     fontSize: Math.round(scale(16)),
     textAlign: "center",
   },
+  modalSmallTxt: {
+    color: Colors.text.primary,
+    fontSize: Math.round(scale(11)),
+    textAlign: "center",
+  },
   bottomSheetContainer: {
     paddingHorizontal: Math.round(scale(10)),
   },
@@ -699,5 +705,14 @@ export default StyleSheet.create({
     fontStyle: "italic",
     fontWeight: "bold",
     lineHeight: Math.round(verticalScale(25)),
+  },
+  graphcontainer: {
+    padding: Math.round(scale(10)),
+    backgroundColor: Colors.card,
+    borderRadius: 20,
+    alignItems: "center",
+    width: "100%",
+    justifyContent: "center",
+    ...shadows.default,
   },
 });
