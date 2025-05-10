@@ -1254,8 +1254,9 @@ export default class CalcController {
     if (this._gearBoxBuilder.getShaft()) {
       try {
         // Kiểm nghiệm trục
-        this._designStrategy.testDurability(this._gearBoxBuilder.getShaft());
+        const durability = this._designStrategy.testDurability(this._gearBoxBuilder.getShaft());
         this._gearBoxBuilder.setShaft(this._gearBoxBuilder.getShaft());
+        return durability;
       } catch (error) {
         console.log(error);
         if (error instanceof Error) {

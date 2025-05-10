@@ -79,6 +79,29 @@ export const keyLabel = {
   _tau_c: "Ứng suất cắt cho phép (N/mm2)",
 };
 
+export const fatigueDuraLabel = {
+  point: "Vị trí",
+  W_j: "Momen W_j (N.mm)",
+  W_oj: "Momen W_oj (N.mm)",
+  epsi_sigma: "Hệ số εσ",
+  epsi_tau: "Hệ số ε𝜏",
+  sigma_aj: "σ_aj",
+  tau_aj: "𝜏_aj",
+  tau_mj: "𝜏_mj",
+  s_sigma: "Sσ",
+  s_tau: "S𝜏",
+  s: "Hệ số an toàn",
+};
+
+export const staticDuraLabel = {
+  d_max: "Đường kính tối đa (mm)",
+  M_max: "Momen tối đa (N.mm)",
+  T_max: "Momen khởi động tối đa (N.mm)",
+  sigma: "Ứng suất dập cho phép",
+  tau: "Ứng suất cắt cho phép",
+  sigma_td: "Ứng suất dập cho phép quá tải",
+};
+
 export const selectRollerBearingLabel = {
   ELM: "Cỡ siêu nhẹ, vừa", // Extra light, medium
   ESLN: "Cỡ đặc biệt nhẹ, hẹp", // Extra light, narrow

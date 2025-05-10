@@ -1,8 +1,15 @@
-import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, ScrollView, FlatList, Dimensions } from "react-native";
 import styles from "@style/MainStyle";
 import CalcFooter from "@views/common/CalcFooter";
 import Header from "@/views/common/Header";
+import SaveComponent from "@/views/common/SaveComponent";
+import CalcController from "@/src/controller/CalcController";
+import Carousel, { Pagination } from "react-native-reanimated-carousel";
+import { scale, verticalScale } from "react-native-size-matters";
+import { useSharedValue } from "react-native-reanimated";
+import Colors from "@/src/style/Colors";
+import { staticDuraLabel, fatigueDuraLabel } from "@/views/common/Label";
 
 // Data giả lập result
 const result = {
@@ -83,118 +90,89 @@ const result = {
     },
   ],
 };
-
+const width = Dimensions.get("window").width;
 export default function Shaft5Screen() {
+  const progress = useSharedValue<number>(0);
+  const calcController = CalcController.getInstance();
+  const { fatigueDura, staticDura } = calcController.testShaft();
+  const carouselData = [...fatigueDura, ...staticDura];
   return (
     <View style={styles.container}>
-      <Header title="Kết quả độ bền trục" />
-      <ScrollView horizontal>
-        <View style={localStyles.table}>
-          {/* Header Row */}
-          <View style={[localStyles.row, localStyles.headerRow]}>
-            <Text style={[localStyles.cell, localStyles.headerCell]}>
-              Thông số
-            </Text>
-            <Text style={[localStyles.cell, localStyles.headerCell]}>
-              Trục 1
-            </Text>
-            <Text style={[localStyles.cell, localStyles.headerCell]}>
-              Trục 2
-            </Text>
-            <Text style={[localStyles.cell, localStyles.headerCell]}>
-              Trục 3
-            </Text>
-          </View>
-
-          {/* W_j Row */}
-          <View style={localStyles.row}>
-            <Text style={localStyles.cell}>W_j</Text>
-            {result.fatigueDura.map((item, index) => (
-              <Text key={index} style={localStyles.cell}>
-                {item.W_j.toFixed(4)}
-              </Text>
-            ))}
-          </View>
-
-          {/* M_j Row */}
-          <View style={localStyles.row}>
-            <Text style={localStyles.cell}>M_j</Text>
-            {result.fatigueDura.map((item, index) => (
-              <Text key={index} style={localStyles.cell}>
-                {item.M_j.toFixed(4)}
-              </Text>
-            ))}
-          </View>
-
-          {/* Sigma_aj Row */}
-          <View style={localStyles.row}>
-            <Text style={localStyles.cell}>Sigma_aj</Text>
-            {result.fatigueDura.map((item, index) => (
-              <Text key={index} style={localStyles.cell}>
-                {item.sigma_aj.toFixed(4)}
-              </Text>
-            ))}
-          </View>
-
-          {/* Tau_aj Row */}
-          <View style={localStyles.row}>
-            <Text style={localStyles.cell}>Tau_aj</Text>
-            {result.fatigueDura.map((item, index) => (
-              <Text key={index} style={localStyles.cell}>
-                {item.tau_aj.toFixed(4)}
-              </Text>
-            ))}
-          </View>
-
-          {/* D_max Row */}
-          <View style={localStyles.row}>
-            <Text style={localStyles.cell}>D_max</Text>
-            {result.staticDura.map((item, index) => (
-              <Text key={index} style={localStyles.cell}>
-                {item.d_max.toFixed(4)}
-              </Text>
-            ))}
-          </View>
-
-          {/* M_max Row */}
-          <View style={localStyles.row}>
-            <Text style={localStyles.cell}>M_max</Text>
-            {result.staticDura.map((item, index) => (
-              <Text key={index} style={localStyles.cell}>
-                {item.M_max.toFixed(4)}
-              </Text>
-            ))}
-          </View>
-        </View>
-      </ScrollView>
+      <Header title="Thiết kế trục" rightIcon={<SaveComponent />} />
+      <Carousel
+        autoPlayInterval={2000}
+        data={carouselData}
+        height={verticalScale(500)}
+        loop={true}
+        pagingEnabled={true}
+        snapEnabled={true}
+        width={width}
+        mode="parallax"
+        modeConfig={{
+          parallaxScrollingScale: 0.9,
+          parallaxScrollingOffset: 50,
+        }}
+        onProgressChange={progress}
+        renderItem={({ item: durability, index, animationValue }) => {
+          if (Math.floor(index / 3) === 1) {
+            return (
+              <View style={styles.optionCard} pointerEvents="box-none">
+                <Text style={styles.tableTitle}>Kiểm nghiệm độ bền tĩnh</Text>
+                <View style={{ ...styles.tableContainer, width: "90%" }} pointerEvents="box-none">
+                  <View style={styles.specHeaderRow}>
+                    <Text style={{ ...styles.specHeaderCell, fontSize: scale(20) }}>
+                      Trục số {durability.shaftIdx}
+                    </Text>
+                  </View>
+                  {Object.keys(staticDuraLabel).map((key) => (
+                    <View key={key} style={styles.specRow}>
+                      <Text style={styles.specCellRow}>
+                        {staticDuraLabel[key as keyof typeof staticDuraLabel]}
+                      </Text>
+                      <Text style={styles.specCellRow}>
+                        {durability[key as keyof typeof durability].toFixed(3)}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            );
+          } else {
+            return (
+              <View style={styles.optionCard} pointerEvents="box-none">
+                <Text style={styles.tableTitle}>Kiểm nghiệm độ bền mỏi</Text>
+                <View style={{ ...styles.tableContainer, width: "90%" }} pointerEvents="box-none">
+                  <View style={styles.specHeaderRow}>
+                    <Text style={{ ...styles.specHeaderCell, fontSize: scale(20) }}>
+                      Trục số {durability.shaftIdx}
+                    </Text>
+                  </View>
+                  {Object.keys(fatigueDuraLabel).map((key) => (
+                    <View key={key} style={styles.specRow}>
+                      <Text style={styles.specCellRow}>
+                        {fatigueDuraLabel[key as keyof typeof fatigueDuraLabel]}
+                      </Text>
+                      <Text style={styles.specCellRow}>
+                        {typeof durability[key as keyof typeof durability] === "number"
+                          ? durability[key as keyof typeof durability].toFixed(3)
+                          : durability[key as keyof typeof durability]}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            );
+          }
+        }}
+      />
+      <Pagination.Basic
+        progress={progress}
+        data={carouselData}
+        activeDotStyle={{ backgroundColor: Colors.border.accent, borderRadius: 50 }}
+        dotStyle={{ backgroundColor: Colors.overlay, borderRadius: 50 }}
+        containerStyle={{ gap: 5, marginTop: scale(5) }}
+      />
       <CalcFooter />
     </View>
   );
 }
-
-const localStyles = StyleSheet.create({
-  table: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    margin: 10,
-    backgroundColor: "#f0f0f0",
-  },
-  row: {
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderColor: "#ccc",
-  },
-  headerRow: {
-    backgroundColor: "#f0f0f0",
-  },
-  cell: {
-    flex: 1,
-    padding: 10,
-    textAlign: "center",
-    borderRightWidth: 1,
-    borderColor: "#ccc",
-  },
-  headerCell: {
-    fontWeight: "bold",
-  },
-});
