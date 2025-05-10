@@ -218,7 +218,7 @@ const CatalogPage = () => {
                     <Text style={styles.title}>{item.name}</Text>
                     <Text style={styles.subtitle}>
                       Độ nhớt centistoc ở 50°C: {item.centistoc_max < 0 && "≥"}
-                      {item.centistoc_min} - {item.centistoc_max}
+                      {item.centistoc_min} {`${!(item.centistoc_max < 0) ? "- " + item.centistoc_max : ""}`}
                     </Text>
                   </View>
                 </View>

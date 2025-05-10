@@ -50,6 +50,9 @@ export default function RootLayout() {
 
           {/* Roller Bearing Flow */}
           <Stack.Screen name="views/design/rollerBearing/SelectRollerBearingScreen" />
+
+          {/* Lubricant Flow */}
+          <Stack.Screen name="views/design/lubricant/LubricantSelect" />
         </Stack>
       </PaperProvider>
     </GestureHandlerRootView>
