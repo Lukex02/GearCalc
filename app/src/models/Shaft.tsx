@@ -144,11 +144,12 @@ export default class CalculatedShaft {
   ) {
     const sigma_allow = Utils.getSigmaAllowInShaft(this._d[shaftNo - 1]);
     const T = this._distributedTorque[shaftNo - 1];
-    this._indiShaft.push(new IndividualShaft(MParam, T, sigma_allow, l));
+    const newIndiShaft = this._indiShaft.filter((shaft) => shaft.shaftNo !== shaftNo);
+    newIndiShaft.push(new IndividualShaft(MParam, T, sigma_allow, l, shaftNo));
+    this._indiShaft = newIndiShaft;
   }
-  addAxialForce(F_a: number) {
-    if (!this._F_a) this._F_a = [];
-    this._F_a.push(F_a);
+  addAxialForce(F_a_add: number[]) {
+    this._F_a = F_a_add;
   }
   getAxialForce(shaftNo: 1 | 2 | 3) {
     if (shaftNo === 1) return this._F_a[0];
@@ -195,6 +196,7 @@ export default class CalculatedShaft {
 
 class IndividualShaft {
   private _T: number; // Lực tác dụng lên trục này
+  private _shaftNo: 1 | 2 | 3; // Số thứ tự của trục
   private _l: { name: string; value: number }[];
   private _maxStats: {
     d: number;
@@ -216,10 +218,12 @@ class IndividualShaft {
     MParam: { point: string; Mx: number; My: number; Rx: number; Ry: number }[],
     T: number,
     sigma_allow: number,
-    l: { name: string; value: number }[]
+    l: { name: string; value: number }[],
+    shaftNo: 1 | 2 | 3
   ) {
     this._T = T;
     this._l = l;
+    this._shaftNo = shaftNo;
     this._maxStats = { d: 0, M: 0 };
     this._statAtPoint = MParam.map((curr) => {
       const M_td = Math.sqrt(curr.Mx ** 2 + curr.My ** 2 + 0.75 * T ** 2);
@@ -231,7 +235,7 @@ class IndividualShaft {
         M_y: curr.My,
         R_x: curr.Rx,
         R_y: curr.Ry,
-        d_sb: M_td / (0.1 * sigma_allow) ** 1 / 3,
+        d_sb: (M_td / (0.1 * sigma_allow)) ** (1 / 3),
         d: undefined,
         key: undefined,
       };
@@ -255,6 +259,9 @@ class IndividualShaft {
   getStatAtPoint(point: string) {
     return this._statAtPoint.find((stat) => stat.point === point)!;
   }
+  getDSbAll() {
+    return this._statAtPoint.map((stat) => stat.d_sb);
+  }
   get T() {
     return this._T;
   }
@@ -263,5 +270,8 @@ class IndividualShaft {
   }
   get l() {
     return this._l;
+  }
+  get shaftNo() {
+    return this._shaftNo;
   }
 }

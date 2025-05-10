@@ -14,6 +14,7 @@ import LoadingScreen from "./LoadingScreen";
 import * as Label from "@/views/common/Label";
 import CalculatedChain from "@/src/models/Chain";
 import GearSet from "@/src/models/Gear";
+import CalculatedShaft from "@/src/models/Shaft";
 
 export default function SaveComponent() {
   const [modalSaveVisible, setModalConfirmSaveVisible] = useState(false);
@@ -105,7 +106,7 @@ export default function SaveComponent() {
             : ("chainLabel" as keyof typeof Label)
         ];
       const itemKeys = Object.keys(labels);
-      // console.log(item.designStrategy);
+      // console.log(type === "_shaft" ? item : "ko phải shaft");
       return (
         <View key={index}>
           {index != null && (
@@ -136,6 +137,8 @@ export default function SaveComponent() {
                       }
                     )
                   : item.designStrategy._designInputStats[key as keyof typeof labels] // DesignStrategy
+                : Array.isArray(item[key])
+                ? item[key].join(`, `)
                 : item[key]}
             </Text>
           ))}

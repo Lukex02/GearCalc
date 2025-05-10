@@ -172,10 +172,10 @@ export default class DatabaseService {
 
   static async getKey(d: number): Promise<any> {
     const { data, error } = await supabase
-      .from("b, h, t1")
+      .from("key_flat")
       .select("*")
-      .gt("d_min", d)
-      .lt("d_max", d)
+      .lte("d_min", d)
+      .gt("d_max", d)
       .limit(1);
     if (error) console.error("Lỗi khi lấy dữ liệu ", error);
     return data ?? [];

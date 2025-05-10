@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { Slider } from "react-native-awesome-slider";
@@ -8,130 +8,152 @@ import CalcController from "@controller/CalcController";
 import CalcFooter from "@views/common/CalcFooter";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useSharedValue } from "react-native-reanimated";
-import { useNavigation } from "@react-navigation/native";
 import Header from "@/views/common/Header";
 import SaveComponent from "@/views/common/SaveComponent";
+import { verticalScale } from "react-native-size-matters";
 
-// Giả lập keyData
-const keyData = [
-  { shaft: 1, point: "A", d: 10 },
-  { shaft: 1, point: "C", d: 10 },
-  { shaft: 2, point: "B", d: 10 },
-  { shaft: 2, point: "C", d: 10 },
-  { shaft: 3, point: "A", d: 10 },
-  { shaft: 3, point: "C", d: 10 },
-];
+const pointMapping = {
+  0: "A",
+  1: "B",
+  2: "C",
+  3: "D",
+};
 
 export default function SelectDiamShaftScreen() {
-  const [selectedDiameters, setSelectedDiameters] = useState<
-    Record<string, number>
-  >({});
   const calcController = CalcController.getInstance();
-  const isSliding = useRef(false);
-  const navigation = useNavigation();
+  const [dSb, setDSb] = useState<number[][]>(); // Giá trị đường kính trục sơ bộ
+  const [selectedDiameters, setSelectedDiameters] = useState<
+    Record<number, { point: string; value: number }[]>
+  >({
+    1: [],
+    2: [],
+    3: [],
+  });
   // Sử dụng useRef để lưu trữ SharedValue
   const progressValues = useRef(
-    keyData.map((item) => useSharedValue(item.d))
-  ).current;
+    [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20].map((item) => useSharedValue(item))
+  ).current; // Sử dụng SharedValue
 
-  const minimumValue = useSharedValue(5); // Giá trị tối thiểu
-  const maximumValue = useSharedValue(50); // Giá trị tối đa
+  const minimumValue = useSharedValue(20); // Giá trị tối thiểu
+  const maximumValue = useSharedValue(90); // Giá trị tối đa
 
-  const handleSelection = (
-    shaft: number,
-    point: string,
-    value: number,
-    index: number
-  ) => {
-    setSelectedDiameters((prev) => ({
-      ...prev,
-      [`${shaft}-${point}`]: value,
-    }));
-    progressValues[index].value = value; // Cập nhật SharedValue
+  useEffect(() => {
+    const dSbData = calcController
+      .getShaft()
+      .getAllIndividualShaft()
+      .map((indiShaft, index) => {
+        return indiShaft.getDSbAll();
+      });
+    setDSb(dSbData);
+    // console.log("dSbData", dSbData.flat());
+  }, []);
+
+  const handleSelection = (shaft: number, point: number, newValue: number) => {
+    const newSelected = {
+      ...selectedDiameters,
+      [shaft]: [...(selectedDiameters[shaft] || [])],
+    };
+
+    const existing = newSelected[shaft].find(
+      (item) => item.point === pointMapping[point as keyof typeof pointMapping]
+    );
+    if (existing) {
+      existing.value = newValue;
+    } else {
+      newSelected[shaft].push({
+        point: pointMapping[point as keyof typeof pointMapping],
+        value: newValue,
+      });
+    }
+    setSelectedDiameters(newSelected);
   };
 
   const handleCalculation = async () => {
-    const shaftSelections: Record<number, { point: string; value: number }[]> =
-      {};
+    if (
+      !selectedDiameters ||
+      selectedDiameters[1].length < 4 ||
+      selectedDiameters[2].length < 4 ||
+      selectedDiameters[3].length < 4
+    )
+      return alert("Vui lòng chọn đủ đường kính trục!");
 
-    Object.keys(selectedDiameters).forEach((key) => {
-      const [shaft, point] = key.split("-");
-      const shaftNo = parseInt(shaft, 10);
-
-      if (!shaftSelections[shaftNo]) {
-        shaftSelections[shaftNo] = [];
-      }
-
-      shaftSelections[shaftNo].push({ point, value: selectedDiameters[key] });
+    Object.keys(selectedDiameters).forEach((shaftNoEntries) => {
+      const shaftNo = parseInt(shaftNoEntries, 10) as 1 | 2 | 3;
+      calcController.chooseIndiShaftDiameter(shaftNo, selectedDiameters[shaftNo]);
     });
-
-    for (const [shaftNo, d_choose] of Object.entries(shaftSelections)) {
-      await calcController.chooseIndiShaftDiameter(
-        parseInt(shaftNo, 10) as 1 | 2 | 3,
-        d_choose
-      );
+    try {
+      const keyList = await calcController.calcKey();
+      console.log("Kết quả tính toán then:", keyList);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
     }
-
-    const result = await calcController.calcKey();
-    console.log("Kết quả tính toán:", result);
   };
 
   return (
     <View style={styles.container}>
-      <Header title="Chọn đường kính trục" />
-      <View style={styles.tableContainer}>
-        <FlatList
-          data={keyData}
-          keyExtractor={(item) => `${item.shaft}-${item.point}`}
-          renderItem={({ item, index }) => (
-            <View style={localStyles.itemContainer}>
-              <Text
-                style={styles.paramType}
-              >{`Trục ${item.shaft} - Điểm ${item.point}`}</Text>
-              <Slider
-                theme={sliderTheme}
-                bubble={(value) => `${value} mm`}
-                renderThumb={() => (
-                  <FontAwesome6
-                    name="diamond"
-                    size={20}
-                    color={Colors.primary}
+      <Header title="Thiết kế trục" rightIcon={<SaveComponent />} />
+      <View style={styles.inputContainer}>
+        <View style={styles.tableContainer}>
+          <Text style={styles.tableTitle}>Chọn đường kính trục</Text>
+          {dSb && (
+            <FlatList
+              data={dSb.flat()}
+              keyExtractor={(item, index) => `item-${index}`}
+              renderItem={({ item, index }) => (
+                <View style={localStyles.itemContainer}>
+                  <Text style={styles.paramType}>
+                    Trục
+                    <Text style={{ color: Colors.text.accent, fontWeight: "bold" }}>{` ${
+                      Math.floor(index / 4) + 1
+                    } tại ${pointMapping[(index % 4) as keyof typeof pointMapping]} `}</Text>
+                    - Sơ bộ: <Text style={{ color: Colors.text.muted }}>{item.toFixed(2)} mm</Text>
+                  </Text>
+                  <Slider
+                    theme={sliderTheme}
+                    bubble={(value) => `${value} mm`}
+                    renderThumb={() => <FontAwesome6 name="diamond" size={20} color={Colors.primary} />}
+                    bubbleOffsetX={2}
+                    style={styles.slider}
+                    steps={(90 - 20) / 5}
+                    forceSnapToStep={true}
+                    renderMark={({ index }) => <View></View>}
+                    containerStyle={{ borderRadius: 40 }}
+                    progress={progressValues[index]} // Sử dụng SharedValue
+                    minimumValue={minimumValue} // Sử dụng SharedValue
+                    maximumValue={maximumValue} // Sử dụng SharedValue
+                    onSlidingComplete={(value) => {
+                      // isSliding.current = false;
+                      handleSelection(Math.floor(index / 4) + 1, index % 4, value);
+                    }}
                   />
-                )}
-                bubbleOffsetX={5}
-                style={styles.slider}
-                containerStyle={{ borderRadius: 40 }}
-                progress={progressValues[index]} // Sử dụng SharedValue
-                minimumValue={minimumValue} // Sử dụng SharedValue
-                maximumValue={maximumValue} // Sử dụng SharedValue
-                step={1}
-                onSlidingStart={() => (isSliding.current = true)}
-                onSlidingComplete={(value) => {
-                  isSliding.current = false;
-                  handleSelection(item.shaft, item.point, value, index);
-                }}
-              />
-              <Text style={styles.resultText}>
-                Đường kính:{" "}
-                <Text style={{ color: Colors.primary, fontWeight: "bold" }}>
-                  {(
-                    selectedDiameters[`${item.shaft}-${item.point}`] || item.d
-                  ).toFixed(5)}{" "}
-                  mm
-                </Text>
-              </Text>
-            </View>
+                  <Text style={styles.resultText}>
+                    Chọn:{" "}
+                    <Text style={{ color: Colors.text.success, fontWeight: "bold" }}>
+                      {" "}
+                      {selectedDiameters &&
+                        selectedDiameters[Math.floor(index / 4) + 1][index % 4] &&
+                        selectedDiameters[Math.floor(index / 4) + 1][index % 4].value}{" "}
+                      mm
+                    </Text>
+                  </Text>
+                </View>
+              )}
+            />
           )}
-        />
-        <Button
-          mode="contained"
-          onPress={handleCalculation}
-          style={styles.mainBtn}
-        >
-          Tính toán
-        </Button>
-        <CalcFooter nextPage={"/views/design/shaft/Shaft5Screen"} />
+          <Button
+            mode="contained"
+            onPress={handleCalculation}
+            style={{ ...styles.mainBtnMedium, marginTop: verticalScale(15) }}
+            labelStyle={styles.mainBtnSmallTxt}
+          >
+            Tính toán then
+          </Button>
+        </View>
       </View>
+
+      <CalcFooter nextPage={"/views/design/shaft/Shaft5Screen"} />
     </View>
   );
 }

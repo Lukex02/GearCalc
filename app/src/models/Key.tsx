@@ -13,10 +13,12 @@ export default class CalculatedKey {
     this._t1 = t1;
     this._sigma_d = (2 * T) / (d * this._lt * (h - t1));
     this._tau_c = (2 * T) / (d * this._lt * b);
-    if (this._sigma_d > 100) throw new Error("Ứng suất dập không thỏa: " + this._sigma_d); // CHọn luôn max là 100 với thép cố định va đập nhẹ
-    if (this._tau_c > 60) throw new Error("Ứng suất cắt không thỏa: " + this._tau_c);
+    if (this._sigma_d > 120) alert(`Ứng suất dập không thỏa: ` + this._sigma_d.toFixed(2));
+    // Chọn luôn max là 100 với thép cố định va đập nhẹ
+    else if (this._sigma_d > 100) alert(`Ứng suất dập hơi nguy hiểm: ` + this._sigma_d.toFixed(2) + " > 100"); // CHọn luôn max là 100 với thép cố định va đập nhẹ
+    if (this._tau_c > 60) alert(`Ứng suất cắt không thỏa: ` + this._tau_c.toFixed(2));
     // Chọn luôn max là 60 khi chịu tải trọng va đập nhẹ
-    else if (this._tau_c > 40) alert("Ứng suất cắt hơi nguy hiểm: " + this._tau_c); // Giới hạn dưới là 40 khi chịu tải trọng va đập nhẹ
+    else if (this._tau_c > 40) alert(`Ứng suất cắt hơi nguy hiểm: ` + this._tau_c.toFixed(2)); // Giới hạn dưới là 40 khi chịu tải trọng va đập nhẹ
   }
   getDimension() {
     return { b: this._b, h: this._h, t1: this._t1 };

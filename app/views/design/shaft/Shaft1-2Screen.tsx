@@ -195,7 +195,7 @@ export default function Shaft1_2Screen() {
 
   return (
     <View style={styles.container}>
-      <Header title="Thông số trục" rightIcon={<SaveComponent />} />
+      <Header title="Thiết kế trục" rightIcon={<SaveComponent />} />
 
       {/* Hiển thị các thông số vật liệu */}
       {renderMaterialStats()}

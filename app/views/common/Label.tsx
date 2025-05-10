@@ -66,7 +66,7 @@ export const gearSetLabel = {
 };
 
 export const shaftLabel = {
-  sigma_b: "Giới hạn bền",
+  _d: "Đường kính trục (mm)",
 };
 
 export const selectRollerBearingLabel = {

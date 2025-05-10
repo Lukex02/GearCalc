@@ -427,7 +427,6 @@ export class DesignGearBox1 implements DesignStrategy {
         },
       ]
     );
-    shaft.addAxialForce(F_a1);
 
     // ------ Xác định lực tác dụng lên trục II
     // Lực trên bánh răng lớn của bộ truyền cấp nhanh
@@ -538,8 +537,6 @@ export class DesignGearBox1 implements DesignStrategy {
         },
       ]
     );
-    shaft.addAxialForce(F_a2);
-    shaft.addAxialForce(F_a3);
 
     // ------ Xác định lực tác dụng lên trục III
     // Lực trên bánh răng lớn của bộ truyền cấp chậm
@@ -635,7 +632,7 @@ export class DesignGearBox1 implements DesignStrategy {
         },
       ]
     );
-    shaft.addAxialForce(F_a4);
+    shaft.addAxialForce([F_a1, F_a3]);
     return shaft;
   }
   get shaftDiagram() {
@@ -1224,6 +1221,9 @@ export default class CalcController {
   getShaftDiagram() {
     return this._designStrategy.shaftDiagram;
   }
+  getShaft() {
+    return this._gearBoxBuilder.getShaft();
+  }
   // Bước 3 của trục: Chọn đường kính trục cho từng tiết diện của từng trục
   chooseIndiShaftDiameter(shaftNo: 1 | 2 | 3, d_choose: { point: string; value: number }[]) {
     if (this._gearBoxBuilder.getShaft()) {
@@ -1234,7 +1234,13 @@ export default class CalcController {
   // Bước 4 của trục: Chọn then
   async calcKey() {
     if (this._gearBoxBuilder.getShaft()) {
-      return this._designStrategy.designKey(this._gearBoxBuilder.getShaft());
+      try {
+        return this._designStrategy.designKey(this._gearBoxBuilder.getShaft());
+      } catch (error) {
+        if (error instanceof Error) {
+          throw new Error(`Lỗi khi tính toán then: ${error.message}`);
+        }
+      }
     }
   }
   // Bước 5 (cuối) của trục: Kiểm nghiệm
