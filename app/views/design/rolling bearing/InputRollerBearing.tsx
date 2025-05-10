@@ -8,7 +8,6 @@ import { scale } from "react-native-size-matters";
 import { Colors } from "@/src/style/Colors";
 import Header from "@/views/common/Header";
 import SaveComponent from "@/views/common/SaveComponent";
-import { kron } from "mathjs";
 
 type RollerBearingProps = {
   symbol: string;
