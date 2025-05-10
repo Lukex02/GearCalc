@@ -22,7 +22,16 @@ export default function SaveComponent() {
 
   const sheetRef = useRef<BottomSheet>(null);
   const data = useMemo(
-    () => ["_type", "_design", "_calcEnginePostStats", "_engine", "_mechDrive", "_gearSet", "_shaft"],
+    () => [
+      "_type",
+      "_design",
+      "_calcEnginePostStats",
+      "_engine",
+      "_mechDrive",
+      "_gearSet",
+      "_shaft",
+      "_rollerBearing",
+    ],
     []
   );
 
@@ -101,12 +110,12 @@ export default function SaveComponent() {
             </Text>
             {indiShaft.getStatAtAllPoint().map((statsAtPoint, index) => (
               <View>
-                <Text key={index} style={styles.bottomSheetSmallTxt}>
+                <Text key={`d-${index}`} style={styles.bottomSheetSmallTxt}>
                   {"- Ở vị trí "}
                   {statsAtPoint.point}: {statsAtPoint.d} (mm)
                 </Text>
                 {statsAtPoint.key && (
-                  <Text key={index} style={styles.bottomSheetSmallTxt}>
+                  <Text key={`key-${index}`} style={styles.bottomSheetSmallTxt}>
                     {"+ Sử dụng then bằng: "}
                     {statsAtPoint.key.b + "x" + statsAtPoint.key.h + " (mm)"}, dài {statsAtPoint.key.lt} (mm)
                   </Text>
@@ -125,6 +134,8 @@ export default function SaveComponent() {
             ? ("gearSetLabel" as keyof typeof Label)
             : type === "_design"
             ? ("inputLabel" as keyof typeof Label)
+            : type === "rollerBearing"
+            ? ("rollerBearingLabel" as keyof typeof Label)
             : ("chainLabel" as keyof typeof Label)
         ];
       const itemKeys = Object.keys(labels);
@@ -169,13 +180,13 @@ export default function SaveComponent() {
     const calcController = CalcController.getInstance();
     const gearBox = calcController.getGearBox();
     const stats = gearBox[item as keyof typeof gearBox];
-    // console.log(stats);
     return (
       <View key={item} style={styles.bottomSheetContent}>
         <Text style={styles.bottomSheetLargeTxt}>
           {Label.mainlabel[item as keyof typeof Label.mainlabel]}: {item === "_type" && stats}
         </Text>
-        {(stats && !Array.isArray(stats)) || (Array.isArray(stats) && stats.length > 0) ? (
+        {(stats && !Array.isArray(stats) && Object.keys(stats).length > 0) ||
+        (Array.isArray(stats) && stats.length > 0) ? (
           <View>
             {Array.isArray(stats)
               ? stats.map((stat, index) => renderStats(stat, item, index))
