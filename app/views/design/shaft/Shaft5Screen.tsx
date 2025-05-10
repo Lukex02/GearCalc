@@ -149,10 +149,10 @@ export default function Shaft5Screen() {
                   </View>
                   {Object.keys(fatigueDuraLabel).map((key) => (
                     <View key={key} style={styles.specRow}>
-                      <Text style={styles.specCellRow}>
+                      <Text style={{ ...styles.specCellRow, paddingVertical: verticalScale(10) }}>
                         {fatigueDuraLabel[key as keyof typeof fatigueDuraLabel]}
                       </Text>
-                      <Text style={styles.specCellRow}>
+                      <Text style={{ ...styles.specCellRow, paddingVertical: verticalScale(10) }}>
                         {typeof durability[key as keyof typeof durability] === "number"
                           ? durability[key as keyof typeof durability].toFixed(3)
                           : durability[key as keyof typeof durability]}
