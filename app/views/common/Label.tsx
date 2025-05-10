@@ -93,7 +93,7 @@ export const fatigueDuraLabel = {
 };
 
 export const staticDuraLabel = {
-  d_max: "Đường kính tối đa (mm)",
+  d_max: "Đường kính lớn nhất (mm)",
   M_max: "Momen tối đa (N.mm)",
   T_max: "Momen khởi động tối đa (N.mm)",
   sigma: "Ứng suất dập cho phép",
@@ -101,10 +101,11 @@ export const staticDuraLabel = {
   sigma_td: "Ứng suất dập cho phép quá tải",
 };
 
-export const selectRollerBearingLabel = {
+export const selectRollerBearingSizeLabel = {
   ELM: "Cỡ siêu nhẹ, vừa", // Extra light, medium
   ESLN: "Cỡ đặc biệt nhẹ, hẹp", // Extra light, narrow
   ESLM: "Cỡ đặc biệt nhẹ, vừa", // Extra light, medium
+  EL: "Cỡ siêu nhẹ", // Extra light
   L: "Cỡ nhẹ", // Light
   M: "Cỡ vừa", // Medium
   H: "Cỡ nặng", // Heavy
@@ -116,7 +117,16 @@ export const rollerBearingTypeLabel = {
   tapered: "Ổ đũa côn",
 };
 
-export const rollerBearingLabel = {};
+export const rollerBearingLabel = {
+  type: "Loại ổ",
+  symbol: "Ký hiệu",
+  d: "d (mm)",
+  D: "D (mm)",
+  r: "r (mm)",
+  C: "C (kN)",
+  C_O: "C_O (kN)",
+  description: "Kiểu",
+};
 
 export const labelTable = {
   _designInputStats: "inputLabel",
@@ -135,7 +145,7 @@ const Label = {
   chainLabel,
   gearSetLabel,
   shaftLabel,
-  selectRollerBearingLabel,
+  selectRollerBearingSizeLabel,
   rollerBearingTypeLabel,
   labelTable,
   keyLabel,

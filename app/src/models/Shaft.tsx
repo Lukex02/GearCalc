@@ -153,8 +153,8 @@ export default class CalculatedShaft {
   }
   getAxialForce(shaftNo: 1 | 2 | 3) {
     if (shaftNo === 1) return this._F_a[0];
-    if (shaftNo === 2) return Math.abs(this._F_a[2] - this._F_a[1]);
-    else return this._F_a[3];
+    if (shaftNo === 2) return Math.abs(this._F_a[1] - this._F_a[0]);
+    else return this._F_a[1];
   }
   getHubLength(name: string) {
     return this._hub_length.find((h) => h.name === name)!.value;
@@ -202,6 +202,7 @@ class IndividualShaft {
     d: number;
     M: number;
   };
+  private _d_forRB: number; // Đường kính trục cho ổ lăn
   private _statAtPoint: {
     point: string; // Tên điểm được ký hiệu (A, B, C, D)
     d_sb: number; // Đường kính sơ bộ tại các mặt cắt trên trục này
@@ -221,6 +222,7 @@ class IndividualShaft {
     l: { name: string; value: number }[],
     shaftNo: 1 | 2 | 3
   ) {
+    this._d_forRB = 0;
     this._T = T;
     this._l = l;
     this._shaftNo = shaftNo;
@@ -250,6 +252,9 @@ class IndividualShaft {
     d_choose.forEach((d) => {
       this._statAtPoint.forEach((stat, idx) => {
         if (stat.point === d.point) {
+          if (this._shaftNo === 1 && (d.point === "B" || d.point === "D")) this._d_forRB = d.value;
+          else if (this._shaftNo === 2 && (d.point === "A" || d.point === "D")) this._d_forRB = d.value;
+          else if (this._shaftNo === 3 && (d.point === "C" || d.point === "A")) this._d_forRB = d.value;
           this._maxStats.d = Math.max(this._maxStats.d, d.value);
           stat.d = d.value;
         }
@@ -273,5 +278,8 @@ class IndividualShaft {
   }
   get shaftNo() {
     return this._shaftNo;
+  }
+  get d_forRB() {
+    return this._d_forRB;
   }
 }

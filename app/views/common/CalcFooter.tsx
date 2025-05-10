@@ -32,7 +32,7 @@ export default function CalcFooter({
   const [snackBarSaveVisible, setSnackBarSaveVisible] = useState(false);
 
   const handleContinuePress = () => {
-    if ((!onValidate || onValidate()) && nextPage) {
+    if ((onValidate == null || onValidate()) && nextPage) {
       router.push(nextPage);
     }
   };
@@ -49,18 +49,22 @@ export default function CalcFooter({
   };
 
   const saveAndGoHome = () => {
-    DatabaseService.updateUserHistory(
-      CalcController.getInstance().getGearBox(),
-      new Date().toLocaleString(),
-      true
-    ).then(() => {
-      setModalFinishVisible(false);
-      setSnackBarSaveVisible(true);
-      router.push("/(tabs)/home");
-    });
+    if (onValidate == null || onValidate()) {
+      DatabaseService.updateUserHistory(
+        CalcController.getInstance().getGearBox(),
+        new Date().toLocaleString(),
+        true
+      ).then(() => {
+        setModalFinishVisible(false);
+        setSnackBarSaveVisible(true);
+        router.push("/(tabs)/home");
+      });
+    }
   };
   const handleFinishPress = () => {
-    setModalFinishVisible(true);
+    if (onValidate == null || onValidate()) {
+      setModalFinishVisible(true);
+    }
   };
   return (
     <View style={styles.buttonFooter}>

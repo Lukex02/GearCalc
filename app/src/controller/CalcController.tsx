@@ -13,7 +13,7 @@ import Utils from "@services/Utils";
 import KeyController from "@controller/KeyController";
 import CalculatedKey from "@models/Key";
 import RollerBearingController from "@controller/RollerBearingController";
-import { SelectedRollerBearing } from "@models/RollerBearing";
+import CalculatedRollerBearing, { SelectedRollerBearing } from "@models/RollerBearing";
 import BoxController from "@controller/BoxController";
 import Lubricant from "@models/Lubricant";
 
@@ -112,7 +112,7 @@ interface DesignStrategy {
     F_r: number,
     selectedRB: SelectedRollerBearing,
     spinSpd: number
-  ): boolean;
+  ): { status: boolean; message?: string };
   designBox(gears?: any, shaft?: any, D1?: number[]): any;
 }
 
@@ -762,7 +762,6 @@ export class DesignGearBox1 implements DesignStrategy {
   }
   designRollerBearing(shaft: CalculatedShaft, shaftNo: 1 | 2 | 3) {
     try {
-      // const L_h = this._designInputStats.L;
       const F_a = shaft.getAxialForce(shaftNo);
       const indiShaft = shaft.getIndividualShaft(shaftNo);
 
@@ -813,8 +812,7 @@ export class DesignGearBox1 implements DesignStrategy {
     spinSpd: number
   ) {
     if (type === "single_row_ball") {
-      const iFa_Co = (1 * F_a) / selectedRB.C_O;
-      // Chọn e theo iFa_Co, làm hàm bên Utils dò bảng
+      const iFa_Co = (1 * F_a) / (selectedRB.C_O * 1000);
       let { X, Y, e } = Utils.getRollerCoeffi(type, iFa_Co)!;
       if (F_a / (1 * F_r) <= e) {
         X = 1;
@@ -826,13 +824,17 @@ export class DesignGearBox1 implements DesignStrategy {
         ((this._designInputStats.t1 / 60) * this._designInputStats.T1 ** (1 / 3) +
           (this._designInputStats.t2 / 60) * this._designInputStats.T2 ** (1 / 3)) **
           (1 / 3);
-      const L = (60 * (this._designInputStats.L * 300 * 2 * 8 * 3) * spinSpd) / 10 ** 6;
+      const L = (60 * ((this._designInputStats.L * 300 * 2 * 8) / 3) * spinSpd) / 10 ** 6;
       const C_d = Q_td * L ** (1 / 3);
-      if (C_d < selectedRB.C) {
-        return true;
-      } else {
-        return false;
+      if (C_d > selectedRB.C * 1000 && C_d - selectedRB.C * 1000 > 3000) {
+        return { status: false, message: `C_d không đạt yêu cầu: ${C_d.toFixed(3)}` };
       }
+      const Q_t1 = 0.6 * F_r + 0.5 * F_a;
+      const Q_t = Math.max(Q_t1, F_r);
+      if (Q_t > selectedRB.C_O * 1000) {
+        return { status: false, message: `Q_t không đạt yêu cầu: ${Q_t.toFixed(3)}` };
+      }
+      return { status: true, message: `Ổ lăn đạt yêu cầu` };
     } else {
       throw new Error("Hiện tại chỉ mới áp dụng cho ổ bi đỡ một dãy");
     }
@@ -987,7 +989,7 @@ class DesignGearBox2 implements DesignStrategy {
     selectedRB: SelectedRollerBearing,
     spinSpd: number
   ) {
-    return true;
+    return { status: true, message: `Ổ lăn đạt yêu cầu` };
   }
   designBox() {}
 }
@@ -1001,7 +1003,14 @@ export default class CalcController {
   private _effiency!: Efficiency;
   private _ratio!: TransRatio;
   private _calcEngine!: CalculatedEngine;
-  private _calcRollerBearing!: any;
+  private _calcRollerBearing: Record<
+    number,
+    {
+      type: string;
+      F_a: number;
+      F_r: number;
+    }
+  >;
   private _gearBoxBuilder: GearBoxBuilder;
 
   // Implement semi-Singleton to store object state
@@ -1029,6 +1038,7 @@ export default class CalcController {
         throw new Error("Invalid gear box type");
     }
     CalcController.instance = this;
+    this._calcRollerBearing = {};
     this._gearBoxBuilder = new GearBoxBuilder();
     this._gearBoxBuilder.setType(gearBoxLabel[gearBoxType]);
   }
@@ -1272,23 +1282,32 @@ export default class CalcController {
     if (!shaft) {
       throw new Error("Chưa thiết kế trục, không thể tính ổ lăn");
     }
-    this._calcRollerBearing = this._designStrategy.designRollerBearing(shaft, shaftNo);
+    const calcRB = this._designStrategy.designRollerBearing(shaft, shaftNo);
+    this._calcRollerBearing[shaftNo] = calcRB;
+    return calcRB;
   }
 
   // Chọn ổ lăn và kiểm thử
   chooseRollerBearing(selected: SelectedRollerBearing, shaftNo: 1 | 2 | 3) {
     // Kiểm tra lại lựa chọn rồi mới set hoặc báo chọn lại
     try {
-      const calcRb = this._calcRollerBearing;
+      const calcRb = this._calcRollerBearing[shaftNo];
       const spinSpd = this._gearBoxBuilder.getCalcEnginePostStats().distShaft.n[shaftNo];
-      if (this._designStrategy.checkRollerBearing(selected.type, calcRb.F_a, calcRb.F_r, selected, spinSpd)) {
-        this._gearBoxBuilder.setRollerBearing(selected);
+      const checkRB = this._designStrategy.checkRollerBearing(
+        selected.type,
+        calcRb.F_a,
+        calcRb.F_r,
+        selected,
+        spinSpd
+      );
+      if (checkRB.status) {
+        this._gearBoxBuilder.setRollerBearing(selected, shaftNo);
       } else {
-        throw new Error("Ổ lăn không đạt yêu cầu");
+        throw new Error(`Ổ lăn tại trục ${shaftNo} không đạt yêu cầu: ${checkRB.message}`);
       }
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(`Ổ lăn được chọn không đạt yêu cầu: ${error.message}`);
+        throw new Error(`Ổ lăn không chọn được: ${error.message}`);
       }
     }
   }
@@ -1298,7 +1317,7 @@ export default class CalcController {
     const gears = this._gearBoxBuilder.getGearSet();
     const rollerBearings = this._gearBoxBuilder.getRollerBearing();
     const shaft = this._gearBoxBuilder.getShaft();
-    const D1 = rollerBearings.map((rb) => rb.D);
+    const D1 = [1, 2, 3].map((shaftNo) => rollerBearings[shaftNo].D);
     const box = this._designStrategy.designBox(gears, shaft, D1);
     this._gearBoxBuilder.setBox(box);
   }

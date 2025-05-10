@@ -14,7 +14,6 @@ import LoadingScreen from "./LoadingScreen";
 import * as Label from "@/views/common/Label";
 import CalculatedChain from "@/src/models/Chain";
 import GearSet from "@/src/models/Gear";
-import CalculatedShaft from "@/src/models/Shaft";
 
 export default function SaveComponent() {
   const [modalSaveVisible, setModalConfirmSaveVisible] = useState(false);

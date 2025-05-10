@@ -75,7 +75,6 @@ export default function SelectEngineScreen() {
             <Text style={styles.noDataWarn}>Không có động cơ thỏa mãn điều kiện!</Text>
           )}
           <FlatList
-            // contentContainerStyle={{ flex: 1 }}
             data={engineList}
             keyExtractor={(item) => item.M_ID}
             renderItem={({ item }) => (

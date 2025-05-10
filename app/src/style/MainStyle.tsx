@@ -524,7 +524,7 @@ export default StyleSheet.create({
   selectContainer: {
     flex: 1,
     maxHeight: verticalScale(300),
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-around",
     width: "100%",
     backgroundColor: Colors.card,

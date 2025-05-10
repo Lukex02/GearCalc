@@ -182,12 +182,9 @@ export default class DatabaseService {
   }
 
   static async getSelectableRollerBearingList(type: string, d: number): Promise<any[]> {
-    const { data, error } = await supabase
-      .from("roller_bearing")
-      .select("*")
-      .eq("type", type)
-      .eq("d", d)
-      .limit(5);
+    // console.log("type", type);
+    // console.log("d", d);
+    const { data, error } = await supabase.from("roller_bearing").select("*").eq("rb_type", type).eq("d", d);
 
     if (error) console.error("Lỗi khi lấy dữ liệu ", error);
     return data ?? [];

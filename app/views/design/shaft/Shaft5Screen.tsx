@@ -172,7 +172,7 @@ export default function Shaft5Screen() {
         dotStyle={{ backgroundColor: Colors.overlay, borderRadius: 50 }}
         containerStyle={{ gap: 5, marginTop: scale(5) }}
       />
-      <CalcFooter nextPage={"/views/design/rollerBearing/SelectRollerBearing"} />
+      <CalcFooter nextPage={"/views/design/rollerBearing/SelectRollerBearingScreen"} />
     </View>
   );
 }

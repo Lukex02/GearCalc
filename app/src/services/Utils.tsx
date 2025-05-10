@@ -302,7 +302,7 @@ const ForceOnShaftDiagram = ({
 };
 
 function chooseRollerBearingType(F_a: number, maxFr: number) {
-  if (F_a / maxFr < 0.3) return "single_row_ball"; // Ổ bi một dãy
+  if (F_a / maxFr < 0.4) return "single_row_ball"; // Ổ bi một dãy
   else if (F_a / maxFr < 1.5) return "thrust"; // Ổ đỡ - chặn
   else return "tapered"; // Ổ đũa côn
 }

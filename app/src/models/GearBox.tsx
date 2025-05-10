@@ -13,7 +13,7 @@ export class GearBox {
   private _mechDrive: CalculatedChain | any;
   private _gearSet: GearSet[] | any = [];
   private _shaft: CalculatedShaft | any;
-  private _rollerBearing: SelectedRollerBearing[] = [];
+  private _rollerBearing: Record<number, SelectedRollerBearing> = {};
   private _box: any;
   private _lubricant!: { lubricant: Lubricant; usedFor: string }[];
 
@@ -62,7 +62,7 @@ export class GearBox {
   set rollerBearing(rollerBearing: SelectedRollerBearing[]) {
     this._rollerBearing = rollerBearing;
   }
-  get rollerBearing(): SelectedRollerBearing[] {
+  get rollerBearing(): Record<number, SelectedRollerBearing> {
     return this._rollerBearing;
   }
   set box(box: any) {
@@ -91,7 +91,7 @@ interface Builder {
   setMechDrive(mechDrive: CalculatedChain | any): void;
   setGearSet(gears: GearSet, name: string): void;
   setShaft(shaft: CalculatedShaft): void;
-  setRollerBearing(rollerBearing: any): void;
+  setRollerBearing(rollerBearing: SelectedRollerBearing, shaftNo: 1 | 2 | 3): void;
   setBox(box: any): void;
   build(): GearBox;
 }
@@ -146,10 +146,10 @@ export default class GearBoxBuilder implements Builder {
   getShaft(): CalculatedShaft {
     return this._gearBox.shaft;
   }
-  setRollerBearing(rollerBearing: SelectedRollerBearing): void {
-    this._gearBox.rollerBearing.push(rollerBearing);
+  setRollerBearing(rollerBearing: SelectedRollerBearing, shaftNo: 1 | 2 | 3): void {
+    this._gearBox.rollerBearing[shaftNo] = rollerBearing;
   }
-  getRollerBearing(): SelectedRollerBearing[] {
+  getRollerBearing(): Record<number, SelectedRollerBearing> {
     return this._gearBox.rollerBearing;
   }
   setBox(box: any): void {

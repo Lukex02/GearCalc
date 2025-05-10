@@ -42,6 +42,14 @@ export default function RootLayout() {
           <Stack.Screen name="views/design/gear/GearFast" />
           <Stack.Screen name="views/design/gear/GearSlow" />
           <Stack.Screen name="views/design/gear/GearResult" />
+
+          {/* Shaft Flow */}
+          <Stack.Screen name="views/design/shaft/Shaft1-2Screen" />
+          <Stack.Screen name="views/design/shaft/Shaft3-4Screen" />
+          <Stack.Screen name="views/design/shaft/Shaft5Screen" />
+
+          {/* Roller Bearing Flow */}
+          <Stack.Screen name="views/design/rollerBearing/SelectRollerBearingScreen" />
         </Stack>
       </PaperProvider>
     </GestureHandlerRootView>

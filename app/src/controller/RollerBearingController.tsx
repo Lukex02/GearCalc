@@ -1,6 +1,6 @@
 import DatabaseService from "@services/DatabaseService";
 import CalculatedRollerBearing, { SelectedRollerBearing } from "@models/RollerBearing";
-import { selectRollerBearingLabel } from "@/views/common/Label";
+import { selectRollerBearingSizeLabel } from "@/views/common/Label";
 
 export default class RollerBearingController {
   static generateRollerBearing(Rx: number, Ry: number) {
@@ -19,14 +19,16 @@ export default class RollerBearingController {
         .map((rollerBearing) => {
           if (rollerBearing) {
             return new SelectedRollerBearing(
-              rollerBearing.type,
+              rollerBearing.rb_type,
               rollerBearing.symbol,
               rollerBearing.d,
               rollerBearing.D,
-              rollerBearing.R,
+              rollerBearing.r,
               rollerBearing.C,
               rollerBearing.C_O,
-              selectRollerBearingLabel[rollerBearing.description as keyof typeof selectRollerBearingLabel],
+              selectRollerBearingSizeLabel[
+                rollerBearing.description as keyof typeof selectRollerBearingSizeLabel
+              ],
               rollerBearing.B,
               rollerBearing.b,
               rollerBearing.r1
