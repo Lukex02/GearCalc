@@ -15,7 +15,7 @@ export class GearBox {
   private _shaft: CalculatedShaft | any;
   private _rollerBearing: Record<number, SelectedRollerBearing> = {};
   private _box: any;
-  private _lubricant!: { lubricant: Lubricant; usedFor: string }[];
+  private _lubricant!: Lubricant;
 
   set design(storedDesign: any) {
     this._design = storedDesign;
@@ -71,10 +71,10 @@ export class GearBox {
   get box(): any {
     return this._box;
   }
-  set lubricant(lub: { lubricant: Lubricant; usedFor: string }[]) {
+  set lubricant(lub: Lubricant) {
     this._lubricant = lub;
   }
-  get lubricant(): { lubricant: Lubricant; usedFor: string }[] {
+  get lubricant(): Lubricant {
     return this._lubricant;
   }
 }
@@ -158,10 +158,10 @@ export default class GearBoxBuilder implements Builder {
   getBox(): any {
     return this._gearBox.box;
   }
-  setLubricant(lubricant: Lubricant, usedFor: string): void {
-    this._gearBox.lubricant.push({ lubricant, usedFor });
+  setLubricant(lubricant: Lubricant): void {
+    this._gearBox.lubricant = lubricant;
   }
-  getLubricant(): { lubricant: Lubricant; usedFor: string }[] {
+  getLubricant(): Lubricant {
     return this._gearBox.lubricant;
   }
   build(): GearBox {

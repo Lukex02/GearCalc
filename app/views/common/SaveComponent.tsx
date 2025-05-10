@@ -14,6 +14,7 @@ import LoadingScreen from "./LoadingScreen";
 import * as Label from "@/views/common/Label";
 import CalculatedChain from "@/src/models/Chain";
 import GearSet from "@/src/models/Gear";
+import CalculatedShaft, { IndividualShaft } from "@/src/models/Shaft";
 
 export default function SaveComponent() {
   const [modalSaveVisible, setModalConfirmSaveVisible] = useState(false);
@@ -21,7 +22,7 @@ export default function SaveComponent() {
 
   const sheetRef = useRef<BottomSheet>(null);
   const data = useMemo(
-    () => ["_type", "_design", "_calcEnginePostStats", "_engine", "_mechDrive", "_gearSet", "_shaft"], // ! Cần thêm điều kiện thiết kế trong _design.designStrategy._designInputStats
+    () => ["_type", "_design", "_calcEnginePostStats", "_engine", "_mechDrive", "_gearSet", "_shaft"],
     []
   );
 
@@ -91,6 +92,30 @@ export default function SaveComponent() {
           ))}
         </View>
       );
+    } else if (type === "_shaft") {
+      return item.getAllIndividualShaft().map((indiShaft: IndividualShaft, index: number) => {
+        return (
+          <View key={index}>
+            <Text style={{ ...styles.bottomSheetSmallBoldTxt }}>
+              Trục {indiShaft.shaftNo}: d = {item.getD(indiShaft.shaftNo)} (mm)
+            </Text>
+            {indiShaft.getStatAtAllPoint().map((statsAtPoint, index) => (
+              <View>
+                <Text key={index} style={styles.bottomSheetSmallTxt}>
+                  {"- Ở vị trí "}
+                  {statsAtPoint.point}: {statsAtPoint.d} (mm)
+                </Text>
+                {statsAtPoint.key && (
+                  <Text key={index} style={styles.bottomSheetSmallTxt}>
+                    {"+ Sử dụng then bằng: "}
+                    {statsAtPoint.key.b + "x" + statsAtPoint.key.h + " (mm)"}, dài {statsAtPoint.key.lt} (mm)
+                  </Text>
+                )}
+              </View>
+            ))}
+          </View>
+        );
+      });
     } else {
       const labels =
         Label[
@@ -100,12 +125,9 @@ export default function SaveComponent() {
             ? ("gearSetLabel" as keyof typeof Label)
             : type === "_design"
             ? ("inputLabel" as keyof typeof Label)
-            : type === "_shaft"
-            ? ("shaftLabel" as keyof typeof Label)
             : ("chainLabel" as keyof typeof Label)
         ];
       const itemKeys = Object.keys(labels);
-      // console.log(type === "_shaft" ? item : "ko phải shaft");
       return (
         <View key={index}>
           {index != null && (
@@ -136,8 +158,6 @@ export default function SaveComponent() {
                       }
                     )
                   : item.designStrategy._designInputStats[key as keyof typeof labels] // DesignStrategy
-                : Array.isArray(item[key])
-                ? item[key].join(`, `)
                 : item[key]}
             </Text>
           ))}

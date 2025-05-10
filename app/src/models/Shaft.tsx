@@ -194,7 +194,7 @@ export default class CalculatedShaft {
   }
 }
 
-class IndividualShaft {
+export class IndividualShaft {
   private _T: number; // Lực tác dụng lên trục này
   private _shaftNo: 1 | 2 | 3; // Số thứ tự của trục
   private _l: { name: string; value: number }[];
@@ -264,8 +264,14 @@ class IndividualShaft {
   getStatAtPoint(point: string) {
     return this._statAtPoint.find((stat) => stat.point === point)!;
   }
+  getStatAtAllPoint() {
+    return this._statAtPoint;
+  }
   getDSbAll() {
     return this._statAtPoint.map((stat) => stat.d_sb);
+  }
+  getDAll() {
+    return this._statAtPoint.map((stat) => stat.d);
   }
   get T() {
     return this._T;

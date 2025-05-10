@@ -1320,10 +1320,11 @@ export default class CalcController {
     const D1 = [1, 2, 3].map((shaftNo) => rollerBearings[shaftNo].D);
     const box = this._designStrategy.designBox(gears, shaft, D1);
     this._gearBoxBuilder.setBox(box);
+    return box;
   }
 
   // Chọn bôi trơn
-  chooseLubricant(lubricant: Lubricant, usedFor: string) {
-    this._gearBoxBuilder.setLubricant(lubricant, usedFor);
+  chooseLubricant(lubricant: Lubricant) {
+    this._gearBoxBuilder.setLubricant(lubricant);
   }
 }

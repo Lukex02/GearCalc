@@ -191,7 +191,10 @@ export default class DatabaseService {
   }
 
   static async getLubricant() {
-    const { data, error } = await supabase.from("lubricantAt50C").select("*");
+    const { data, error } = await supabase
+      .from("lubricantAt50C")
+      .select("*")
+      .order("centistoc_min", { ascending: false });
 
     if (error) console.error("Lỗi khi lấy dữ liệu ", error);
     return data ?? [];
