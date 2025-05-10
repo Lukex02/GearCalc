@@ -15,6 +15,7 @@ import Header from "@/views/common/Header";
 import SaveComponent from "@/views/common/SaveComponent";
 import { gearSetLabel as label } from "@/views/common/Label";
 import GearSet from "@/src/models/Gear";
+import { useRouter } from "expo-router";
 
 // Bảng Data cứng khi chọn luôn vật liệu là Thép 40X - Tôi cải thiện
 const materialStats = {
@@ -23,6 +24,7 @@ const materialStats = {
 };
 
 export default function GearSlowScreen() {
+  const router = useRouter();
   const calcController = CalcController.getInstance();
   const [gearSet, setGearSet] = useState<GearSet>();
   const selectMats: typeof materialStats = materialStats;
@@ -62,8 +64,6 @@ export default function GearSlowScreen() {
         );
         setGearSet(gearSet);
         setModalVisible(true);
-      } else {
-        calcController.setGearSet(gearSet);
       }
       return verify;
     } else {
@@ -82,7 +82,12 @@ export default function GearSlowScreen() {
     setVerify(true);
     return true;
   };
-
+  useEffect(() => {
+    if (verify) {
+      calcController.setGearSet(gearSet, "Bánh răng cấp chậm");
+      router.push("/views/design/gear/GearResult");
+    }
+  }, [verify]);
   useEffect(() => {
     if (HB.small.value - HB.big.value >= 10 && HB.small.value - HB.big.value < 15) {
       setHBColor(Colors.text.warning);

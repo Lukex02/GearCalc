@@ -69,6 +69,16 @@ export const shaftLabel = {
   _d: "Đường kính trục (mm)",
 };
 
+export const keyLabel = {
+  _d: "d (mm)",
+  _lt: "Chiều dài then (mm)",
+  _b: "b (mm)",
+  _h: "h (mm)",
+  _t1: "Chiều sâu rãnh then trên trục (mm)",
+  _sigma_d: "Ứng suất dập cho phép (N/mm2)",
+  _tau_c: "Ứng suất cắt cho phép (N/mm2)",
+};
+
 export const selectRollerBearingLabel = {
   ELM: "Cỡ siêu nhẹ, vừa", // Extra light, medium
   ESLN: "Cỡ đặc biệt nhẹ, hẹp", // Extra light, narrow
@@ -106,6 +116,7 @@ const Label = {
   selectRollerBearingLabel,
   rollerBearingTypeLabel,
   labelTable,
+  keyLabel,
 };
 
 export default Label;

@@ -113,6 +113,7 @@ export class CalculatedGear {
 }
 
 export default class GearSet {
+  private _name: string;
   private _gear_small: CalculatedGear;
   private _gear_big: CalculatedGear;
   private _sigma_H_allow: number; // Ứng suất tiếp xúc cho phép
@@ -174,6 +175,7 @@ export default class GearSet {
     },
     fast: boolean
   ) {
+    this._name = fast ? "Bánh răng cấp nhanh" : "Bánh răng cấp chậm";
     this._gear_small = new CalculatedGear(sigma_b[0], sigma_ch[0], HB[0], S_max[0]);
     this._gear_big = new CalculatedGear(sigma_b[1], sigma_ch[1], HB[1], S_max[1]);
     // Tính sigma này là lấy sơ bộ Z_R * Z_v * K_xH = 1
@@ -390,5 +392,8 @@ export default class GearSet {
   }
   get a_tw_rad(): number {
     return this._alpha_tw_rad;
+  }
+  get name(): string {
+    return this._name;
   }
 }

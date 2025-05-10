@@ -1,6 +1,6 @@
 import CalculatedChain from "@models/Chain";
 import { CalculatedEngine, SelectedEngine } from "@models/EngineModel";
-import { CalculatedGear } from "@models/Gear";
+import GearSet, { CalculatedGear } from "@models/Gear";
 import CalculatedShaft from "@models/Shaft";
 import { SelectedRollerBearing } from "@models/RollerBearing";
 import Lubricant from "@models/Lubricant";
@@ -11,7 +11,7 @@ export class GearBox {
   private _calcEnginePostStats: any | null;
   private _engine: SelectedEngine | any;
   private _mechDrive: CalculatedChain | any;
-  private _gearSet: CalculatedGear[] | any = [];
+  private _gearSet: GearSet[] | any = [];
   private _shaft: CalculatedShaft | any;
   private _rollerBearing: SelectedRollerBearing[] = [];
   private _box: any;
@@ -47,10 +47,10 @@ export class GearBox {
   get mechDrive(): CalculatedChain | any {
     return this._mechDrive;
   }
-  set gearSet(gearSet: CalculatedGear[] | any) {
+  set gearSet(gearSet: GearSet[] | any) {
     this._gearSet = gearSet;
   }
-  get gearSet(): CalculatedGear[] | any {
+  get gearSet(): GearSet[] | any {
     return this._gearSet;
   }
   set shaft(shaft: CalculatedShaft) {
@@ -89,7 +89,7 @@ interface Builder {
   setCalcEnginePostStats(calcEngine: any): void;
   setEngine(engine: SelectedEngine): void;
   setMechDrive(mechDrive: CalculatedChain | any): void;
-  setGearSet(gears: CalculatedGear | any): void;
+  setGearSet(gears: GearSet, name: string): void;
   setShaft(shaft: CalculatedShaft): void;
   setRollerBearing(rollerBearing: any): void;
   setBox(box: any): void;
@@ -133,7 +133,8 @@ export default class GearBoxBuilder implements Builder {
   getMechDrive(): any {
     return this._gearBox.mechDrive;
   }
-  setGearSet(gearSet: any): void {
+  setGearSet(gearSet: any, name: "Bánh răng cấp nhanh" | "Bánh răng cấp chậm"): void {
+    this._gearBox.gearSet = this._gearBox.gearSet.filter((item: any) => item.name !== name);
     this._gearBox.gearSet.push(gearSet);
   }
   getGearSet(): any[] {

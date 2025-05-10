@@ -15,6 +15,7 @@ import Header from "@/views/common/Header";
 import SaveComponent from "@/views/common/SaveComponent";
 import GearSet from "@/src/models/Gear";
 import { gearSetLabel as label } from "@/views/common/Label";
+import { useRouter } from "expo-router";
 
 // Bảng Data cứng khi chọn luôn vật liệu là Thép 40X - Tôi cải thiện
 const materialStats = {
@@ -23,6 +24,7 @@ const materialStats = {
 };
 
 export default function GearFastScreen() {
+  const router = useRouter();
   const calcController = CalcController.getInstance();
   const [gearSet, setGearSet] = useState<GearSet>();
   const selectMats: typeof materialStats = materialStats;
@@ -62,8 +64,6 @@ export default function GearFastScreen() {
         );
         setGearSet(gearSet);
         setModalVisible(true);
-      } else {
-        calcController.setGearSet(gearSet);
       }
       return verify;
     } else {
@@ -82,6 +82,13 @@ export default function GearFastScreen() {
     setVerify(true);
     return true;
   };
+
+  useEffect(() => {
+    if (verify) {
+      calcController.setGearSet(gearSet, "Bánh răng cấp nhanh");
+      router.push("/views/design/gear/GearSlow");
+    }
+  }, [verify]);
 
   useEffect(() => {
     if (HB.small.value - HB.big.value >= 10 && HB.small.value - HB.big.value < 15) {

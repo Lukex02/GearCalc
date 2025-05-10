@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
-import { Button } from "react-native-paper";
+import { View, Text, FlatList, StyleSheet, Image } from "react-native";
+import { Button, Modal, Portal } from "react-native-paper";
 import { Slider } from "react-native-awesome-slider";
 import styles, { sliderTheme } from "@style/MainStyle";
 import { Colors } from "@style/Colors";
@@ -11,6 +11,10 @@ import { useSharedValue } from "react-native-reanimated";
 import Header from "@/views/common/Header";
 import SaveComponent from "@/views/common/SaveComponent";
 import { verticalScale } from "react-native-size-matters";
+import CalcFooterStyle from "@/src/style/CalcFooterStyle";
+import CalculatedKey from "@/src/models/Key";
+import Label from "@/views/common/Label";
+import LoadingScreen from "@/views/common/LoadingScreen";
 
 const pointMapping = {
   0: "A",
@@ -21,6 +25,8 @@ const pointMapping = {
 
 export default function SelectDiamShaftScreen() {
   const calcController = CalcController.getInstance();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [verify, setVerify] = useState(false);
   const [dSb, setDSb] = useState<number[][]>(); // Giá trị đường kính trục sơ bộ
   const [selectedDiameters, setSelectedDiameters] = useState<
     Record<number, { point: string; value: number }[]>
@@ -29,6 +35,7 @@ export default function SelectDiamShaftScreen() {
     2: [],
     3: [],
   });
+  const [keyList, setKeyList] = useState<CalculatedKey[]>([]); // Kết quả tính toán then
   // Sử dụng useRef để lưu trữ SharedValue
   const progressValues = useRef(
     [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20].map((item) => useSharedValue(item))
@@ -76,19 +83,56 @@ export default function SelectDiamShaftScreen() {
       selectedDiameters[3].length < 4
     )
       return alert("Vui lòng chọn đủ đường kính trục!");
+    for (let i = 0; i < (dSb?.length || 0); i++) {
+      const d_sbList = dSb![i]; // dùng ! nếu chắc chắn không null
 
+      const diameterList = selectedDiameters[i + 1];
+      if (!diameterList) continue;
+
+      for (let diaIndex = 0; diaIndex < diameterList.length; diaIndex++) {
+        const item = diameterList[diaIndex];
+
+        if (item.value < d_sbList[diaIndex]) {
+          alert(
+            `Vui lòng chọn đường kính tại trục ${i + 1} - ${
+              pointMapping[diaIndex as keyof typeof pointMapping]
+            } lớn hơn sơ bộ!`
+          );
+          return; // hoặc break nếu chỉ muốn thoát 1 vòng
+        }
+      }
+    }
+
+    setModalVisible(true);
     Object.keys(selectedDiameters).forEach((shaftNoEntries) => {
       const shaftNo = parseInt(shaftNoEntries, 10) as 1 | 2 | 3;
       calcController.chooseIndiShaftDiameter(shaftNo, selectedDiameters[shaftNo]);
     });
     try {
       const keyList = await calcController.calcKey();
-      console.log("Kết quả tính toán then:", keyList);
+      setKeyList(keyList);
     } catch (error) {
       if (error instanceof Error) {
         alert(error.message);
       }
     }
+  };
+
+  const handleChange = () => {
+    setModalVisible(false);
+    setVerify(false);
+  };
+
+  const handleValidation = () => {
+    if (!verify) {
+      alert("Vui lòng xác nhận thông số then!");
+    }
+    return verify;
+  };
+
+  const handleVerification = () => {
+    setModalVisible(false);
+    setVerify(true);
   };
 
   return (
@@ -124,13 +168,20 @@ export default function SelectDiamShaftScreen() {
                     minimumValue={minimumValue} // Sử dụng SharedValue
                     maximumValue={maximumValue} // Sử dụng SharedValue
                     onSlidingComplete={(value) => {
-                      // isSliding.current = false;
                       handleSelection(Math.floor(index / 4) + 1, index % 4, value);
                     }}
                   />
                   <Text style={styles.resultText}>
                     Chọn:{" "}
-                    <Text style={{ color: Colors.text.success, fontWeight: "bold" }}>
+                    <Text
+                      style={{
+                        color:
+                          selectedDiameters[Math.floor(index / 4) + 1][index % 4]?.value < item
+                            ? Colors.text.error
+                            : Colors.text.success,
+                        fontWeight: "bold",
+                      }}
+                    >
                       {" "}
                       {selectedDiameters &&
                         selectedDiameters[Math.floor(index / 4) + 1][index % 4] &&
@@ -145,15 +196,73 @@ export default function SelectDiamShaftScreen() {
           <Button
             mode="contained"
             onPress={handleCalculation}
-            style={{ ...styles.mainBtnMedium, marginTop: verticalScale(15) }}
+            style={{ ...styles.mainBtnMedium, marginTop: verticalScale(15), width: "100%" }}
             labelStyle={styles.mainBtnSmallTxt}
           >
             Tính toán then
           </Button>
         </View>
       </View>
-
-      <CalcFooter nextPage={"/views/design/shaft/Shaft5Screen"} />
+      <CalcFooter onValidate={handleValidation} nextPage={"/views/design/shaft/Shaft5Screen"} />
+      <Portal>
+        <Modal visible={modalVisible} onDismiss={() => setModalVisible(false)} style={styles.overlay}>
+          {keyList && keyList.length > 0 ? (
+            <View style={styles.modalView}>
+              <Text style={styles.pageTitle}>Thông số then</Text>
+              <Image source={require("@img/key_flat.png")} style={styles.keyImg} resizeMode="stretch" />
+              <View style={{ height: Math.floor(verticalScale(300)) }}>
+                {keyList && (
+                  <FlatList
+                    data={keyList}
+                    keyExtractor={(item, index) => `${item.point}-${item.lt}`}
+                    renderItem={({ item, index }) => (
+                      <View key={index}>
+                        <Text style={{ ...styles.specHeaderCell, textAlign: "left" }}>
+                          Tại trục {Math.floor(index / 2) + 1} - {item.point}
+                        </Text>
+                        {Object.keys(Label.keyLabel).map((key) => (
+                          <Text
+                            key={key}
+                            style={{
+                              ...styles.specCellRow,
+                              textAlign: "left",
+                              paddingVertical: verticalScale(6),
+                            }}
+                          >
+                            - {Label.keyLabel[key as keyof typeof Label.keyLabel]}:{" "}
+                            {item[key as keyof typeof Label.keyLabel]} mm
+                          </Text>
+                        ))}
+                      </View>
+                    )}
+                  />
+                )}
+              </View>
+              <View style={CalcFooterStyle.buttonFooter}>
+                <Button
+                  mode="contained"
+                  style={{ ...styles.mainBtnSmall, backgroundColor: Colors.text.error }}
+                  labelStyle={{ ...styles.mainBtnSmallTxt, color: Colors.text.primary }}
+                  onPress={handleChange}
+                  rippleColor={"rgba(0, 0, 0, 0.29)"}
+                >
+                  Thay đổi
+                </Button>
+                <Button
+                  mode="contained"
+                  style={{ ...styles.mainBtnSmall, backgroundColor: Colors.text.success }}
+                  labelStyle={styles.mainBtnSmallTxt}
+                  onPress={handleVerification}
+                >
+                  Xác nhận
+                </Button>
+              </View>
+            </View>
+          ) : (
+            <LoadingScreen />
+          )}
+        </Modal>
+      </Portal>
     </View>
   );
 }
@@ -161,7 +270,7 @@ export default function SelectDiamShaftScreen() {
 const localStyles = StyleSheet.create({
   itemContainer: {
     padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border.primary,
+    borderTopWidth: 1,
+    borderTopColor: Colors.border.primary,
   },
 });

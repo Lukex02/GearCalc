@@ -646,36 +646,42 @@ export class DesignGearBox1 implements DesignStrategy {
           indiShaft.getStatAtPoint("A").key = await KeyController.generateKey(
             shaft.getHubLength("lm12"),
             indiShaft.T,
-            indiShaft.getStatAtPoint("A").d!
+            indiShaft.getStatAtPoint("A").d!,
+            "A"
           );
           indiShaft.getStatAtPoint("C").key = await KeyController.generateKey(
             shaft.getHubLength("lm13"),
             indiShaft.T,
-            indiShaft.getStatAtPoint("C").d!
+            indiShaft.getStatAtPoint("C").d!,
+            "C"
           );
           keyData.push(indiShaft.getStatAtPoint("A").key, indiShaft.getStatAtPoint("C").key);
         } else if (shaftIdx === 1) {
           indiShaft.getStatAtPoint("B").key = await KeyController.generateKey(
             shaft.getHubLength("lm22"),
             indiShaft.T,
-            indiShaft.getStatAtPoint("B").d!
+            indiShaft.getStatAtPoint("B").d!,
+            "B"
           );
           indiShaft.getStatAtPoint("C").key = await KeyController.generateKey(
             shaft.getHubLength("lm23"),
             indiShaft.T,
-            indiShaft.getStatAtPoint("C").d!
+            indiShaft.getStatAtPoint("C").d!,
+            "C"
           );
           keyData.push(indiShaft.getStatAtPoint("B").key, indiShaft.getStatAtPoint("C").key);
         } else if (shaftIdx === 2) {
           indiShaft.getStatAtPoint("B").key = await KeyController.generateKey(
             shaft.getHubLength("lm32"),
             indiShaft.T,
-            indiShaft.getStatAtPoint("B").d!
+            indiShaft.getStatAtPoint("B").d!,
+            "B"
           );
           indiShaft.getStatAtPoint("D").key = await KeyController.generateKey(
             shaft.getHubLength("lm33"),
             indiShaft.T,
-            indiShaft.getStatAtPoint("D").d!
+            indiShaft.getStatAtPoint("D").d!,
+            "D"
           );
           keyData.push(indiShaft.getStatAtPoint("B").key, indiShaft.getStatAtPoint("D").key);
         }
@@ -1140,8 +1146,8 @@ export default class CalcController {
       }
     }
   }
-  setGearSet(gearSet: GearSet | any) {
-    this._gearBoxBuilder.setGearSet(gearSet);
+  setGearSet(gearSet: GearSet | any, name: "Bánh răng cấp nhanh" | "Bánh răng cấp chậm") {
+    this._gearBoxBuilder.setGearSet(gearSet, name);
   }
   getGearSet() {
     return this._gearBoxBuilder.getGearSet();
