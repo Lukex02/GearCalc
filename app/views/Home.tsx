@@ -51,12 +51,12 @@ export default function Home() {
     }, [])
   );
 
-  const handlePrint = (history: any) => {
-    Utils.printReportPDF(history);
+  const handlePrint = (historyId: any) => {
+    Utils.printReportPDF(historyId);
   };
 
-  const handlePreview = (history: any) => {
-    console.log("Preview", history);
+  const handlePreview = (historyId: any) => {
+    console.log("Preview", historyId);
   };
 
   return (
@@ -154,7 +154,7 @@ export default function Home() {
                   <Button
                     dark={true}
                     buttonColor={Colors.utilBtn}
-                    onPress={() => handlePrint(userHistoryStats.recentHistory)}
+                    onPress={() => handlePrint(userHistoryStats.recentHistory.id)}
                     mode="contained"
                     labelStyle={{
                       color: Colors.text.success,

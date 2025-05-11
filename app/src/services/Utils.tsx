@@ -637,11 +637,14 @@ const iconForComponent = {
 };
 
 async function printReportPDF(historyId: any) {
+  console.log(historyId);
   const history = await DatabaseService.getUserHistory(historyId);
   const historyCompKeys = Object.keys(history);
   const compKeys = Object.keys(Label.mainlabel).filter(
     (key) =>
-      (historyCompKeys.includes(key) && !Array.isArray(history[key])) ||
+      (historyCompKeys.includes(key) &&
+        !Array.isArray(history[key]) &&
+        Object.keys(history[key]).length > 0) ||
       (Array.isArray(history[key]) && history[key].length > 0)
   ); // Trích ra key có tồn tại trong history và không phải là mảng rỗng
   // console.log("compKeys:", compKeys);
