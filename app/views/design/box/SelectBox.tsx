@@ -130,7 +130,9 @@ export default function SelectBoxScreen() {
                                 );
                               }
                             )
-                          : selectedBox.specs[key as keyof typeof boxLabel]}
+                          : selectedBox.specs[
+                              key as keyof typeof transverseLabel & typeof jointLabel & typeof verticalLabel
+                            ]}
                       </Text>
                     );
                   }}
