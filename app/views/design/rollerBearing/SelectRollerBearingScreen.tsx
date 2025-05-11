@@ -18,6 +18,7 @@ const width = Dimensions.get("window").width;
 
 export default function SelectRollerBearingScreen() {
   const calcController = CalcController.getInstance();
+  const isInitialMount = React.useRef(true);
   const shaftDiameter = calcController
     .getShaft()
     .getAllIndividualShaft()
@@ -66,7 +67,8 @@ export default function SelectRollerBearingScreen() {
 
   useEffect(() => {
     // Get roller bearings that meet requirements
-    if (rollerBearingList.length === 0) {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
       getSelectedRollerBearing().then(() => {
         setLoading(false);
       });
@@ -82,87 +84,97 @@ export default function SelectRollerBearingScreen() {
         <LoadingScreen />
       ) : (
         <View>
-          <Carousel
-            autoPlayInterval={2000}
-            data={rollerBearingList}
-            height={verticalScale(480)}
-            loop={true}
-            pagingEnabled={true}
-            snapEnabled={true}
-            width={width}
-            mode="parallax"
-            modeConfig={{
-              parallaxScrollingScale: 0.9,
-              parallaxScrollingOffset: 50,
-            }}
-            onProgressChange={progress}
-            renderItem={({ item: rbInEachShaft, index: shaftIdx, animationValue }) => {
-              return (
-                <View
-                  style={{
-                    ...styles.selectContainer,
-                    maxHeight: verticalScale(500),
-                    padding: Math.round(scale(25)),
-                  }}
-                  pointerEvents="box-none"
-                >
-                  {rollerBearingList.length === 0 && (
-                    <Text style={styles.noDataWarn}>Không có thiết kế ổ lăn thỏa mãn điều kiện!</Text>
-                  )}
-                  <View style={styles.specHeaderRow}>
-                    <Text style={styles.pageTitle}>Ổ lăn cho trục {shaftIdx + 1}</Text>
-                    <FontAwesome5 name="cogs" size={scale(30)} color={Colors.primary} />
-                  </View>
-                  <FlatList
-                    data={rbInEachShaft}
-                    keyExtractor={(item) => item.symbol.toString()}
-                    renderItem={({ item: rb }) => (
-                      <TouchableOpacity
-                        key={rb.symbol}
-                        style={styles.selectItem}
-                        onPress={() => handleSelectRollerBearing(rb, shaftIdx + 1)}
-                      >
-                        <MaterialCommunityIcons name="movie-roll" size={scale(50)} color={Colors.primary} />
-                        <View style={{ flex: 1 }}>
-                          <Text style={styles.selectName}>Ký hiệu: {rb.symbol}</Text>
-                          {Object.keys(rollerBearingLabel).map((key, index) => {
-                            if (key === "symbol") return null; // Skip the symbol key
-                            return (
-                              <Text key={index} style={styles.selectDetails}>
-                                {rollerBearingLabel[key as keyof typeof rollerBearingLabel]} :{" "}
-                                {key === "type"
-                                  ? rollerBearingTypeLabel[
-                                      rb[key as keyof typeof rb] as keyof typeof rollerBearingTypeLabel
-                                    ]
-                                  : rb[key as keyof typeof rb]}
-                              </Text>
-                            );
-                          })}
-                        </View>
-                        {selectedRollerBearing[shaftIdx + 1]?.symbol === rb.symbol && (
-                          <FontAwesome5 name="check" size={24} color={Colors.text.success} />
+          {rollerBearingList.length === 0 ? (
+            <Text style={styles.noDataWarn}>Không có thiết kế ổ lăn thỏa mãn điều kiện!</Text>
+          ) : (
+            <View>
+              <Carousel
+                autoPlayInterval={2000}
+                data={rollerBearingList}
+                height={verticalScale(480)}
+                loop={true}
+                pagingEnabled={true}
+                snapEnabled={true}
+                width={width}
+                mode="parallax"
+                modeConfig={{
+                  parallaxScrollingScale: 0.9,
+                  parallaxScrollingOffset: 50,
+                }}
+                onProgressChange={progress}
+                renderItem={({ item: rbInEachShaft, index: shaftIdx, animationValue }) => {
+                  return (
+                    <View
+                      style={{
+                        ...styles.selectContainer,
+                        maxHeight: verticalScale(500),
+                        padding: Math.round(scale(25)),
+                      }}
+                      pointerEvents="box-none"
+                    >
+                      {rollerBearingList.length === 0 && (
+                        <Text style={styles.noDataWarn}>Không có thiết kế ổ lăn thỏa mãn điều kiện!</Text>
+                      )}
+                      <View style={styles.specHeaderRow}>
+                        <Text style={styles.pageTitle}>Ổ lăn cho trục {shaftIdx + 1}</Text>
+                        <FontAwesome5 name="cogs" size={scale(30)} color={Colors.primary} />
+                      </View>
+                      <FlatList
+                        data={rbInEachShaft}
+                        keyExtractor={(item) => item.symbol.toString()}
+                        renderItem={({ item: rb }) => (
+                          <TouchableOpacity
+                            key={rb.symbol}
+                            style={styles.selectItem}
+                            onPress={() => handleSelectRollerBearing(rb, shaftIdx + 1)}
+                          >
+                            <MaterialCommunityIcons
+                              name="movie-roll"
+                              size={scale(50)}
+                              color={Colors.primary}
+                            />
+                            <View style={{ flex: 1 }}>
+                              <Text style={styles.selectName}>Ký hiệu: {rb.symbol}</Text>
+                              {Object.keys(rollerBearingLabel).map((key, index) => {
+                                if (key === "symbol") return null; // Skip the symbol key
+                                return (
+                                  <Text key={index} style={styles.selectDetails}>
+                                    {rollerBearingLabel[key as keyof typeof rollerBearingLabel]} :{" "}
+                                    {key === "type"
+                                      ? rollerBearingTypeLabel[
+                                          rb[key as keyof typeof rb] as keyof typeof rollerBearingTypeLabel
+                                        ]
+                                      : rb[key as keyof typeof rb]}
+                                  </Text>
+                                );
+                              })}
+                            </View>
+                            {selectedRollerBearing[shaftIdx + 1]?.symbol === rb.symbol && (
+                              <FontAwesome5 name="check" size={24} color={Colors.text.success} />
+                            )}
+                          </TouchableOpacity>
                         )}
-                      </TouchableOpacity>
-                    )}
-                  />
-                  <View style={{ ...styles.specHeaderRow, borderBottomWidth: 0 }}>
-                    {selectedRollerBearing[shaftIdx + 1] ? (
-                      <AntDesign name="checksquare" size={35} color={Colors.text.success} />
-                    ) : (
-                      <AntDesign name="closesquare" size={35} color={Colors.text.error} />
-                    )}
-                  </View>
-                </View>
-              );
-            }}
-          />
-          <Pagination.Basic
-            progress={progress}
-            data={rollerBearingList}
-            activeDotStyle={{ backgroundColor: Colors.border.accent, borderRadius: 50 }}
-            dotStyle={{ backgroundColor: Colors.overlay, borderRadius: 50 }}
-            containerStyle={{ gap: 5, marginTop: scale(5) }}
-          />
+                      />
+                      <View style={{ ...styles.specHeaderRow, borderBottomWidth: 0 }}>
+                        {selectedRollerBearing[shaftIdx + 1] ? (
+                          <AntDesign name="checksquare" size={35} color={Colors.text.success} />
+                        ) : (
+                          <AntDesign name="closesquare" size={35} color={Colors.text.error} />
+                        )}
+                      </View>
+                    </View>
+                  );
+                }}
+              />
+              <Pagination.Basic
+                progress={progress}
+                data={rollerBearingList}
+                activeDotStyle={{ backgroundColor: Colors.border.accent, borderRadius: 50 }}
+                dotStyle={{ backgroundColor: Colors.overlay, borderRadius: 50 }}
+                containerStyle={{ gap: 5, marginTop: scale(5) }}
+              />
+            </View>
+          )}
         </View>
       )}
       <CalcFooter onValidate={handleValidation} finish={true} />
