@@ -41,7 +41,7 @@
       "typedRoutes": true
     },
     "extra": {
-      "supabaseAnonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9kcmZ1c2pnYmN0a3lia2F2ZWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY5NDUzNDIsImV4cCI6MjA2MjUyMTM0Mn0.tvism0E3NigUBO1EijqHgQWOFdnVm4oIQZL-Q95Y1mM",
+      "supabaseAnonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9kcmZ1c2pnYmN0a3lia2F2ZWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY5NDg1NzcsImV4cCI6MjA2MjUyNDU3N30.Vsc0yZ4Tt1CPQixOpctneAjrPHZkNesC2o39VWrFQ-8",
       "router": {
         "origin": false
       },
