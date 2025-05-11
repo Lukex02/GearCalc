@@ -7,7 +7,10 @@ export default class DatabaseService {
       email,
       password,
       options: {
-        data: { username }, // Lưu username vào user metadata
+        data: {
+          username,
+          history: [],
+        }, // Lưu username vào user metadata
       },
     });
     if (error) console.error("Signup error:", error.message);
