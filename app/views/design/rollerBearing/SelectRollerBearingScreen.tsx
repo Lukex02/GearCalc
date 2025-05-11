@@ -37,32 +37,52 @@ export default function SelectRollerBearingScreen() {
   const handleSelectRollerBearing = (bearing: SelectedRollerBearing, shaftIdx: number) => {
     setSelectedRollerBearing({ ...selectedRollerBearing, [shaftIdx]: bearing });
   };
-
+  const renderBearingDetails = React.useCallback((rb: SelectedRollerBearing) => {
+    return Object.keys(rollerBearingLabel).map((key, index) => {
+      if (key === "symbol") return null; // Skip the symbol key
+      return (
+        <Text key={index} style={styles.selectDetails}>
+          {rollerBearingLabel[key as keyof typeof rollerBearingLabel]} :{" "}
+          {key === "type"
+            ? rollerBearingTypeLabel[rb[key as keyof typeof rb] as keyof typeof rollerBearingTypeLabel]
+            : rb[key as keyof typeof rb]}
+        </Text>
+      );
+    });
+  }, []);
   const handleValidation = () => {
     if (selectedRollerBearing[1] && selectedRollerBearing[2] && selectedRollerBearing[3]) {
       try {
         calcController.chooseRollerBearing(selectedRollerBearing[1], 1);
         calcController.chooseRollerBearing(selectedRollerBearing[2], 2);
         calcController.chooseRollerBearing(selectedRollerBearing[3], 3);
+        return true;
       } catch (error) {
         if (error instanceof Error) {
           alert(error.message);
-          return false;
         }
+        return false;
       }
-      return true;
     } else {
       alert("Vui lòng chọn đủ ổ lăn.");
       return false;
     }
   };
   const getSelectedRollerBearing = async () => {
-    const rb = await Promise.all(
-      shaftDiameter.map(async (d, i) => {
-        return await RollerBearingController.getSelectableRollerBearing(calcRollerBearing[i].type, d);
-      })
-    );
-    setRollerBearingList(rb);
+    try {
+      const rb = await Promise.all(
+        shaftDiameter.map(async (d, i) => {
+          return await RollerBearingController.getSelectableRollerBearing(calcRollerBearing[i].type, d);
+        })
+      );
+      setRollerBearingList(rb);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -135,19 +155,7 @@ export default function SelectRollerBearingScreen() {
                             />
                             <View style={{ flex: 1 }}>
                               <Text style={styles.selectName}>Ký hiệu: {rb.symbol}</Text>
-                              {Object.keys(rollerBearingLabel).map((key, index) => {
-                                if (key === "symbol") return null; // Skip the symbol key
-                                return (
-                                  <Text key={index} style={styles.selectDetails}>
-                                    {rollerBearingLabel[key as keyof typeof rollerBearingLabel]} :{" "}
-                                    {key === "type"
-                                      ? rollerBearingTypeLabel[
-                                          rb[key as keyof typeof rb] as keyof typeof rollerBearingTypeLabel
-                                        ]
-                                      : rb[key as keyof typeof rb]}
-                                  </Text>
-                                );
-                              })}
+                              {renderBearingDetails(rb)}
                             </View>
                             {selectedRollerBearing[shaftIdx + 1]?.symbol === rb.symbol && (
                               <FontAwesome5 name="check" size={24} color={Colors.text.success} />
