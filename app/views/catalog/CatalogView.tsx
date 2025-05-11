@@ -9,7 +9,7 @@ import DatabaseService from "@services/DatabaseService";
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { scale, verticalScale } from "react-native-size-matters";
 import Header from "@views/common/Header";
-import { rollerBearingLabel } from "@views/common/Label";
+import { rollerBearingTypeLabel } from "@views/common/Label";
 
 const CatalogPage = () => {
   const [loading, setLoading] = useState(true);
@@ -193,14 +193,14 @@ const CatalogPage = () => {
                   />
                   <View style={styles.gridTextContainer}>
                     <Text style={styles.title}>
-                      {rollerBearingLabel[item.rb_type as keyof typeof rollerBearingLabel]}
+                      {rollerBearingTypeLabel[item.rb_type as keyof typeof rollerBearingTypeLabel]}
                     </Text>
                     <Text style={styles.subtitle}>d: {item.d} (mm)</Text>
                     <Text style={styles.subtitle}>D: {item.D} (mm)</Text>
                     {item.b && <Text style={styles.subtitle}>b = T: {item.b} (mm)</Text>}
                     {item.B && <Text style={styles.subtitle}>B: {item.B} (mm)</Text>}
                     <Text style={styles.subtitle}>r: {item.r} (mm)</Text>
-                    {item.r1 && <Text style={styles.subtitle}>r1: {item.r1} (mm)</Text>}
+                    {item.r1 && <Text style={styles.subtitle}>r1: {`${item.r1}`} (mm)</Text>}
                     <Text style={styles.subtitle}>C: {item.C} (kN)</Text>
                     <Text style={styles.subtitle}>Co: {item.Co} (kN)</Text>
                   </View>

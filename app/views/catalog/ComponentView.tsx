@@ -7,7 +7,7 @@ import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 import { scale } from "react-native-size-matters";
 import CalcFooter from "@views/common/CalcFooter";
 import Header from "@views/common/Header";
-import { rollerBearingLabel } from "@views/common/Label";
+import { rollerBearingTypeLabel } from "@views/common/Label";
 
 const ComponentPage = () => {
   const data = useLocalSearchParams();
@@ -137,7 +137,7 @@ const ComponentPage = () => {
           color={Colors.primary}
         />
         <Text style={styles.componentTitle}>
-          {rollerBearingLabel[data.rb_type as keyof typeof rollerBearingLabel]}
+          {rollerBearingTypeLabel[data.rb_type as keyof typeof rollerBearingTypeLabel]}
         </Text>
         <View style={styles.componentInfoContainer}>
           <Text style={styles.componentInfo}>

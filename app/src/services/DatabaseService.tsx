@@ -214,8 +214,7 @@ export default class DatabaseService {
       .gt("Power", reqPower)
       .lt("Speed", Math.floor(reqRpm) + 50) // Xấp xỉ thì cho phép sai số trên dưới 50 so với yêu cầu
       .gt("Speed", Math.floor(reqRpm) - 50)
-      .order("Motor_Type", { ascending: false })
-      .eq("Motor_Type", "K160S4"); // Lấy tạm thời theo bản thuyết minh để theo dõi tính toán
+      .order("Motor_Type", { ascending: false });
     if (error) console.error("Lỗi khi lấy dữ liệu ", error);
     return data ?? [];
   }
@@ -228,7 +227,7 @@ export default class DatabaseService {
       .eq("chain_type", "1_roller")
       .order("P_max", { ascending: true })
       .order("Step_p", { ascending: true })
-      .limit(5);
+      .limit(10);
 
     if (error) console.error("Lỗi khi lấy dữ liệu ", error);
     return data ?? [];
@@ -239,7 +238,7 @@ export default class DatabaseService {
     const tables = ["Engine", "chain", "key_flat", "roller_bearing", "lubricantAt50C"];
 
     for (const tableName of tables) {
-      const { data, error } = await supabase.from(tableName).select("*").limit(2); // Tránh lãng phí data
+      const { data, error } = await supabase.from(tableName).select("*").limit(10); // Tránh lãng phí data
       if (error) {
         console.error(`Lỗi khi lấy dữ liệu từ ${tableName}:`, error);
       } else {
