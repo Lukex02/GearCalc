@@ -360,6 +360,10 @@ async function imageToBase64(name: string): Promise<{ base64Img: string; mimeTyp
     shaft2: require("../../../assets/images/GB1/Shaft2.png"),
     shaft3: require("../../../assets/images/GB1/Shaft3.png"),
     shaft_all: require("../../../assets/images/GB1/ShaftAll.png"),
+    rollerBearing: require("../../../assets/images/rollerBearing/single_row_ball.png"),
+    box1: require("../../../assets/images/GB1/box_1.png"),
+    box2: require("../../../assets/images/GB1/box_2.png"),
+    box3: require("../../../assets/images/GB1/box_3.png"),
   };
   const asset = Asset.fromModule(imageMap[name as keyof typeof imageMap]);
   await asset.downloadAsync();
@@ -387,8 +391,6 @@ async function renderStats(stats: any, key: string) {
     </section>
     `;
   } else if (typeof stats === "object" && !Array.isArray(stats)) {
-    // Trường hợp object, thì map theo object
-    // Tách 1 số trường hợp object đặc biệt là _design và _calcEnginePostStats
     if (key === "_design") {
       const inputStatsKey = Object.keys(inputLabel);
       const { base64Img: designTemplateImg, mimeType } = await imageToBase64("gearbox1_template");
@@ -467,19 +469,21 @@ async function renderStats(stats: any, key: string) {
 
       `;
     } else if (key === "_shaft") {
-      console.log(stats);
       content += `
       <h2 class="componentTitle">${Label.mainlabel[key as keyof typeof Label.mainlabel]}</h2>
       <p class="medTxt">Đường kính các trục: ${stats._d.join(", ")}</p>
       <div class="grid-container">
-      ${stats._indiShaft
-        .map((indiShaft: any, index: number) => {
+      ${await Promise.all(
+        stats._indiShaft.map(async (indiShaft: any, index: number) => {
+          const { base64Img: shaftImg, mimeType: mimeType } = await imageToBase64(
+            "shaft" + indiShaft._shaftNo
+          );
           return `
-        <section class="grid-item-2-sm">
+        <section class="grid-item-2-sm" style="display: flex; flex-direction: column; align-items: center;">
+          <img src="data:${mimeType};base64,${shaftImg}" class="design-3" />
           <h2 class="componentTitle">Đường kính các điểm trên trục ${indiShaft._shaftNo} (mm)</h2>
           ${indiShaft._statAtPoint
             .map((pointsStat: any, index: number) => {
-              console.log(pointsStat);
               return `<div class="grid-container">
             <p class="grid-item-2-lg">${indiShaft._shaftNo}-${pointsStat.point}</p>
             <p class="grid-item-2-sm">${pointsStat.d}</p>
@@ -488,12 +492,13 @@ async function renderStats(stats: any, key: string) {
             .join("")}
         </section>`;
         })
-        .join("")}
+      ).then((res) => res.join(""))}
       </div>
       `;
     } else if (key === "_rollerBearing") {
       const tableLabel = Label.labelTable[key as keyof typeof Label.labelTable] as keyof typeof Label;
       const statsLabel = Label[tableLabel];
+      const { base64Img: rollerBearingImg, mimeType } = await imageToBase64("rollerBearing");
 
       content += `
       <h2 class="componentTitle">${Label.mainlabel[key as keyof typeof Label.mainlabel]}</h2>
@@ -502,6 +507,7 @@ async function renderStats(stats: any, key: string) {
         .map((shaftNo: any) => {
           return `
         <section class="grid-item-2-sm">
+          <img src="data:${mimeType};base64,${rollerBearingImg}" class="design-3" />
           <h2 class="componentTitle">${Label.mainlabel[key as keyof typeof Label.mainlabel]} ${shaftNo}</h2>
           ${Object.keys(statsLabel)
             .map((spec) => {
@@ -523,7 +529,17 @@ async function renderStats(stats: any, key: string) {
     } else {
       const tableLabel = Label.labelTable[key as keyof typeof Label.labelTable] as keyof typeof Label;
       const statsLabel = Label[tableLabel];
-      content = `
+      if (key === "_box") {
+        const boxImg = await Promise.all(
+          [1, 2, 3].map(async (slice: number) => await imageToBase64("box" + slice))
+        );
+        content += `
+          ${boxImg.map((img, index) => {
+            return `<img src="data:${img.mimeType};base64,${img.base64Img}" class="design" />`;
+          })}
+        `;
+      }
+      content += `
       <section>
         <h2 class="componentTitle">${Label.mainlabel[key as keyof typeof Label.mainlabel]}</h2>
         <div class="grid-container">
@@ -633,7 +649,6 @@ const iconForComponent = {
 };
 
 async function printReportPDF(historyId: any) {
-  console.log(historyId);
   const history = await DatabaseService.getUserHistory(historyId);
   const historyCompKeys = Object.keys(history);
   const compKeys = Object.keys(Label.mainlabel).filter(
@@ -694,6 +709,10 @@ async function printReportPDF(historyId: any) {
         img.design {
           margin: auto;
           width: 160mm;
+        }
+        img.design-3 {
+          margin: auto;
+          width: 50mm;
         }
         h2.componentTitle {
           text-align: start;
