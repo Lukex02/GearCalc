@@ -50,11 +50,7 @@ export default function CalcFooter({
 
   const saveAndGoHome = () => {
     if (onValidate == null || onValidate()) {
-      DatabaseService.updateUserHistory(
-        CalcController.getInstance().getGearBox(),
-        new Date().toLocaleString(),
-        true
-      ).then(() => {
+      DatabaseService.updateUserHistory(CalcController.getInstance().getGearBox(), true).then(() => {
         setModalFinishVisible(false);
         setSnackBarSaveVisible(true);
         router.push("/(tabs)/home");
