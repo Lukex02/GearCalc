@@ -379,7 +379,6 @@ async function imageToBase64(name: string): Promise<{ base64Img: string; mimeTyp
 
 async function renderStats(stats: any, key: string) {
   let content = "";
-  // if (key === "_mechDrive") console.log("Key:", stats);
   if (key === "_type") {
     // Trường hợp là loại hộp giảm tốc
     content = `
@@ -391,9 +390,8 @@ async function renderStats(stats: any, key: string) {
     // Trường hợp object, thì map theo object
     // Tách 1 số trường hợp object đặc biệt là _design và _calcEnginePostStats
     if (key === "_design") {
-      // const inputStatsKey = Object.keys(stats.designStrategy._designInputStats);
       const inputStatsKey = Object.keys(inputLabel);
-      /*const { base64Img: designTemplateImg, mimeType } = await imageToBase64("gearbox1_template");
+      const { base64Img: designTemplateImg, mimeType } = await imageToBase64("gearbox1_template");
       content = `
       <img src="data:${mimeType};base64,${designTemplateImg}" class="design" />
       <section>
@@ -418,7 +416,7 @@ async function renderStats(stats: any, key: string) {
           })
           .join("")}
       </section>
-      `;*/
+      `;
     } else if (key === "_calcEnginePostStats") {
       content = `
       <section>
@@ -522,7 +520,6 @@ async function renderStats(stats: any, key: string) {
         .join("")}
       </div>
       `;
-      // console.log(content);
     } else {
       const tableLabel = Label.labelTable[key as keyof typeof Label.labelTable] as keyof typeof Label;
       const statsLabel = Label[tableLabel];
@@ -571,7 +568,6 @@ async function renderStats(stats: any, key: string) {
     </div>
     `;
   }
-  // console.log(key, content);
   return content;
 }
 
