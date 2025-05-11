@@ -138,7 +138,7 @@ export default function AccountScreen() {
           </View>
           <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
             <Text style={{ color: "white", fontWeight: "bold" }}>Thiết kế đã lưu: </Text>
-            <Text style={{ color: "white" }}>{user.user_metadata.history.length}</Text>
+            <Text style={{ color: "white" }}>{history.length}</Text>
           </View>
         </View>
       </View>
