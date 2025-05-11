@@ -107,11 +107,11 @@ export default function AccountScreen() {
   };
 
   const handleView = (historyId: any) => {
-    console.log("View", historyId);
+    alert("Chức năng chưa phát triển");
   };
 
   const handleEdit = (historyId: any) => {
-    console.log("Edit", historyId);
+    alert("Chức năng chưa phát triển");
   };
 
   return loading ? (

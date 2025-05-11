@@ -56,7 +56,7 @@ export default function Home() {
   };
 
   const handlePreview = (historyId: any) => {
-    console.log("Preview", historyId);
+    alert("Chức năng chưa phát triển");
   };
 
   return (
