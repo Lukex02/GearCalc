@@ -4,6 +4,7 @@ import GearSet, { CalculatedGear } from "@models/Gear";
 import CalculatedShaft from "@models/Shaft";
 import { SelectedRollerBearing } from "@models/RollerBearing";
 import Lubricant from "@models/Lubricant";
+import Box from "@models/Box";
 
 export class GearBox {
   private _design!: any;
@@ -14,7 +15,7 @@ export class GearBox {
   private _gearSet: GearSet[] | any = [];
   private _shaft: CalculatedShaft | any;
   private _rollerBearing: Record<number, SelectedRollerBearing> = {};
-  private _box: any;
+  private _box!: Box;
   private _lubricant!: Lubricant;
 
   set design(storedDesign: any) {
@@ -65,10 +66,10 @@ export class GearBox {
   get rollerBearing(): Record<number, SelectedRollerBearing> {
     return this._rollerBearing;
   }
-  set box(box: any) {
+  set box(box: Box) {
     this._box = box;
   }
-  get box(): any {
+  get box(): Box {
     return this._box;
   }
   set lubricant(lub: Lubricant) {
@@ -152,10 +153,10 @@ export default class GearBoxBuilder implements Builder {
   getRollerBearing(): Record<number, SelectedRollerBearing> {
     return this._gearBox.rollerBearing;
   }
-  setBox(box: any): void {
+  setBox(box: Box): void {
     this._gearBox.box = box;
   }
-  getBox(): any {
+  getBox(): Box {
     return this._gearBox.box;
   }
   setLubricant(lubricant: Lubricant): void {

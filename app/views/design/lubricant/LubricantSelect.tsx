@@ -31,7 +31,7 @@ export default function LubricantSelect() {
 
   const handleValidation = () => {
     if (!selectedLub) {
-      alert("Vui lòng chọn đủ bôi trơn.");
+      alert("Vui lòng chọn dầu bôi trơn.");
       return false;
     } else {
       calcController.chooseLubricant(selectedLub);
@@ -41,8 +41,7 @@ export default function LubricantSelect() {
 
   return (
     <View style={styles.container}>
-      <Header title="Bôi trơn" />
-      {/* <Header title="Bôi trơn" rightIcon={<SaveComponent />} /> */}
+      <Header title="Bôi trơn" rightIcon={<SaveComponent />} />
       {loading ? (
         <LoadingScreen />
       ) : (

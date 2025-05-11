@@ -55,7 +55,7 @@ export default class Box {
     this._d5 = Math.ceil(this._d2 * 0.55); // Vít ghép thân ổ
 
     // Mặt bích ghép nắp và thân
-    this._S3 = Math.ceil(1.6 * this._d4);
+    this._S3 = Math.ceil(1.6 * this._d3);
     this._S4 = Math.ceil(0.9 * this._S3);
 
     this._E2 = Math.ceil(1.6 * this._d2);
@@ -76,11 +76,48 @@ export default class Box {
     this._K1 = 3 * this._d1;
     this._q = this._K1 + 2 * this._deltaBody;
 
-    this._deltaGapGears = 1.1 * this._deltaBody;
+    this._deltaGapGears = Math.ceil(1.1 * this._deltaBody);
     this._deltaGapTop = 4 * this._deltaBody;
     this._deltaGapSide = this._deltaBody;
     this._L = Math.floor(a_w[0] + a_w[1] + da1 / 2 + dw2 / 2 + 2 * this._deltaGapGears + 2 * this._K3);
     this._B = l_max + this._K3;
-    this._Z = (this._L + this._B) / 200;
+    this._Z = Math.round((this._L + this._B) / 200);
+  }
+  getTransverseData() {
+    return {
+      _deltaBody: this._deltaBody, //
+      _e: this._e, //
+      _d2: this._d2, //
+      _S3: this._S3, //
+      _S4: this._S4, //
+      _K1: this._K1, //
+      _K2: this._K2, //
+      _K3: this._K3, //
+      _C1: this._shaftBearing[0].C, //
+      _C2: this._shaftBearing[1].C, //
+      _C3: this._shaftBearing[2].C, //
+    };
+  }
+  getJointData() {
+    return {
+      _K3: this._K3, //
+      _S1: this._S1, //
+      _S4: this._S4, //
+    };
+  }
+  getVerticalData() {
+    return {
+      _K1: this._K1, //
+      _shaftBearing: this._shaftBearing, //
+      _deltaLid: this._deltaLid, //
+      _deltaBody: this._deltaBody, //
+      _h: this._h, //
+      _S1: this._S1, //
+      _d1: this._d1, //
+      _q: this._q, //
+      _R2: this._R2, //
+      _K2: this._K2, //
+      _E2: this._E2, //
+    };
   }
 }

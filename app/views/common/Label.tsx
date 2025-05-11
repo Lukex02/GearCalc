@@ -128,6 +128,80 @@ export const rollerBearingLabel = {
   description: "Kiểu",
 };
 
+// Gối trục
+export const shaftBearinglabel = {
+  C: "C (mm)",
+  D: "D (mm)",
+  D2: "D2 (mm)",
+  D3: "D3 (mm)",
+  D4: "D4 (mm)",
+  Z: "Số lượng bulông",
+  d4: "Đường kính vít",
+};
+
+export const transverseLabel = {
+  _deltaBody: "Chiều dày thân hộp (mm)",
+  _e: "Chiều dày gân tăng cứng (mm)",
+  _d2: "Đường kính bulông cạnh ổ (mm)",
+  _S3: "Chiều dày số lượng bánh răng dọc (mm)",
+  _S4: "Chiều dày số lượng bánh răng ngang (mm)",
+  _K1: "Bề rộng mặt đế hộp K1 (mm)",
+  _K2: "Bề rộng mặt đế hộp K2 (mm)",
+  _K3: "Bề rộng mặt đế hộp K3 (mm)",
+  _C1: "Khoảng cách từ tâm bulông đến mép lỗ trục 1 (mm)",
+  _C2: "Khoảng cách từ tâm bulông đến mép lỗ trục 2 (mm)",
+  _C3: "Khoảng cách từ tâm bulông đến mép lỗ trục 3 (mm)",
+};
+
+export const jointLabel = {
+  _K3: "Bề rộng mặt đế hộp K3 (mm)",
+  _S1: "Chiều dày mặt đế hộp khi không có phần lồi 1 (mm)",
+  _S4: "Chiều dày bích nắp hộp (mm)",
+};
+
+export const verticalLabel = {
+  _K1: "Bề rộng mặt đế hộp K1 (mm)",
+  _deltaLid: "Chiều dày nắp hộp (mm)",
+  _deltaBody: "Chiều dày thân hộp (mm)",
+  _shaftBearing: "Gối trục",
+  _h: "Chiều cao gân tăng cứng (mm)",
+  _S1: "Chiều dày mặt đế hộp khi không có phần lồi 1 (mm)",
+  _d1: "Đường kính bulông nền (mm)",
+  _q: "Bề rộng mặt đế hộp q (mm)",
+  _R2: "Tâm lỗ bulông cạnh ổ (mm)",
+  _K2: "Bề rộng mặt đế hộp K2 (mm)",
+  _E2: "Tâm lỗ bulông cạnh ổ (mm)",
+};
+
+export const boxLabel = {
+  // _deltaBody: "Chiều dày thân hộp",
+  // _deltaLid: "Chiều dày nắp hộp",
+  // _e: "Gân tăng cứng",
+  // _h: "Chiều cao",
+  // _slope: "Độ dốc",
+  // _d1: "Đường kính bulông nền (mm)",
+  // _d2: "Đường kính bulông cạnh (mm)",
+  // _d3: "Đường kính bulông ghép bích nắp và thân (mm)",
+  // _d4: "Đường kính vít ghép nắp (mm)",
+  // _d5: "Đường kính vít ghép thân (mm)",
+  // _S3: "Chiều dày số lượng bánh răng dọc (mm)",
+  // _S4: "Chiều dày số lượng bánh răng ngang (mm)",
+  // _E2: "Tâm lỗ bulông cạnh ổ (mm)",
+  // _S1: "Chiều dày mặt đế hộp khi không có phần lồi 1 (mm)",
+  // _K1: "Bề rộng mặt đế hộp K1 (mm)",
+  // _q: "Bề rộng mặt đế hộp q (mm)",
+  // _deltaGapGears: "Khe hỡ giữa các chi tiết bánh răng (mm)",
+  // _deltaGapTop: "Khe hỡ giữa đỉnh bánh răng lớn với đáy hộp (mm)",
+  // _deltaGapSide: "Khe hỡ giữa mặt bên các bánh răng với nhau (mm)",
+  // _L: "Chiều dày hộp (mm)",
+  // _B: "Chiều dày rộng (mm)",
+  // _Z: "Số lượng bu lông nền (cái)",
+  ...shaftBearinglabel,
+  ...transverseLabel,
+  ...jointLabel,
+  ...verticalLabel,
+};
+
 export const labelTable = {
   _designInputStats: "inputLabel",
   _engine: "engineLabel",
@@ -135,6 +209,7 @@ export const labelTable = {
   _gearSet: "gearSetLabel",
   _shaft: "shaftLabel",
   _rollerBearing: "rollerBearingLabel",
+  _box: "boxLabel",
 };
 
 const Label = {
@@ -149,6 +224,7 @@ const Label = {
   rollerBearingTypeLabel,
   labelTable,
   keyLabel,
+  boxLabel,
 };
 
 export default Label;

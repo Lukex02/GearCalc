@@ -16,6 +16,7 @@ import RollerBearingController from "@controller/RollerBearingController";
 import CalculatedRollerBearing, { SelectedRollerBearing } from "@models/RollerBearing";
 import BoxController from "@controller/BoxController";
 import Lubricant from "@models/Lubricant";
+import Box from "@models/Box";
 
 type GearBox1GearSetInput = {
   sigma_b: [number, number];
@@ -113,7 +114,7 @@ interface DesignStrategy {
     selectedRB: SelectedRollerBearing,
     spinSpd: number
   ): { status: boolean; message?: string };
-  designBox(gears?: any, shaft?: any, D1?: number[]): any;
+  designBox(gears?: any, shaft?: any, D1?: number[]): Box;
 }
 
 //
@@ -839,7 +840,7 @@ export class DesignGearBox1 implements DesignStrategy {
       throw new Error("Hiện tại chỉ mới áp dụng cho ổ bi đỡ một dãy");
     }
   }
-  designBox(gearSet: GearSet[], shaft: CalculatedShaft, D1: number[]) {
+  designBox(gearSet: GearSet[], shaft: CalculatedShaft, D1: number[]): Box {
     return BoxController.generateBox(gearSet, shaft, D1);
   }
 }
@@ -991,7 +992,7 @@ class DesignGearBox2 implements DesignStrategy {
   ) {
     return { status: true, message: `Ổ lăn đạt yêu cầu` };
   }
-  designBox() {}
+  designBox(): any {}
 }
 
 //
