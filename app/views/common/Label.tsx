@@ -220,6 +220,7 @@ const Label = {
   chainLabel,
   gearSetLabel,
   shaftLabel,
+  rollerBearingLabel,
   selectRollerBearingSizeLabel,
   rollerBearingTypeLabel,
   labelTable,

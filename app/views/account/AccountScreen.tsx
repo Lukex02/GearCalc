@@ -103,7 +103,7 @@ export default function AccountScreen() {
   };
 
   const handlePrint = (historyId: any) => {
-    Utils.printReportPDF(user.user_metadata.history.find((item: any) => item.id === historyId));
+    Utils.printReportPDF(historyId);
   };
 
   const handleView = (historyId: any) => {
@@ -166,7 +166,7 @@ export default function AccountScreen() {
                 onSwipeableOpen={() => setSelectItemId(item.id)}
               >
                 <View style={styles.historyRow}>
-                  <Text style={styles.historyCell}>{item.design._type}</Text>
+                  <Text style={styles.historyCell}>{item.type}</Text>
                   <Text style={styles.historyCell}>{new Date(item.time).toLocaleString()}</Text>
                   <View style={styles.historyCell}>
                     <Text

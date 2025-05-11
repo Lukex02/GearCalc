@@ -9,6 +9,7 @@ import * as FileSystem from "expo-file-system";
 import { Asset } from "expo-asset";
 import Label, { inputLabel } from "@/views/common/Label";
 import { scale, verticalScale } from "react-native-size-matters";
+import DatabaseService from "./DatabaseService";
 
 const math = create(all);
 
@@ -392,7 +393,7 @@ async function renderStats(stats: any, key: string) {
     if (key === "_design") {
       // const inputStatsKey = Object.keys(stats.designStrategy._designInputStats);
       const inputStatsKey = Object.keys(inputLabel);
-      const { base64Img: designTemplateImg, mimeType } = await imageToBase64("gearbox1_template");
+      /*const { base64Img: designTemplateImg, mimeType } = await imageToBase64("gearbox1_template");
       content = `
       <img src="data:${mimeType};base64,${designTemplateImg}" class="design" />
       <section>
@@ -417,7 +418,7 @@ async function renderStats(stats: any, key: string) {
           })
           .join("")}
       </section>
-      `;
+      `;*/
     } else if (key === "_calcEnginePostStats") {
       content = `
       <section>
@@ -467,6 +468,61 @@ async function renderStats(stats: any, key: string) {
       </section>
 
       `;
+    } else if (key === "_shaft") {
+      console.log(stats);
+      content += `
+      <h2 class="componentTitle">${Label.mainlabel[key as keyof typeof Label.mainlabel]}</h2>
+      <p class="medTxt">Đường kính các trục: ${stats._d.join(", ")}</p>
+      <div class="grid-container">
+      ${stats._indiShaft
+        .map((indiShaft: any, index: number) => {
+          return `
+        <section class="grid-item-2-sm">
+          <h2 class="componentTitle">Đường kính các điểm trên trục ${indiShaft._shaftNo} (mm)</h2>
+          ${indiShaft._statAtPoint
+            .map((pointsStat: any, index: number) => {
+              console.log(pointsStat);
+              return `<div class="grid-container">
+            <p class="grid-item-2-lg">${indiShaft._shaftNo}-${pointsStat.point}</p>
+            <p class="grid-item-2-sm">${pointsStat.d}</p>
+          </div>`;
+            })
+            .join("")}
+        </section>`;
+        })
+        .join("")}
+      </div>
+      `;
+    } else if (key === "_rollerBearing") {
+      const tableLabel = Label.labelTable[key as keyof typeof Label.labelTable] as keyof typeof Label;
+      const statsLabel = Label[tableLabel];
+
+      content += `
+      <h2 class="componentTitle">${Label.mainlabel[key as keyof typeof Label.mainlabel]}</h2>
+      <div class="grid-container">
+      ${Object.keys(stats)
+        .map((shaftNo: any) => {
+          return `
+        <section class="grid-item-2-sm">
+          <h2 class="componentTitle">${Label.mainlabel[key as keyof typeof Label.mainlabel]} ${shaftNo}</h2>
+          ${Object.keys(statsLabel)
+            .map((spec) => {
+              return `<div class="grid-container">
+            <p class="grid-item-2-sm">${statsLabel[spec as keyof typeof statsLabel]}</p>
+            <p class="grid-item-2-lg">${
+              spec === "type"
+                ? Label.rollerBearingTypeLabel[spec as keyof typeof Label.rollerBearingTypeLabel]
+                : stats[shaftNo][spec as keyof typeof stats]
+            }</p>
+          </div>`;
+            })
+            .join("")}
+        </section>`;
+        })
+        .join("")}
+      </div>
+      `;
+      // console.log(content);
     } else {
       const tableLabel = Label.labelTable[key as keyof typeof Label.labelTable] as keyof typeof Label;
       const statsLabel = Label[tableLabel];
@@ -474,7 +530,7 @@ async function renderStats(stats: any, key: string) {
       <section>
         <h2 class="componentTitle">${Label.mainlabel[key as keyof typeof Label.mainlabel]}</h2>
         <div class="grid-container">
-        ${Object.keys(Label[tableLabel])
+        ${Object.keys(statsLabel)
           .map((statKey) => {
             return `<p class="grid-item-2-sm">${statsLabel[statKey as keyof typeof statsLabel]}</p>
             <p class="grid-item-2-lg">${
@@ -580,12 +636,13 @@ const iconForComponent = {
             style="margin: auto" viewBox="0 0 24 24"><path d="M22,12.5C22,12.5 24,14.67 24,16A2,2 0 0,1 22,18A2,2 0 0,1 20,16C20,14.67 22,12.5 22,12.5M6,6H10A1,1 0 0,1 11,7A1,1 0 0,1 10,8H9V10H11C11.74,10 12.39,10.4 12.73,11L19.24,7.24L22.5,9.13C23,9.4 23.14,10 22.87,10.5C22.59,10.97 22,11.14 21.5,10.86L19.4,9.65L15.75,15.97C15.41,16.58 14.75,17 14,17H5A2,2 0 0,1 3,15V12A2,2 0 0,1 5,10H7V8H6A1,1 0 0,1 5,7A1,1 0 0,1 6,6M5,12V15H14L16.06,11.43L12.6,13.43L11.69,12H5M0.38,9.21L2.09,7.5C2.5,7.11 3.11,7.11 3.5,7.5C3.89,7.89 3.89,8.5 3.5,8.91L1.79,10.62C1.4,11 0.77,11 0.38,10.62C0,10.23 0,9.6 0.38,9.21Z" /></svg>`,
 };
 
-async function printReportPDF(history: any) {
-  const historyCompKeys = Object.keys(history.design);
+async function printReportPDF(historyId: any) {
+  const history = await DatabaseService.getUserHistory(historyId);
+  const historyCompKeys = Object.keys(history);
   const compKeys = Object.keys(Label.mainlabel).filter(
     (key) =>
-      (historyCompKeys.includes(key) && !Array.isArray(history.design[key])) ||
-      (Array.isArray(history.design[key]) && history.design[key].length > 0)
+      (historyCompKeys.includes(key) && !Array.isArray(history[key])) ||
+      (Array.isArray(history[key]) && history[key].length > 0)
   ); // Trích ra key có tồn tại trong history và không phải là mảng rỗng
   // console.log("compKeys:", compKeys);
   const renderAvailableComponent = compKeys
@@ -603,7 +660,7 @@ async function printReportPDF(history: any) {
 
   const renderComponent = await Promise.all(
     compKeys.map(async (key) => {
-      const component = history.design[key];
+      const component = history[key];
       return await renderStats(component, key);
     })
   );

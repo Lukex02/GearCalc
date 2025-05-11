@@ -118,7 +118,7 @@ export default function Home() {
               <View style={styles.homeCardCol}>
                 <Text style={styles.homeCardTxt}>
                   {userHistoryStats.recentHistory
-                    ? userHistoryStats.recentHistory.design._type
+                    ? userHistoryStats.recentHistory.type
                     : "Bạn chưa có thiết kế nào"}
                 </Text>
                 <FontAwesome
@@ -214,7 +214,7 @@ export default function Home() {
                   )}
                   <Text style={styles.homeCardMedTxt}>
                     {userHistoryStats.recentUnfinishHistory
-                      ? userHistoryStats.recentUnfinishHistory.design._type +
+                      ? userHistoryStats.recentUnfinishHistory.type +
                         " (" +
                         new Date(userHistoryStats.recentUnfinishHistory.time).toLocaleString() +
                         ")"
