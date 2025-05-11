@@ -60,6 +60,7 @@ export default function SelectRollerBearingScreen() {
       } catch (error) {
         if (error instanceof Error) {
           alert(error.message);
+          return false;
         }
         return false;
       }
@@ -185,7 +186,7 @@ export default function SelectRollerBearingScreen() {
           )}
         </View>
       )}
-      <CalcFooter onValidate={handleValidation} finish={true} />
+      <CalcFooter onValidate={handleValidation} nextPage={"/views/design/box/SelectBox"} />
     </View>
   );
 }
