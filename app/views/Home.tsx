@@ -128,7 +128,9 @@ export default function Home() {
                   style={{ alignSelf: "center" }}
                 />
                 <Text style={{ ...styles.homeCardTxt, fontStyle: "italic" }}>
-                  {userHistoryStats.recentHistory ? "Thời gian: " + userHistoryStats.recentHistory.time : ""}
+                  {userHistoryStats.recentHistory
+                    ? "Thời gian: " + new Date(userHistoryStats.recentHistory.time).toLocaleString()
+                    : ""}
                 </Text>
               </View>
               {userHistoryStats.recentHistory && (
@@ -214,7 +216,7 @@ export default function Home() {
                     {userHistoryStats.recentUnfinishHistory
                       ? userHistoryStats.recentUnfinishHistory.design._type +
                         " (" +
-                        userHistoryStats.recentUnfinishHistory.time +
+                        new Date(userHistoryStats.recentUnfinishHistory.time).toLocaleString() +
                         ")"
                       : "Hiện tại không có"}
                   </Text>

@@ -814,7 +814,11 @@ export class DesignGearBox1 implements DesignStrategy {
   ) {
     if (type === "single_row_ball") {
       const iFa_Co = (1 * F_a) / (selectedRB.C_O * 1000);
-      let { X, Y, e } = Utils.getRollerCoeffi(type, iFa_Co)!;
+      let rollerCoeffi = Utils.getRollerCoeffi(type, iFa_Co);
+      if (!rollerCoeffi) {
+        throw new Error(`iFa_Co không hợp lệ: ${iFa_Co}!`);
+      }
+      let { X, Y, e } = rollerCoeffi;
       if (F_a / (1 * F_r) <= e) {
         X = 1;
         Y = 0;

@@ -74,17 +74,19 @@ export default function AccountScreen() {
       DatabaseService.getUser().then((user) => {
         if (user) {
           setUser(user);
-          setHistory(user.user_metadata.history.reverse());
-          setLoading(false);
+          DatabaseService.getUserAllHistory().then((history) => {
+            setHistory(history);
+            setLoading(false);
+          });
         }
       });
-    }, [])
+    }, [history])
   );
 
   const handleRemoveAll = () => {
     DatabaseService.removeAllHistory().then((data) => {
       if (data) {
-        setUser(data.user);
+        setHistory(data);
         setModalConfirmVisible(false);
         setsnackBarVisible(true);
       }
@@ -94,7 +96,7 @@ export default function AccountScreen() {
   const handleRemove = (historyId: any) => {
     DatabaseService.removeHistory(historyId).then((data) => {
       if (data) {
-        setUser(data.user);
+        setHistory(data);
         setsnackBarVisible(true);
       }
     });
@@ -165,7 +167,7 @@ export default function AccountScreen() {
               >
                 <View style={styles.historyRow}>
                   <Text style={styles.historyCell}>{item.design._type}</Text>
-                  <Text style={styles.historyCell}>{item.time}</Text>
+                  <Text style={styles.historyCell}>{new Date(item.time).toLocaleString()}</Text>
                   <View style={styles.historyCell}>
                     <Text
                       style={{

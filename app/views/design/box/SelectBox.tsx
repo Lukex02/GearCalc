@@ -58,28 +58,23 @@ export default function SelectBoxScreen() {
   return (
     <View style={styles.container}>
       <Header title="Thiết kế vỏ hộp" rightIcon={<SaveComponent />} />
-      <View style={{ ...styles.inputContainer, height: verticalScale(280) }}>
+      <View style={styles.inputContainer}>
         <View style={styles.tableContainer}>
           <Text style={styles.tableTitle}>Thông số các mặt</Text>
-          <FlatList
-            data={boxData}
-            keyExtractor={(item) => item.type}
-            renderItem={({ item }) => (
-              <View style={localStyles.itemContainer}>
-                <Text style={styles.paramType}>{item.name}</Text>
-                <Button
-                  mode="contained"
-                  onPress={() => handleSelectBox(item)}
-                  style={styles.mainBtnSmall}
-                  labelStyle={styles.mainBtnSmallTxt}
-                >
-                  Xem
-                  <MaterialCommunityIcons name="file-find" size={16} color="black" />
-                </Button>
-              </View>
-            )}
-            ItemSeparatorComponent={() => <View style={localStyles.separator} />}
-          />
+          {boxData.map((item) => (
+            <View style={localStyles.itemContainer}>
+              <Text style={styles.paramType}>{item.name}</Text>
+              <Button
+                mode="contained"
+                onPress={() => handleSelectBox(item)}
+                style={styles.mainBtnSmall}
+                labelStyle={styles.mainBtnSmallTxt}
+              >
+                Xem
+                <MaterialCommunityIcons name="file-find" size={16} color="black" />
+              </Button>
+            </View>
+          ))}
         </View>
       </View>
       <CalcFooter nextPage={"/views/design/lubricant/LubricantSelect"} />
@@ -160,11 +155,8 @@ const localStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-  },
-  separator: {
-    height: 1,
-    backgroundColor: Colors.border.primary,
-    marginVertical: verticalScale(8),
+    borderTopWidth: 1,
+    borderTopColor: Colors.border.primary,
   },
   modalImage: {
     width: "100%",

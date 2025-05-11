@@ -9,7 +9,6 @@ export default class DatabaseService {
       options: {
         data: {
           username,
-          history: [],
         }, // Lưu username vào user metadata
       },
     });
@@ -49,15 +48,13 @@ export default class DatabaseService {
     if (userError || !userData?.user) {
       console.error("Không lấy được user:", userError);
     } else {
-      const currentHistory = userData.user.user_metadata.history || [];
+      // const currentHistory = userData.user.user_metadata.history || [];
 
-      const updatedHistory = [...currentHistory, { id: currentHistory.length, design, time, isFinish }];
-
-      const { data, error } = await supabase.auth.updateUser({
-        data: {
-          history: updatedHistory,
-        },
-      });
+      const newHistory = { design, time, isFinish };
+      const { data, error } = await supabase
+        .from("history")
+        .insert([{ user_id: userData.user.id, design: design, time: time, isFinish: isFinish }])
+        .select();
 
       if (error) {
         console.error("Lỗi khi cập nhật:", error);
@@ -72,11 +69,13 @@ export default class DatabaseService {
     if (userError || !userData?.user) {
       console.error("Không lấy được user:", userError);
     } else {
-      const { data, error } = await supabase.auth.updateUser({
-        data: {
-          history: userData.user.user_metadata.history.filter((item: any) => item.id !== designId),
-        },
-      });
+      const { data, error } = await supabase
+        .from("history")
+        .delete()
+        .eq("user_id", userData.user.id)
+        .eq("id", designId)
+        .select();
+
       if (error) {
         console.error("Lỗi khi cập nhật:", error);
       } else {
@@ -86,15 +85,21 @@ export default class DatabaseService {
   }
 
   static async removeAllHistory() {
-    const { data, error } = await supabase.auth.updateUser({
-      data: {
-        history: [],
-      },
-    });
-    if (error) {
-      console.error("Lỗi khi cập nhật:", error);
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError || !userData?.user) {
+      console.error("Không lấy được user:", userError);
     } else {
-      return data;
+      const { data, error } = await supabase
+        .from("history")
+        .delete()
+        .eq("user_id", userData.user.id)
+        .select();
+
+      if (error) {
+        console.error("Lỗi khi cập nhật:", error);
+      } else {
+        return data;
+      }
     }
   }
 
@@ -103,21 +108,45 @@ export default class DatabaseService {
     if (error || !data?.user) {
       console.error("Không lấy được user:", error);
     } else {
-      const recentHistory =
-        data.user.user_metadata.history[data.user.user_metadata.history.length - 1] || null;
-      const recentUnfinishHistory =
-        data.user.user_metadata.history.findLast((item: any) => !item.isFinish) || null;
-      const designedNum = data.user.user_metadata.history.filter((item: any) => item.isFinish).length;
-      const printedNum = data.user.user_metadata.history.reduce(
-        (prev: any, curr: any) => (prev + curr.printed ? curr.printed : 0),
-        0
-      );
-      return {
-        recentHistory,
-        recentUnfinishHistory,
-        designedNum,
-        printedNum,
-      };
+      const { data: historyData, error: historyError } = await supabase
+        .from("history")
+        .select("*")
+        .eq("user_id", data.user.id)
+        .order("time", { ascending: false })
+        .select();
+
+      if (historyError) {
+        console.error("Lỗi khi lấy dữ liệu history:", historyError);
+      } else {
+        return {
+          recentHistory: historyData[0] || null,
+          recentUnfinishHistory: historyData.findLast((item: any) => !item.isFinish) || null,
+          designedNum: historyData.filter((item: any) => item.isFinish).length,
+          printedNum: historyData.reduce(
+            (prev: any, curr: any) => (prev + curr.printed ? curr.printed : 0),
+            0
+          ),
+        };
+      }
+    }
+  }
+  static async getUserAllHistory() {
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError || !userData?.user) {
+      console.error("Không lấy được user:", userError);
+    } else {
+      const { data: historyData, error: historyError } = await supabase
+        .from("history")
+        .select("*")
+        .eq("user_id", userData.user.id)
+        .order("time", { ascending: false })
+        .select();
+
+      if (historyError) {
+        console.error("Lỗi khi lấy dữ liệu history:", historyError);
+      } else {
+        return historyData;
+      }
     }
   }
 
