@@ -13,10 +13,11 @@ export default function LogOutComponent() {
   const [modalVisible, setModalVisible] = useState(false);
 
   const logOut = () => {
-    DatabaseService.logOut();
-    router.push("../../");
-    setModalVisible(false);
-    alert("Đăng xuất thành công");
+    DatabaseService.logOut().then(() => {
+      router.push("../../");
+      setModalVisible(false);
+      alert("Đăng xuất thành công");
+    });
   };
 
   return (
