@@ -56,12 +56,25 @@ export default function SelectRollerBearingScreen() {
     }
   };
   const getSelectedRollerBearing = async () => {
-    const rb = await Promise.all(
-      shaftDiameter.map(async (d, i) => {
-        return await RollerBearingController.getSelectableRollerBearing(calcRollerBearing[i].type, d);
-      })
-    );
-    setRollerBearingList(rb);
+    try {
+      const rb = await Promise.all(
+        shaftDiameter.map(async (d, i) => {
+          return await RollerBearingController.getSelectableRollerBearing(
+            calcRollerBearing[i].type,
+            d
+          );
+        })
+      );
+      setRollerBearingList(rb);
+    } catch (error) {
+      Alert.alert(
+        "Lỗi",
+        "Không thể tải danh sách ổ lăn. Vui lòng thử lại sau."
+      );
+      console.error("Error fetching roller bearings:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
