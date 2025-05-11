@@ -111,7 +111,7 @@ export default class DatabaseService {
     } else {
       const { data: historyData, error: historyError } = await supabase
         .from("history")
-        .select("id,type,time,isFinish")
+        .select("id,type,time,isFinish,printed")
         .eq("user_id", data.user.id)
         .order("time", { ascending: false });
 
@@ -167,7 +167,39 @@ export default class DatabaseService {
     }
   }
 
-  // Code database here
+  static async updatePrinted(historyId: any) {
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError || !userData?.user) {
+      console.error("Không lấy được user:", userError);
+    } else {
+      const { data, error } = await supabase
+        .from("history")
+        .select("id, printed")
+        .eq("id", historyId)
+        .single();
+      if (error) {
+        console.error("Lỗi khi lấy dữ liệu history:", error);
+      } else {
+        const { data: updated, error: updateError } = await supabase
+          .from("history")
+          .update({ printed: data.printed + 1 })
+          .eq("id", historyId)
+          .select()
+          .single();
+        if (updateError) {
+          console.error("Lỗi khi cập nhật:", updateError);
+        } else {
+          return updated;
+        }
+      }
+      if (error) {
+        console.error("Lỗi khi cập nhật:", error);
+      } else {
+        return data;
+      }
+    }
+  }
+
   static async getSelectableEngine(reqPower: number, reqRpm: number): Promise<any[]> {
     let { data, error } = await supabase
       .from("Engine")
@@ -226,9 +258,13 @@ export default class DatabaseService {
   }
 
   static async getSelectableRollerBearingList(type: string, d: number): Promise<any[]> {
-    // console.log("type", type);
-    // console.log("d", d);
-    const { data, error } = await supabase.from("roller_bearing").select("*").eq("rb_type", type).eq("d", d);
+    const { data, error } = await supabase
+      .from("roller_bearing")
+      .select("*")
+      .eq("rb_type", type)
+      .eq("d", d)
+      .order("C", { ascending: false })
+      .limit(2);
 
     if (error) console.error("Lỗi khi lấy dữ liệu ", error);
     return data ?? [];

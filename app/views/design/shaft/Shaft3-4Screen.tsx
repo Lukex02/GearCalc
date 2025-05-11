@@ -230,7 +230,7 @@ export default function SelectDiamShaftScreen() {
                             }}
                           >
                             - {Label.keyLabel[key as keyof typeof Label.keyLabel]}:{" "}
-                            {item[key as keyof typeof Label.keyLabel]} mm
+                            {item[key as keyof typeof Label.keyLabel].toFixed(3)}
                           </Text>
                         ))}
                       </View>

@@ -137,7 +137,6 @@ export default function SelectRollerBearingScreen() {
           ) : (
             <View>
               <Carousel
-                autoPlayInterval={2000}
                 data={rollerBearingList}
                 height={verticalScale(480)}
                 loop={true}
@@ -166,14 +165,8 @@ export default function SelectRollerBearingScreen() {
                         <Text style={styles.pageTitle}>Ổ lăn cho trục {shaftIdx + 1}</Text>
                         <FontAwesome5 name="cogs" size={scale(30)} color={Colors.primary} />
                       </View>
-                      <FlatList
-                        onTouchStart={handleTouchStart}
-                        onTouchMove={handleTouchMove}
-                        data={rbInEachShaft}
-                        contentContainerStyle={{ gap: scale(20) }}
-                        keyExtractor={(item) => item.symbol.toString()}
-                        nestedScrollEnabled={true}
-                        renderItem={({ item: rb }) => (
+                      <View>
+                        {rbInEachShaft.map((rb, index) => (
                           <TouchableOpacity
                             style={styles.selectItem}
                             key={rb.symbol}
@@ -192,8 +185,8 @@ export default function SelectRollerBearingScreen() {
                               <FontAwesome5 name="check" size={24} color={Colors.text.success} />
                             )}
                           </TouchableOpacity>
-                        )}
-                      />
+                        ))}
+                      </View>
                       <View style={{ ...styles.specHeaderRow, borderBottomWidth: 0 }}>
                         {selectedRollerBearing[shaftIdx + 1] ? (
                           <AntDesign name="checksquare" size={35} color={Colors.text.success} />

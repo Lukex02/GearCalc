@@ -58,7 +58,7 @@ export default function SelectBoxScreen() {
   return (
     <View style={styles.container}>
       <Header title="Thiết kế vỏ hộp" rightIcon={<SaveComponent />} />
-      <View style={styles.inputContainer}>
+      <View style={{ ...styles.inputContainer, height: verticalScale(250) }}>
         <View style={styles.tableContainer}>
           <Text style={styles.tableTitle}>Thông số các mặt</Text>
           {boxData.map((item) => (
@@ -159,7 +159,7 @@ const localStyles = StyleSheet.create({
     borderTopColor: Colors.border.primary,
   },
   modalImage: {
-    width: "100%",
+    width: scale(200),
     maxHeight: verticalScale(250),
   },
   specsContainer: {

@@ -178,11 +178,11 @@ export const verticalLabel = {
 };
 
 export const boxLabel = {
-  _deltaBody: "Chiều dày thân hộp",
-  _deltaLid: "Chiều dày nắp hộp",
-  _e: "Gân tăng cứng",
-  _h: "Chiều cao",
-  _slope: "Độ dốc",
+  _deltaBody: "Chiều dày thân hộp (mm)",
+  _deltaLid: "Chiều dày nắp hộp (mm)",
+  _e: "Chiều dày gân tăng cứng (mm)",
+  _h: "Chiều cao gân tăng cứng (mm)",
+  _slope: "Độ dốc (độ)",
   _d1: "Đường kính bulông nền (mm)",
   _d2: "Đường kính bulông cạnh (mm)",
   _d3: "Đường kính bulông ghép bích nắp và thân (mm)",

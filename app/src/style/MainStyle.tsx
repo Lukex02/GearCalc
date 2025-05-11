@@ -719,7 +719,7 @@ export default StyleSheet.create({
     height: verticalScale(70),
   },
   keyImg: {
-    width: "100%",
+    width: scale(270),
     height: verticalScale(100),
   },
 });

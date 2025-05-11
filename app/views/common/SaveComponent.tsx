@@ -168,7 +168,9 @@ export default function SaveComponent() {
       return (
         <View key={index}>
           {index != null && (
-            <Text style={styles.bottomSheetSmallBoldTxt}>Bộ truyền bánh răng {index + 1}: </Text>
+            <Text style={{ ...styles.bottomSheetSmallBoldTxt, color: Colors.text.lightAccent }}>
+              Bộ truyền bánh răng {index + 1}:{" "}
+            </Text>
           )}
           {itemKeys.map((key) => (
             <Text key={key} style={styles.bottomSheetSmallTxt}>

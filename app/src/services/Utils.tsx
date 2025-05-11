@@ -792,6 +792,7 @@ async function printReportPDF(historyId: any) {
         `;
   const { uri } = await Print.printToFileAsync({ html: report });
   // console.log("File has been saved to:", uri);
+  await DatabaseService.updatePrinted(historyId);
   await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
 }
 
