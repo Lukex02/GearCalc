@@ -130,7 +130,7 @@ export default class DatabaseService {
           recentUnfinishHistory: historyData.findLast((item: any) => !item.isFinish) || null,
           designedNum: historyData.filter((item: any) => item.isFinish).length,
           printedNum: historyData.reduce(
-            (prev: number, curr: any) => (prev + curr.printed ? curr.printed : 0),
+            (prev: number, curr: any) => prev + (curr.printed ? curr.printed : 0),
             0
           ),
         };
