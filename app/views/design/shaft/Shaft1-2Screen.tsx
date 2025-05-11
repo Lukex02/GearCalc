@@ -162,7 +162,7 @@ export default function Shaft1_2Screen() {
               (point: { x: number; y: number }) => point
             );
             return (
-              <View style={styles.optionCard} pointerEvents="box-none">
+              <View key={index} style={styles.optionCard} pointerEvents="box-none">
                 <Text style={styles.tableTitle}>
                   Biểu đồ nội lực {diagramData.diaName} trên trục {diagramData.onShaft.slice(5)}
                 </Text>
@@ -237,7 +237,7 @@ export default function Shaft1_2Screen() {
                     bubble={(value) => `${Math.round(value)}`}
                     renderThumb={() => <FontAwesome6 name="diamond" size={20} color={Colors.primary} />}
                     bubbleOffsetX={5}
-                    style={styles.slider}
+                    style={{ ...styles.slider, width: scale(250) }}
                     forceSnapToStep={true}
                     steps={(90 - 20) / 5}
                     renderMark={({ index }) => <View></View>}

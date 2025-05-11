@@ -219,8 +219,7 @@ const ForceOnShaftDiagram = ({
 
   const progress = useSharedValue(0);
   useEffect(() => {
-    progress.value = 0; // Đặt lại giá trị progress về 0
-    progress.value = withTiming(1, { duration: 1500 });
+    progress.value = withTiming(1, { duration: 1000 });
   }, [data]);
   const [animatedD, setAnimatedD] = React.useState(pathFill); // bắt đầu từ path chưa có animation
 

@@ -20,8 +20,6 @@ import LogOutComponent from "@/views/common/LogOutComponent";
 import Header from "@views/common/Header";
 import DatabaseService from "@/src/services/DatabaseService";
 import LoadingScreen from "./common/LoadingScreen";
-import CalcController from "@/src/controller/CalcController";
-import GearBox from "@/src/models/GearBox";
 import Utils from "@/src/services/Utils";
 
 const carouselData: { id: number; title: string; btnLabel: string; icon: any; navigate: Href }[] = [

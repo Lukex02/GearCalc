@@ -10,7 +10,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { useSharedValue } from "react-native-reanimated";
 import Header from "@/views/common/Header";
 import SaveComponent from "@/views/common/SaveComponent";
-import { verticalScale } from "react-native-size-matters";
+import { scale, verticalScale } from "react-native-size-matters";
 import CalcFooterStyle from "@/src/style/CalcFooterStyle";
 import CalculatedKey from "@/src/models/Key";
 import Label from "@/views/common/Label";
@@ -138,7 +138,7 @@ export default function SelectDiamShaftScreen() {
   return (
     <View style={styles.container}>
       <Header title="Thiết kế trục" rightIcon={<SaveComponent />} />
-      <View style={styles.inputContainer}>
+      <View style={{ ...styles.inputContainer, height: verticalScale(450) }}>
         <View style={styles.tableContainer}>
           <Text style={styles.tableTitle}>Chọn đường kính trục</Text>
           {dSb && (
@@ -216,7 +216,7 @@ export default function SelectDiamShaftScreen() {
                     data={keyList}
                     keyExtractor={(item, index) => `${item.point}-${item.lt}`}
                     renderItem={({ item, index }) => (
-                      <View key={index}>
+                      <View key={index} style={{ width: scale(270) }}>
                         <Text style={{ ...styles.specHeaderCell, textAlign: "left" }}>
                           Tại trục {Math.floor(index / 2) + 1} - {item.point}
                         </Text>

@@ -160,7 +160,7 @@ export default function SaveComponent() {
             ? ("inputLabel" as keyof typeof Label)
             : type === "_rollerBearing"
             ? ("rollerBearingLabel" as keyof typeof Label)
-            : type === "_chain"
+            : type === "_mechDrive"
             ? ("chainLabel" as keyof typeof Label)
             : ("boxLabel" as keyof typeof Label)
         ];

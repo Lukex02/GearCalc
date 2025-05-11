@@ -7,7 +7,6 @@ import Header from "@/views/common/Header";
 import SaveComponent from "@/views/common/SaveComponent";
 import CalcFooter from "@/views/common/CalcFooter";
 import { verticalScale, scale } from "react-native-size-matters";
-import CalcFooterStyle from "@style/CalcFooterStyle";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { boxLabel, shaftBearinglabel, transverseLabel, jointLabel, verticalLabel } from "@views/common/Label";
 import CalcController from "@controller/CalcController";
@@ -21,7 +20,7 @@ const boxData = [
   },
   {
     type: "joint",
-    name: "Bề mặt ghép nắp và thân",
+    name: "Bề mặt ghép",
     image: require("@img/GB1/box_2.png"),
     specs: {},
   },
@@ -35,7 +34,6 @@ const boxData = [
 
 export default function SelectBoxScreen() {
   const [modalVisible, setModalVisible] = useState(false);
-  // const [boxData, setBoxData] = useState<any>({});
   const [selectedBox, setSelectedBox] = useState<any | null>(null);
   const calcController = CalcController.getInstance();
 
@@ -60,7 +58,7 @@ export default function SelectBoxScreen() {
   return (
     <View style={styles.container}>
       <Header title="Thiết kế vỏ hộp" rightIcon={<SaveComponent />} />
-      <View style={styles.inputContainer}>
+      <View style={{ ...styles.inputContainer, height: verticalScale(280) }}>
         <View style={styles.tableContainer}>
           <Text style={styles.tableTitle}>Thông số các mặt</Text>
           <FlatList
@@ -88,7 +86,9 @@ export default function SelectBoxScreen() {
       <Portal>
         <Modal visible={modalVisible} onDismiss={() => setModalVisible(false)} style={styles.overlay}>
           {selectedBox && (
-            <View style={styles.modalView}>
+            <View
+              style={{ ...styles.modalView, maxHeight: verticalScale(550), minHeight: verticalScale(370) }}
+            >
               <Text style={styles.pageTitle}>Thông số</Text>
               <Image source={selectedBox.image} style={localStyles.modalImage} resizeMode="contain" />
               <View style={localStyles.specsContainer}>
@@ -110,24 +110,23 @@ export default function SelectBoxScreen() {
                         {key === "_shaftBearing"
                           ? selectedBox.specs[key as keyof typeof boxLabel].map(
                               (shaftBearing: any, index: number) => {
-                                return (
-                                  <View key={index} style={{ width: "100%" }}>
-                                    <Text style={{ fontStyle: "italic" }}>* Trục {index + 1}</Text>
-                                    {Object.keys(shaftBearinglabel).map((shaftBearingKey) => {
-                                      return (
-                                        <Text key={shaftBearingKey} style={styles.bottomSheetSmallTxt}>
-                                          {"+ "}
-                                          {
-                                            shaftBearinglabel[
-                                              shaftBearingKey as keyof typeof shaftBearinglabel
-                                            ]
-                                          }
-                                          : {shaftBearing[shaftBearingKey as keyof typeof shaftBearinglabel]}
-                                        </Text>
-                                      );
-                                    })}
-                                  </View>
-                                );
+                                return [
+                                  // Trả về một mảng các phần tử
+                                  <Text key={`shaft-title-${index}`} style={{ fontStyle: "italic" }}>
+                                    {"\n"}* Trục {index + 1}
+                                  </Text>,
+                                  Object.keys(shaftBearinglabel).map((shaftBearingKey) => (
+                                    <Text
+                                      key={`shaft-detail-${index}-${shaftBearingKey}`}
+                                      style={styles.bottomSheetSmallTxt}
+                                    >
+                                      {"\n+ "}
+                                      {
+                                        shaftBearinglabel[shaftBearingKey as keyof typeof shaftBearinglabel]
+                                      }: {shaftBearing[shaftBearingKey as keyof typeof shaftBearinglabel]}
+                                    </Text>
+                                  )),
+                                ];
                               }
                             )
                           : selectedBox.specs[
@@ -178,7 +177,8 @@ const localStyles = StyleSheet.create({
   },
   specText: {
     fontSize: verticalScale(11),
-    lineHeight: verticalScale(25),
+    // paddingVertical: verticalScale(10),
+    lineHeight: verticalScale(30),
     color: Colors.text.primary,
     textAlign: "left",
   },

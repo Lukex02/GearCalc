@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, FlatList, Alert, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  PanResponder,
+  Dimensions,
+  PanResponderInstance,
+} from "react-native";
 import styles from "@style/MainStyle";
 import { Colors } from "@style/Colors";
 import CalcController from "@controller/CalcController";
@@ -29,6 +37,25 @@ export default function SelectRollerBearingScreen() {
   const [rollerBearingList, setRollerBearingList] = useState<SelectedRollerBearing[][]>([]);
   const [loading, setLoading] = useState(true);
   const progress = useSharedValue<number>(0);
+
+  const isVerticalScroll = React.useRef(false);
+  const startY = React.useRef(0);
+
+  const handleTouchStart = (event: any) => {
+    startY.current = event.nativeEvent.pageY;
+    isVerticalScroll.current = false;
+  };
+  const handleTouchMove = (event: any) => {
+    const currentY = event.nativeEvent.pageY;
+    const deltaY = Math.abs(currentY - startY.current);
+    const deltaX = Math.abs(event.nativeEvent.pageX - /* vị trí X ban đầu */ 0); // Cần theo dõi cả X nếu cần
+
+    // Nếu chuyển động dọc lớn hơn nhiều so với ngang, coi như là cuộn dọc
+    if (deltaY > deltaX * 2) {
+      isVerticalScroll.current = true;
+    }
+  };
+
   const calcRollerBearing = [
     calcController.calcRollerBearing(1),
     calcController.calcRollerBearing(2),
@@ -131,7 +158,6 @@ export default function SelectRollerBearingScreen() {
                         maxHeight: verticalScale(500),
                         padding: Math.round(scale(25)),
                       }}
-                      pointerEvents="box-none"
                     >
                       {rollerBearingList.length === 0 && (
                         <Text style={styles.noDataWarn}>Không có thiết kế ổ lăn thỏa mãn điều kiện!</Text>
@@ -141,12 +167,16 @@ export default function SelectRollerBearingScreen() {
                         <FontAwesome5 name="cogs" size={scale(30)} color={Colors.primary} />
                       </View>
                       <FlatList
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
                         data={rbInEachShaft}
+                        contentContainerStyle={{ gap: scale(20) }}
                         keyExtractor={(item) => item.symbol.toString()}
+                        nestedScrollEnabled={true}
                         renderItem={({ item: rb }) => (
                           <TouchableOpacity
-                            key={rb.symbol}
                             style={styles.selectItem}
+                            key={rb.symbol}
                             onPress={() => handleSelectRollerBearing(rb, shaftIdx + 1)}
                           >
                             <MaterialCommunityIcons
@@ -189,4 +219,7 @@ export default function SelectRollerBearingScreen() {
       <CalcFooter onValidate={handleValidation} nextPage={"/views/design/box/SelectBox"} />
     </View>
   );
+}
+function useRef(arg0: PanResponderInstance) {
+  throw new Error("Function not implemented.");
 }
