@@ -1,10 +1,5 @@
-import Constants from "expo-constants";
-import { createClient, User } from "@supabase/supabase-js";
+import supabase from "./config";
 import { GearBox } from "@models/GearBox";
-
-const supabaseUrl = "https://odrfusjgbctkybkavelg.supabase.co";
-const supabaseKey = Constants.expoConfig?.extra?.supabaseAnonKey;
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default class DatabaseService {
   static async signUp(username: string, email: string, password: string) {

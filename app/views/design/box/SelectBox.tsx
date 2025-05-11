@@ -59,7 +59,7 @@ export default function SelectBoxScreen() {
 
   return (
     <View style={styles.container}>
-      <Header title="Thiết kế hộp" rightIcon={<SaveComponent />} />
+      <Header title="Thiết kế vỏ hộp" rightIcon={<SaveComponent />} />
       <View style={styles.inputContainer}>
         <View style={styles.tableContainer}>
           <Text style={styles.tableTitle}>Thông số các mặt</Text>

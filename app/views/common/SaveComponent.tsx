@@ -15,6 +15,7 @@ import * as Label from "@/views/common/Label";
 import CalculatedChain from "@/src/models/Chain";
 import GearSet from "@/src/models/Gear";
 import CalculatedShaft, { IndividualShaft } from "@/src/models/Shaft";
+import { SelectedRollerBearing } from "@/src/models/RollerBearing";
 
 export default function SaveComponent() {
   const [modalSaveVisible, setModalConfirmSaveVisible] = useState(false);
@@ -31,6 +32,7 @@ export default function SaveComponent() {
       "_gearSet",
       "_shaft",
       "_rollerBearing",
+      "_box",
     ],
     []
   );
@@ -125,6 +127,28 @@ export default function SaveComponent() {
           </View>
         );
       });
+    } else if (type === "_rollerBearing") {
+      return (
+        <View>
+          {Object.entries(item).map(([shaftNo, bearingData]) => (
+            <View key={shaftNo}>
+              <Text style={styles.bottomSheetSmallBoldTxt}>Ổ lăn trên trục: {shaftNo}</Text>
+              {Object.entries(bearingData as SelectedRollerBearing).map(([prop, value]) => (
+                <Text key={prop} style={styles.bottomSheetSmallTxt}>
+                  <Text style={styles.bottomSheetSmallTxt}>
+                    - {Label.rollerBearingLabel[prop as keyof typeof Label.rollerBearingLabel]}:{" "}
+                  </Text>
+                  {value !== null
+                    ? prop === "type"
+                      ? Label.rollerBearingTypeLabel[value as keyof typeof Label.rollerBearingTypeLabel]
+                      : value
+                    : null}
+                </Text>
+              ))}
+            </View>
+          ))}
+        </View>
+      );
     } else {
       const labels =
         Label[
@@ -134,9 +158,11 @@ export default function SaveComponent() {
             ? ("gearSetLabel" as keyof typeof Label)
             : type === "_design"
             ? ("inputLabel" as keyof typeof Label)
-            : type === "rollerBearing"
+            : type === "_rollerBearing"
             ? ("rollerBearingLabel" as keyof typeof Label)
-            : ("chainLabel" as keyof typeof Label)
+            : type === "_chain"
+            ? ("chainLabel" as keyof typeof Label)
+            : ("boxLabel" as keyof typeof Label)
         ];
       const itemKeys = Object.keys(labels);
       return (

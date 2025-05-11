@@ -20,7 +20,8 @@ export default function LoginScreen() {
       async function restoreSession() {
         const authStatus = await DatabaseService.checkAuth();
         if (authStatus) {
-          router.push("/(tabs)/home");
+          // router.push("/(tabs)/home");
+          console.log(authStatus);
         }
         setLoading(false);
       }

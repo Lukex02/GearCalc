@@ -7,6 +7,7 @@ export const mainlabel = {
   _gearSet: "Bộ truyền",
   _shaft: "Trục",
   _rollerBearing: "Ổ lăn",
+  _box: "Vỏ hộp",
 };
 
 export const inputLabel = {
@@ -126,6 +127,9 @@ export const rollerBearingLabel = {
   C: "C (kN)",
   C_O: "C_O (kN)",
   description: "Kiểu",
+  B: "B (mm)",
+  b: "b (mm)",
+  r1: "r1 (mm)",
 };
 
 // Gối trục
