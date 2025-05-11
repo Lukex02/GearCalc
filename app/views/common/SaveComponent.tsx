@@ -229,12 +229,10 @@ export default function SaveComponent() {
 
   const handleSave = () => {
     const calcController = CalcController.getInstance();
-    DatabaseService.updateUserHistory(calcController.getGearBox(), new Date().toLocaleString(), false).then(
-      () => {
-        setModalConfirmSaveVisible(false);
-        setSnackBarSaveVisible(true);
-      }
-    );
+    DatabaseService.updateUserHistory(calcController.getGearBox(), false).then(() => {
+      setModalConfirmSaveVisible(false);
+      setSnackBarSaveVisible(true);
+    });
   };
 
   return (

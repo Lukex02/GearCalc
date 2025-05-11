@@ -43,7 +43,7 @@ export default class DatabaseService {
     }
   }
 
-  static async updateUserHistory(design: GearBox, time: string, isFinish: boolean) {
+  static async updateUserHistory(design: GearBox, isFinish: boolean) {
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError || !userData?.user) {
       console.error("Không lấy được user:", userError);
@@ -53,7 +53,14 @@ export default class DatabaseService {
       const { data, error } = await supabase
         .from("history")
         .insert([
-          { user_id: userData.user.id, type: design.type, design: design, time: time, isFinish: isFinish },
+          {
+            user_id: userData.user.id,
+            type: design.type,
+            design: design,
+            time: new Date().toISOString(),
+            isFinish: isFinish,
+            printed: 0,
+          },
         ])
         .select();
 
@@ -123,7 +130,7 @@ export default class DatabaseService {
           recentUnfinishHistory: historyData.findLast((item: any) => !item.isFinish) || null,
           designedNum: historyData.filter((item: any) => item.isFinish).length,
           printedNum: historyData.reduce(
-            (prev: any, curr: any) => (prev + curr.printed ? curr.printed : 0),
+            (prev: number, curr: any) => (prev + curr.printed ? curr.printed : 0),
             0
           ),
         };
