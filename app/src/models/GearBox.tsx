@@ -94,7 +94,6 @@ interface Builder {
   setShaft(shaft: CalculatedShaft): void;
   setRollerBearing(rollerBearing: SelectedRollerBearing, shaftNo: 1 | 2 | 3): void;
   setBox(box: any): void;
-  build(): GearBox;
 }
 
 export default class GearBoxBuilder implements Builder {
